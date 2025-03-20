@@ -1,4 +1,4 @@
-import { LayoutProps } from "../Layout/LayoutProps"
+import { LayoutProps } from "../Layout/layoutProps.ts"
 
 export interface RouteProps {
     path: string

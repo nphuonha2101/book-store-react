@@ -9,6 +9,6 @@ export const API_ENDPOINTS = {
     SLIDER: {
         GET_SLIDER: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/sliders/all`,
-        }
+        },
     }
 } as const;

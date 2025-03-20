@@ -1,4 +1,4 @@
-import { LinkGroupProps } from "../../../types/Footer/LinkGroupProps";
+import { LinkGroupProps } from "../../../types/Footer/linkGroupProps.ts";
 
 
 export const LinkGroup: React.FC<LinkGroupProps> = ({ children, header }) => {

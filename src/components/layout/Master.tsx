@@ -1,4 +1,4 @@
-import { LayoutProps } from "../../types/Layout/LayoutProps";
+import { LayoutProps } from "../../types/Layout/layoutProps.ts";
 import Footer from "../partitials/Footer/Footer";
 import Navbar from "../partitials/Header/Navbar";
 

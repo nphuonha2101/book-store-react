@@ -1,6 +1,6 @@
 import React from 'react';
 // import { Navigate } from 'react-router-dom';
-import { RouteType } from '../const/RouteType';
+import { RouteType } from '../const/routeTypes';
 // import { IUser } from '../interfaces/IUser';
 // import { getObject } from '../utils/localStorageUtils';
 

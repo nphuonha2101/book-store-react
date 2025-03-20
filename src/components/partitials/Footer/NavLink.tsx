@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLinkProps } from '../../../types/Footer/NavLinkProps';
+import { NavLinkProps } from '../../../types/Footer/navLinkProps.ts';
 
 export const NavLink: React.FC<NavLinkProps> = ({ link, label }) => {
     return (

@@ -3,7 +3,7 @@ import { Master } from '../components/layout/Master';
 import { Home } from '../components/pages/Home/Home';
 import { SignIn } from '../components/pages/SignIn/SignIn';
 import { RouteType } from '../constants/RouteTypes';
-import { RouteProps } from '../types/Route/Route';
+import { RouteProps } from '../types/Route/routeProps.ts';
 
 export const routes: RouteProps[] = [
     {

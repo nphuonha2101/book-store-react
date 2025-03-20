@@ -3,9 +3,9 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useFetch from "../../../hooks/useFetch";
-import { SliderItem } from "../../../types/Carousel/SliderItem";
-import { API_ENDPOINTS } from "../../../constants/ApiInfo";
-import Logger from "../../../log/Logger";
+import { SliderItem } from "../../../types/ApiResponse/sliderItem";
+import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
+import Logger from "../../../log/logger.ts";
 
 export const HeroSlider: React.FC = () => {
     const { data: sliders } = useFetch<SliderItem[]>(API_ENDPOINTS.SLIDER.GET_SLIDER.URL);

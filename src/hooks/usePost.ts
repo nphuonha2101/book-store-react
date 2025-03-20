@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ApiResponse } from "../types/ApiResponse/ApiResponse";
+import { ApiResponse } from "../types/ApiResponse/apiResponse";
 
 interface FetchOptions extends Omit<RequestInit, "body"> {
     headers?: HeadersInit;

@@ -1,4 +1,4 @@
-import { InputBoxProps } from "../../../types/SignIn/InputBoxProps";
+import { InputBoxProps } from "../../../types/SignIn/inputBoxProps.ts";
 
 export const InputBox = ({ type, placeholder, name }: InputBoxProps) => {
     return (
