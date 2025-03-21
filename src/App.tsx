@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import PrivateRoute from './middlewares/PrivateRoute'
 import { routes } from './routes/index'
+import './index.css'
 
 function App() {
 
