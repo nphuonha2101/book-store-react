@@ -1,115 +1,155 @@
 import { ArrowLeft, Search, X } from "lucide-react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import useFetchPost from "../../../hooks/useFetchPost.ts";
-import "../../../utils/localStorageUtil.ts";
-import { getArray, saveArray } from "../../../utils/localStorageUtils.ts";
-import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
-// import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState, useRef, useMemo } from "react";
+import useFetchPost from "../../../hooks/useFetchPost";
+import { getArray, saveArray } from "../../../utils/localStorageUtils";
+import { API_ENDPOINTS } from "../../../constants/apiInfo";
+import { Book } from "../../../types/ApiResponse/Book/book";
+import { DEFAULT } from "../../../constants/default";
+import useFetch from "../../../hooks/useFetch";
 
-const SearchBar = ({ setIsSearchOpen }: { setIsSearchOpen: Dispatch<SetStateAction<boolean>> }) => {
+export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispatch<SetStateAction<boolean>> }) {
     const [searchTermsHistory, setSearchTermsHistory] = useState<string[]>([]);
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+
     useEffect(() => {
-        const searchTermsHistory = getArray("searchTermsHistory");
-        if (!searchTermsHistory) {
+        const storageHistory = getArray("searchTermsHistory");
+        if (!storageHistory) {
             saveArray("searchTermsHistory", []);
         }
-        setSearchTermsHistory(searchTermsHistory || []);
+        setSearchTermsHistory(storageHistory || []);
     }, []);
 
-    const { data: suggestions, loading, error, fetchData } = useFetchPost<{ terms: string[] }, any>(API_ENDPOINTS.BOOK.SUGGESTIONS.URL, { terms: searchTermsHistory });
+    // Tạo object ổn định
+    const requestBody = useMemo(() => ({ terms: searchTermsHistory }), [searchTermsHistory]);
+
+    const { data: suggestions } = useFetchPost<{ terms: string[] }, Book[]>(
+        API_ENDPOINTS.BOOK.SUGGESTIONS.URL,
+        requestBody,
+        { autoFetch: searchTermsHistory.length > 0 }
+    );
+
+    const fetchOptions = useMemo(() => ({ params: { term: searchTerm } }), [searchTerm]);
+
+    const { data: searchResults } = useFetch<Book[]>(
+        API_ENDPOINTS.BOOK.SEARCH.URL,
+        fetchOptions
+    );
+
+    const clearSearchInput = () => {
+        if (searchInputRef.current) {
+            searchInputRef.current.value = "";
+        }
+        setSearchTerm("");
+    };
 
     return (
-        <>
-            <div className="fixed inset-0 bg-white z-50 flex flex-col animate-fade-in">
-                <div className="border-b border-gray-200 p-4 shadow-sm">
-                    <div className="flex items-center max-w-3xl mx-auto w-full">
-                        <button
-                            onClick={() => setIsSearchOpen(false)}
-                            className="p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100 mr-2 transition-colors"
-                            aria-label="Go back"
-                        >
-                            <ArrowLeft className="w-6 h-6" />
-                        </button>
+        <div className="fixed inset-0 bg-background z-50 flex flex-col animate-fade-in">
+            <div className="border-b border-border p-4">
+                <div className="flex items-center max-w-3xl mx-auto w-full">
+                    <button
+                        onClick={() => setIsSearchOpen(false)}
+                        className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-muted mr-2 transition-colors"
+                        aria-label="Go back"
+                    >
+                        <ArrowLeft className="w-6 h-6" />
+                    </button>
 
-                        <div className="flex-1 flex items-center border border-gray-300 rounded-full px-4 py-2 mx-2 focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500 transition-all">
-                            <Search className="w-5 h-5 text-gray-400 mr-2" />
-                            <input
-                                type="text"
-                                placeholder="Tìm kiếm sản phẩm..."
-                                className="flex-1 outline-none bg-transparent"
-                                autoFocus
-                            />
-                            <button className="text-gray-400 hover:text-gray-600">
+                    <div className="flex-1 flex items-center border border-input rounded-full px-4 py-2 mx-2 focus-within:ring-2 focus-within:ring-ring focus-within:border-input transition-all">
+                        <Search className="w-5 h-5 text-muted-foreground mr-2" />
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm sản phẩm..."
+                            className="flex-1 outline-none bg-transparent text-foreground"
+                            autoFocus
+                            ref={searchInputRef}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        {searchTerm && (
+                            <button className="text-muted-foreground hover:text-foreground transition-colors" onClick={clearSearchInput}>
                                 <X className="w-5 h-5" />
                             </button>
-                        </div>
-
-                        <button
-                            className="ml-2 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors"
-                        >
-                            Tìm
-                        </button>
-                    </div>
-                </div>
-
-                <div className="flex-1 overflow-y-auto">
-                    <div className="max-w-3xl mx-auto w-full p-4">
-                        <div className="mb-6">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">Có thể bạn quan tâm</h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                                {suggestions ? suggestions.map((product) => (
-                                    <div key={product.id} className="group">
-                                        <div className="aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden relative shadow-sm group-hover:shadow transition-all">
-                                            <div className="h-40 bg-gray-200 group-hover:opacity-90 transition-opacity"></div>
-                                            {product.discount && (
-                                                <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                                                    -{product.discount}
-                                                </span>
-                                            )}
-                                            {product.isNew && (
-                                                <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
-                                                    Mới
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="mt-2">
-                                            <p className="text-sm text-gray-700 group-hover:text-indigo-600 transition-colors">{product.name}</p>
-                                            <p className="text-sm font-medium text-gray-900">{product.price}</p>
-                                        </div>
-                                    </div>
-                                )) : (
-                                    <div className="text-center w-full">
-                                        <p className="text-gray-500">Không có sản phẩm nào</p>
-                                    </div>
-                                )}
-                            </div>
-                            <div className="mt-6 text-center">
-                                <button className="bg-transparent border border-gray-300 hover:bg-gray-50 text-gray-700 py-2 px-4 rounded-md text-sm font-medium transition-colors">
-                                    Xem thêm sản phẩm
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="border-t border-gray-200 pt-6 mt-6">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">Danh mục nổi bật</h3>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                                {['Smartphone', 'Laptop', 'Tablet', 'Headphone', 'Smartwatch', 'Accessories'].map((category, index) => (
-                                    <div key={index} className="bg-gray-50 p-4 rounded-lg hover:bg-indigo-50 transition-colors cursor-pointer">
-                                        <div className="text-center">
-                                            <div className="h-12 w-12 bg-indigo-100 rounded-full mx-auto mb-2 flex items-center justify-center">
-                                                <span className="text-indigo-600 font-bold">{category.charAt(0)}</span>
-                                            </div>
-                                            <p className="text-sm font-medium">{category}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                        )}
                     </div>
                 </div>
             </div>
-        </>
-    );
-};
 
-export default SearchBar;
+            <div className="flex-1 overflow-y-auto">
+                <div className="max-w-3xl mx-auto w-full p-4">
+                    {searchTerm === "" ? (
+                        <div className="mb-6">
+                            <h3 className="text-lg font-medium text-foreground mb-4">Có thể bạn quan tâm</h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                {suggestions && suggestions.length > 0 ? suggestions.map((book) => (
+                                    <div key={book.id} className="group relative bg-background border border-border rounded-lg overflow-hidden hover:shadow-md transition-all">
+                                        <div className="aspect-w-1 aspect-h-1 bg-muted">
+                                            <img
+                                                src={book.coverImage || DEFAULT.IMAGE}
+                                                alt={book.title}
+                                                className="object-cover w-full h-full"
+                                            />
+                                        </div>
+                                        <div className="p-4">
+                                            <h3 className="text-sm font-semibold text-foreground mb-1 line-clamp-1 group-hover:text-primary transition-colors">
+                                                {book.title || "Sách chưa có tiêu đề"}
+                                            </h3>
+                                            <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+                                                {book.description || "Mô tả sách"}
+                                            </p>
+                                            <p className="text-sm font-bold text-primary">
+                                                {book.price ? `${book.price} ₫` : "Liên hệ"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )) : (
+                                    <div className="col-span-4 text-center py-8">
+                                        <p className="text-muted-foreground">Không có sản phẩm nào</p>
+                                    </div>
+                                )}
+                            </div>
+                            {suggestions && suggestions.length > 0 && (
+                                <div className="mt-6 text-center">
+                                    <button className="bg-transparent border border-input hover:bg-muted text-foreground py-2 px-4 rounded-md text-sm font-medium transition-colors">
+                                        Xem thêm sản phẩm
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {searchResults && searchResults.length > 0 ? searchResults.map((book) => (
+                                <div key={book.id} className="group bg-background border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+                                    {/* Hình ảnh */}
+                                    <div className="relative w-full aspect-[2/3] overflow-hidden rounded-t-xl bg-muted">
+                                        <img
+                                            src={book.coverImage ? book.coverImage : DEFAULT.IMAGE}
+                                            alt={book.title || "Không có tiêu đề"}
+                                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                            onError={(e) => (e.currentTarget.src = DEFAULT.IMAGE)}
+                                        />
+                                    </div>
+                                    {/* Nội dung */}
+                                    <div className="p-4 flex flex-col">
+                                        <h3 className="text-sm font-semibold text-foreground mb-1 line-clamp-2 group-hover:text-primary transition-colors">
+                                            {book.title || "Sách chưa có tiêu đề"}
+                                        </h3>
+                                        <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+                                            {book.description || "Mô tả sách"}
+                                        </p>
+                                        <p className="text-sm font-bold text-primary mt-auto">
+                                            {book.price ? `${book.price} ₫` : "Liên hệ"}
+                                        </p>
+                                    </div>
+                                </div>
+                            )) : (
+                                <div className="col-span-full text-center py-12">
+                                    <p className="text-muted-foreground">Không tìm thấy sản phẩm phù hợp</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}

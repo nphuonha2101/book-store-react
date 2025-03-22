@@ -1,4 +1,4 @@
-import "tailgrids/assets/css/tailwind.css";
+// import "tailgrids/assets/css/tailwind.css";
 // import './assets/scss/astro-ecommerce.scss'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'

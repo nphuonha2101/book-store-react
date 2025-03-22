@@ -1,62 +1,64 @@
 import React from "react";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useFetch from "../../../hooks/useFetch";
 import { SliderItem } from "../../../types/ApiResponse/sliderItem";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
-import Logger from "../../../log/logger.ts";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "../../../shadcn-components/ui/carousel"
 
 export const HeroSlider: React.FC = () => {
     const { data: sliders } = useFetch<SliderItem[]>(API_ENDPOINTS.SLIDER.GET_SLIDER.URL);
-    Logger.log("API_ENDPOINTS.SLIDER.GET_SLIDER.URL", API_ENDPOINTS.SLIDER.GET_SLIDER.URL);
-    Logger.log("sliders", sliders);
 
     if (!sliders || sliders.length === 0) return null;
 
-    const settings = {
-        dots: true,
-        infinite: false,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 3000,
-    };
-
     return (
-        <section className="w-full py-10 bg-gray-100">
-            <div className="container mx-auto max-w-5xl">
-                <Slider {...settings} className="hero-slider">
-                    {sliders.map((slider, index) => (
-                        <div
-                            key={index}
-                            className="bg-black h-[400px] md:h-[500px] flex items-center justify-center text-center bg-cover bg-center relative"
-                            style={{
-                                backgroundImage: slider.image
-                                    ? `linear-gradient(to right, rgba(255,255,255,0.7), transparent), url("${slider.image}")`
-                                    : "none",
-                            }}
-                        >
-                            <div className="absolute inset-0 bg-black/40"></div>
-                            <div className="relative z-10 max-w-2xl p-6 text-white">
-                                <h2 className="text-2xl md:text-4xl font-bold">{slider.title}</h2>
-                                <p className="mt-2 text-lg">{slider.description}</p>
-                                {slider.url && (
-                                    <div className="mt-4">
+        <div className="relative">
+            <Carousel className="mx-auto w-full max-w-6xl">
+                <CarouselContent>
+                    {sliders.map((slider) => (
+                        <CarouselItem key={slider.id}>
+                            <div className="block w-full h-80 md:h-[500px] relative overflow-hidden rounded-lg shadow-xl">
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                                <img
+                                    src={slider.image}
+                                    alt={slider.title}
+                                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                                />
+                                <div className="absolute bottom-0 left-0 p-6 z-20 w-full">
+                                    {slider.title && (
+                                        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
+                                            {slider.title}
+                                        </h2>
+                                    )}
+                                    {slider.description && (
+                                        <p className="text-white/90 max-w-xl text-sm md:text-base mb-4">
+                                            {slider.description}
+                                        </p>
+                                    )}
+                                    {slider.url && (
                                         <a
                                             href={slider.url}
-                                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md backdrop-blur-sm transition-colors"
                                         >
-                                            Xem ngay
+                                            Xem thêm
                                         </a>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
-                        </div>
+                        </CarouselItem>
                     ))}
-                </Slider>
-            </div>
-        </section>
-    );
+                </CarouselContent>
+                <CarouselPrevious className="left-2 bg-white/30 hover:bg-white/50 backdrop-blur-sm text-black" />
+                <CarouselNext className="right-2 bg-white/30 hover:bg-white/50 backdrop-blur-sm text-black" />
+            </Carousel>
+        </div>
+    )
 };

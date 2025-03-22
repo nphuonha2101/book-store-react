@@ -14,6 +14,9 @@ export const API_ENDPOINTS = {
     BOOK: {
         SUGGESTIONS: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/suggest`,
+        },
+        SEARCH: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/search`,
         }
     }
 } as const;

@@ -4,12 +4,12 @@ import Navbar from "../partitials/Header/Navbar";
 
 export const Master: React.FC<LayoutProps> = ({ children }) => {
     return (
-        <>
+        <div className="w-full min-w-screen-lg">
             <Navbar />
-            <section className="container w-full mt-20 mb-28">
+            <section className="container w-full mt-20 mb-28 px-7">
                 {children}
             </section>
             <Footer />
-        </>
+        </div>
     );
 }
