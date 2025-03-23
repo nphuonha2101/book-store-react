@@ -7,7 +7,8 @@ export interface Book {
     authorName ?: string;
     description ?: string;
     isbn ?: string;
-    coverImage ?: BookImage[];
+    coverImage ?: string;
+    images ?: BookImage[];
     price ?: number;
     quantity ?: number;
     available ?: boolean;
