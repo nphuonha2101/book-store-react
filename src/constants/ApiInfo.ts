@@ -27,4 +27,9 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/categories/all`,
         },
     },
+    AUTH: {
+        SIGN_IN: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/login`,
+        },
+    }
 } as const;

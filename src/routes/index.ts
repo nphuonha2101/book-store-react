@@ -24,6 +24,6 @@ export const routes: RouteProps[] = [
         path: '/signin',
         Component: SignIn,
         Layout: Blank,
-        routeType: RouteType.PUBLIC
+        routeType: RouteType.NOT_ALLOW_AUTH
     }
 ];
