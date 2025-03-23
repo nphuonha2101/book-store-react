@@ -8,6 +8,14 @@ interface FetchOptions extends RequestInit {
 
 const useFetch = <T,>(url: string, options?: FetchOptions) => {
     const [data, setData] = useState<T | null>(null);
+    const [pagination, setPagination] = useState<{
+        isFirst: boolean;
+        isLast: boolean;
+        totalPages: number;
+        pageSize: number;
+        currentPage: number;
+        totalElements: number;
+    } | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -49,6 +57,7 @@ const useFetch = <T,>(url: string, options?: FetchOptions) => {
             if (!result.success) throw new Error(result.message || "Unknown error");
 
             setData(result.data);
+            setPagination(result.pagination || null);
         } catch (err) {
             if (!signal.aborted) setError((err as Error).message);
         } finally {
@@ -63,7 +72,7 @@ const useFetch = <T,>(url: string, options?: FetchOptions) => {
         fetchData();
     }, [fetchData]);
 
-    return { data, loading, error, fetchData };
+    return { data, loading, error, fetchData, pagination };
 };
 
 export default useFetch;

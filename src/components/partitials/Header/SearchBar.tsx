@@ -6,6 +6,8 @@ import { API_ENDPOINTS } from "../../../constants/apiInfo";
 import { Book } from "../../../types/ApiResponse/Book/book";
 import { DEFAULT } from "../../../constants/default";
 import useFetch from "../../../hooks/useFetch";
+import { Button } from "../../../shadcn-components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispatch<SetStateAction<boolean>> }) {
     const [searchTermsHistory, setSearchTermsHistory] = useState<string[]>([]);
@@ -29,7 +31,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
         { autoFetch: searchTermsHistory.length > 0 }
     );
 
-    const fetchOptions = useMemo(() => ({ params: { term: searchTerm } }), [searchTerm]);
+    const fetchOptions = useMemo(() => ({ params: { term: searchTerm, size: 4 } }), [searchTerm]);
 
     const { data: searchResults } = useFetch<Book[]>(
         API_ENDPOINTS.BOOK.SEARCH.URL,
@@ -141,10 +143,19 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
                                         </p>
                                     </div>
                                 </div>
+
                             )) : (
                                 <div className="col-span-full text-center py-12">
                                     <p className="text-muted-foreground">Không tìm thấy sản phẩm phù hợp</p>
                                 </div>
+                            )}
+
+                            {(!searchResults || searchResults && searchResults.length == 0) ?? (
+                                <Link to="{`/search?term=${searchTerm}`}">
+                                    <Button className="bg-primary hover:bg-primary/90 text-primary-foreground py-2 px-4 rounded-md font-medium transition-colors">
+                                        Xem thêm
+                                    </Button>
+                                </Link>
                             )}
                         </div>
                     )}
