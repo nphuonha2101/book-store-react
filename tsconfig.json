@@ -1,10 +1,13 @@
 {
   "files": [],
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "./*"
+      ],
+      "@shadcn-components/*": [
+        "src/shadcn-components/*"
       ]
     }
   },

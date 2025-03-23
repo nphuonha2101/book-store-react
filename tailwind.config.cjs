@@ -1,13 +1,11 @@
 /** @type {import('tailwindcss').Config} */
-import tailgridsPlugin from "tailgrids/plugin";
-import typography from '@tailwindcss/typography';
-import lineClamp from '@tailwindcss/line-clamp';
+const typography = require('@tailwindcss/typography');
+const lineClamp = require('@tailwindcss/line-clamp');
 
-export default {
+module.exports = {
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
-        "./node_modules/tailgrids/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
         extend: {
@@ -26,6 +24,5 @@ export default {
     plugins: [
         typography,
         lineClamp,
-        tailgridsPlugin
     ],
 }

@@ -15,5 +15,19 @@ export const API_ENDPOINTS = {
         GET_BOOKS: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/all`,
         },
+        SUGGESTIONS: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/suggest`,
+        },
+        SEARCH: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/search`,
+        },
+        FILTER: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/filter`,
+        }
+    },
+    CATEGORY: {
+        GET_CATEGORIES: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/categories/all`,
+        },
     },
 } as const;

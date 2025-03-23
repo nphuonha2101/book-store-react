@@ -1,14 +1,11 @@
-export interface ApiResponse<T> {
-    success: boolean;
-    message: string;
-    statusCode: number;
-    data: T;
-    pagination? : {
+export interface PaginationProps {
+    pagination?: {
         isFirst: boolean;
         isLast: boolean;
         totalPages: number;
         pageSize: number;
         currentPage: number;
         totalElements: number;
-    }
+    };
+    onPageChange: (page: number) => void;
 }

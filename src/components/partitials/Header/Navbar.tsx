@@ -1,96 +1,138 @@
-import { useState } from "react";
-import { ListItem } from "./ListItem";
-import { Link } from "react-router-dom";
+import { useState } from 'react';
+import { Search, ShoppingCart, Menu, User, Heart, Bell } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import SearchBar from './SearchBar';
+import { Link } from 'react-router-dom';
+import MobileMenu from './MobileMenu';
 
-const Navbar = () => {
-    const [open, setOpen] = useState(false);
+export default function EnhancedEcommerceNavbar() {
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [cartCount, setCartCount] = useState(3);
 
     return (
-        <header className={`flex w-full items-center bg-white dark:bg-dark sticky top-0 z-50`}>
-            <div className="container">
-                <div className="relative -mx-4 flex items-center justify-between">
-                    <div className="w-60 max-w-full px-4">
-                        <a href="/#" className="block w-full py-5">
-                            <img
-                                src="https://cdn.tailgrids.com/2.0/image/assets/images/logo/logo-primary.svg"
-                                alt="logo"
-                                className="dark:hidden"
-                            />
-                            <img
-                                src="https://cdn.tailgrids.com/2.0/image/assets/images/logo/logo-white.svg"
-                                alt="logo"
-                                className="hidden dark:block"
-                            />
-                        </a>
-                    </div>
-                    <div className="flex w-full items-center justify-between px-4">
-                        <div>
+        <div className="relative">
+            {/* Main Navbar */}
+            <nav className="bg-background sticky top-0 z-30 border-b border-border">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between h-16">
+                        {/* Logo and Mobile Menu Button */}
+                        <div className="flex items-center">
                             <button
-                                onClick={() => setOpen(!open)}
-                                id="navbarToggler"
-                                className={` ${open && "navbarTogglerActive"
-                                    } absolute right-4 top-1/2 block -translate-y-1/2 rounded-lg px-3 py-[6px] ring-primary focus:ring-2 lg:hidden`}
+                                onClick={() => setIsMobileMenuOpen(true)}
+                                className="inline-flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-primary hover:bg-secondary md:hidden"
+                                aria-label="Open menu"
                             >
-                                <span className="relative my-[6px] block h-[2px] w-[30px] bg-body-color dark:bg-white"></span>
-                                <span className="relative my-[6px] block h-[2px] w-[30px] bg-body-color dark:bg-white"></span>
-                                <span className="relative my-[6px] block h-[2px] w-[30px] bg-body-color dark:bg-white"></span>
+                                <Menu className="h-6 w-6" />
                             </button>
-                            <nav
-                                id="navbarCollapse"
-                                className={`absolute right-4 top-full w-full max-w-[250px] rounded-lg bg-white px-6 py-5 shadow dark:bg-dark-2 lg:static lg:block lg:w-full lg:max-w-full lg:shadow-none lg:dark:bg-transparent ${!open && "hidden"
-                                    } `}
-                            >
-                                <ul className="block lg:flex lg:space-x-8 lg:items-center lg:justify-end">
-                                    <ListItem NavLink="/#">Home</ListItem>
-                                    <ListItem NavLink="/#">Payment</ListItem>
-                                    <ListItem NavLink="/#">About</ListItem>
-                                    <ListItem NavLink="/#">Blog</ListItem>
-                                </ul>
-                            </nav>
-                        </div>
-                        <div className="hidden lg:flex lg:items-center lg:space-x-4">
-                            {/* Search Bar */}
-                            <div className="relative flex items-center">
-                                <input
-                                    type="text"
-                                    placeholder="Search..."
-                                    className="w-full rounded-md border border-gray-300 bg-gray-100 px-4 py-2 pr-10 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary dark:bg-dark-2 dark:text-white"
-                                />
-                                <button className="absolute right-3 text-gray-500 hover:text-primary">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M21 21l-4.35-4.35M16.5 10.5a6 6 0 11-12 0 6 6 0 0112 0z"
-                                        />
-                                    </svg>
-                                </button>
+                            <div className="flex-shrink-0 flex items-center ml-2 md:ml-0">
+                                <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                                    NPBookStore
+                                </span>
                             </div>
-                            <Link
-                                to="/signin"
-                                className="px-7 py-3 text-base font-medium text-dark hover:text-primary dark:text-white"
-                            >
-                                Sign in
+                        </div>
+
+                        {/* Desktop Menu */}
+                        <div className="hidden md:flex md:items-center md:space-x-8">
+                            <Link to="/" className="text-primary border-b-2 border-primary px-3 py-2 text-sm font-medium transition-colors">
+                                Trang chủ
                             </Link>
-                            <a
-                                href="/#"
-                                className="rounded-md bg-primary px-7 py-3 text-base font-medium text-white hover:bg-primary/90"
+                            <Link to="/products" className="text-foreground hover:text-primary hover:border-b-2 hover:border-primary px-3 py-2 text-sm font-medium transition-colors">
+                                Sản phẩm
+                            </Link>
+                            <Link to="/categories" className="text-foreground hover:text-primary hover:border-b-2 hover:border-primary px-3 py-2 text-sm font-medium transition-colors">
+                                Danh mục
+                            </Link>
+                            <Link to="/contact-us" className="text-foreground hover:text-primary hover:border-b-2 hover:border-primary px-3 py-2 text-sm font-medium transition-colors">
+                                Liên hệ
+                            </Link>
+                        </div>
+
+                        {/* Nav Icons */}
+                        <div className="flex items-center space-x-1 md:space-x-2">
+                            <button
+                                onClick={() => setIsSearchOpen(true)}
+                                className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary transition-colors"
+                                aria-label="Search"
                             >
-                                Sign Up
-                            </a>
+                                <Search className="h-5 w-5" />
+                            </button>
+
+                            <button
+                                className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary transition-colors hidden md:block"
+                                aria-label="Wishlist"
+                            >
+                                <Heart className="h-5 w-5" />
+                            </button>
+
+                            <button
+                                className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary transition-colors hidden md:block"
+                                aria-label="Notifications"
+                            >
+                                <Bell className="h-5 w-5" />
+                            </button>
+
+                            <button
+                                className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary transition-colors"
+                                aria-label="Account"
+                            >
+                                <User className="h-5 w-5" />
+                            </button>
+
+                            <div className="relative">
+                                <button
+                                    className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary transition-colors"
+                                    aria-label="Shopping cart"
+                                >
+                                    <ShoppingCart className="h-5 w-5" />
+                                </button>
+                                {cartCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm z-10">
+                                        {cartCount > 9 ? '9+' : cartCount}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </header>
-    );
-};
+            </nav>
 
-export default Navbar;
+            {/* Mobile Menu */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        className="md:hidden fixed inset-0 z-40 bg-background/80 backdrop-blur-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        <motion.div
+                            className="fixed inset-y-0 left-0 flex flex-col w-full max-w-xs bg-background shadow-lg transform transition-all duration-300 ease-in-out"
+                            initial={{ x: '-100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '-100%' }}
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <MobileMenu setIsMobileMenuOpen={setIsMobileMenuOpen} />
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Search Modal */}
+            <AnimatePresence>
+                {isSearchOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center"
+                    >
+                        <SearchBar setIsSearchOpen={setIsSearchOpen} />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}

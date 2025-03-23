@@ -6,6 +6,18 @@ export const getString = (key: string): string | null => {
     return localStorage.getItem(key);
 }
 
+export const saveArray = (key: string, value: string[]) => {
+    localStorage.setItem(key, JSON.stringify(value));
+}
+
+export const getArray = (key: string): string[] | null => {
+    const item = localStorage.getItem(key);
+    if (item) {
+        return JSON.parse(item);
+    }
+    return null;
+}
+
 export const saveObject = (key: string, value: object) => {
     localStorage.setItem(key, JSON.stringify(value));
 }

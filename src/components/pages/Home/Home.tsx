@@ -9,10 +9,11 @@ export const Home: React.FC = () => {
     const { data: books, loading, error } = useFetch<Book[]>(API_ENDPOINTS.BOOK.GET_BOOKS.URL);
 
     return (
-        <div>
-            <h1>Home</h1>
-            <HeroSlider />
-            <BookCard items={books ?? []} />
+        <div className="w-full">
+            <div className="w-full flex items-center justify-center">
+                <HeroSlider />
+                <BookCard items={books ?? []} />
+            </div>
         </div>
     );
 };
