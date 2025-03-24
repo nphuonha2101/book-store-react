@@ -1,17 +1,17 @@
-import React from 'react';
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, CreditCard, Truck, Shield } from 'lucide-react';
+import { Logo } from '../../vendor/Logo/Logo';
 
 const Footer = () => {
     return (
         <footer className="bg-background border-t border-border">
-            {/* Main Footer Content */}
+            {/* Nội dung Footer chính */}
             <div className="container mx-auto px-4 py-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-                    {/* Company Info */}
+                    {/* Thông tin Công ty */}
                     <div>
-                        <h3 className="text-xl font-bold mb-4 text-primary">NPBookStore</h3>
-                        <p className="mb-4 text-muted-foreground">Your ultimate destination for books across all genres. Discover, read, and expand your horizons.</p>
+                        <Logo width='90px' className='mb-4' />
+                        <p className="mt-5 mb-4 text-muted-foreground">Điểm đến lý tưởng cho sách thuộc mọi thể loại. Khám phá, đọc và mở rộng tầm nhìn của bạn.</p>
                         <div className="flex space-x-4">
                             <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Facebook size={20} /></a>
                             <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><Instagram size={20} /></a>
@@ -20,33 +20,33 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* Quick Links */}
+                    {/* Liên kết nhanh */}
                     <div>
-                        <h3 className="text-xl font-bold mb-4 text-primary">Quick Links</h3>
+                        <h3 className="text-xl font-bold mb-4 text-primary">Liên kết nhanh</h3>
                         <ul className="space-y-2">
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Home</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Best Sellers</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">New Releases</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Special Offers</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Book Categories</a></li>
+                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Trang chủ</a></li>
+                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Sách bán chạy</a></li>
+                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Sách mới phát hành</a></li>
+                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Khuyến mãi đặc biệt</a></li>
+                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Thể loại sách</a></li>
                         </ul>
                     </div>
 
-                    {/* Customer Service */}
+                    {/* Dịch vụ khách hàng */}
                     <div>
-                        <h3 className="text-xl font-bold mb-4 text-primary">Customer Service</h3>
+                        <h3 className="text-xl font-bold mb-4 text-primary">Dịch vụ khách hàng</h3>
                         <ul className="space-y-2">
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">My Account</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Order History</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Track Order</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Returns & Refunds</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Help Center</a></li>
+                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Tài khoản của tôi</a></li>
+                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Lịch sử đơn hàng</a></li>
+                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Theo dõi đơn hàng</a></li>
+                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Trả hàng & Hoàn tiền</a></li>
+                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Trung tâm hỗ trợ</a></li>
                         </ul>
                     </div>
 
-                    {/* Contact Info */}
+                    {/* Thông tin liên hệ */}
                     <div>
-                        <h3 className="text-xl font-bold mb-4 text-primary">Contact Us</h3>
+                        <h3 className="text-xl font-bold mb-4 text-primary">Liên hệ với chúng tôi</h3>
                         <ul className="space-y-2">
                             <li className="flex items-center gap-2">
                                 <Phone size={16} className="text-primary" />
@@ -54,53 +54,53 @@ const Footer = () => {
                             </li>
                             <li className="flex items-center gap-2">
                                 <Mail size={16} className="text-primary" />
-                                <span className="text-muted-foreground">support@bookstore.com</span>
+                                <span className="text-muted-foreground">hotro@nhachsach.com</span>
                             </li>
                             <li className="flex items-start gap-2">
                                 <MapPin size={16} className="text-primary mt-1" />
-                                <span className="text-muted-foreground">123 Reading Lane, Bookville, BK 12345</span>
+                                <span className="text-muted-foreground">123 Đường Đọc Sách, Thành phố Sách, BK 12345</span>
                             </li>
                         </ul>
                     </div>
                 </div>
 
-                {/* Features */}
+                {/* Tính năng */}
                 <div className="mt-12 pt-8 border-t border-border">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                         <div className="flex flex-col items-center">
                             <Truck size={24} className="mb-2 text-primary" />
-                            <h4 className="font-semibold mb-1">Free Shipping</h4>
-                            <p className="text-sm text-muted-foreground">On orders over $50</p>
+                            <h4 className="font-semibold mb-1">Miễn phí vận chuyển</h4>
+                            <p className="text-sm text-muted-foreground">Cho đơn hàng trên 50$</p>
                         </div>
                         <div className="flex flex-col items-center">
                             <CreditCard size={24} className="mb-2 text-primary" />
-                            <h4 className="font-semibold mb-1">Secure Payment</h4>
-                            <p className="text-sm text-muted-foreground">100% secure payment</p>
+                            <h4 className="font-semibold mb-1">Thanh toán an toàn</h4>
+                            <p className="text-sm text-muted-foreground">Thanh toán an toàn 100%</p>
                         </div>
                         <div className="flex flex-col items-center">
                             <Shield size={24} className="mb-2 text-primary" />
-                            <h4 className="font-semibold mb-1">Money Back Guarantee</h4>
-                            <p className="text-sm text-muted-foreground">Within 30 days</p>
+                            <h4 className="font-semibold mb-1">Đảm bảo hoàn tiền</h4>
+                            <p className="text-sm text-muted-foreground">Trong vòng 30 ngày</p>
                         </div>
                     </div>
                 </div>
 
-                {/* Newsletter */}
+                {/* Bản tin */}
                 <div className="mt-12 pt-8 border-t border-border">
                     <div className="flex flex-col md:flex-row justify-between items-center">
                         <div className="mb-4 md:mb-0">
-                            <h3 className="text-xl font-bold mb-2 text-primary">Subscribe to Our Newsletter</h3>
-                            <p className="text-muted-foreground">Stay updated with new releases and exclusive offers</p>
+                            <h3 className="text-xl font-bold mb-2 text-primary">Đăng ký nhận bản tin của chúng tôi</h3>
+                            <p className="text-muted-foreground">Cập nhật thông tin về sách mới và ưu đãi độc quyền</p>
                         </div>
                         <div className="w-full md:w-2/5">
                             <div className="flex">
                                 <input
                                     type="email"
-                                    placeholder="Your email address"
+                                    placeholder="Địa chỉ email của bạn"
                                     className="bg-background border border-input text-foreground py-2 px-4 rounded-l-md w-full focus:outline-none focus:ring-2 focus:ring-ring focus:border-input"
                                 />
                                 <button className="bg-primary hover:bg-primary/90 text-primary-foreground py-2 px-4 rounded-r-md font-medium transition-colors">
-                                    Subscribe
+                                    Đăng ký
                                 </button>
                             </div>
                         </div>
@@ -108,18 +108,18 @@ const Footer = () => {
                 </div>
             </div>
 
-            {/* Bottom Footer */}
+            {/* Footer dưới cùng */}
             <div className="bg-muted py-6">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row justify-between items-center">
                         <div className="mb-4 md:mb-0">
-                            <p className="text-muted-foreground text-sm">© 2025 BookStore. All rights reserved.</p>
+                            <p className="text-muted-foreground text-sm">© {new Date().getFullYear()} NPBookStore. Tất cả các quyền được bảo lưu.</p>
                         </div>
                         <div>
                             <ul className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                                <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-                                <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
-                                <li><a href="#" className="hover:text-primary transition-colors">Cookies Settings</a></li>
+                                <li><a href="#" className="hover:text-primary transition-colors">Chính sách bảo mật</a></li>
+                                <li><a href="#" className="hover:text-primary transition-colors">Điều khoản dịch vụ</a></li>
+                                <li><a href="#" className="hover:text-primary transition-colors">Cài đặt cookie</a></li>
                             </ul>
                         </div>
                     </div>

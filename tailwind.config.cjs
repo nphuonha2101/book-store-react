@@ -18,7 +18,10 @@ module.exports = {
             },
             width: {
                 'calc-100vw': 'calc(100vw)',
-            }
+            },
+            fontFamily: {
+                sans: ['Poppins', 'sans-serif'],
+            },
         }
     },
     plugins: [

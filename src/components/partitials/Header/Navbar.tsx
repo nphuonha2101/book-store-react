@@ -1,14 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search, ShoppingCart, Menu, User, Heart, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SearchBar from './SearchBar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import MobileMenu from './MobileMenu';
+import { Logo } from '../../vendor/Logo/Logo';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../shadcn-components/ui/dropdown-menu';
+import { getString } from '../../../utils/localStorageUtils';
+import Logger from '../../../log/logger';
 
 export default function EnhancedEcommerceNavbar() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [cartCount, setCartCount] = useState(3);
+    const [cartCount] = useState(3);
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = getString('token');
+        Logger.log('Navbar', `Token: ${token}`);
+        if (token) {
+            setIsUserLoggedIn(true);
+        } else {
+            setIsUserLoggedIn(false);
+        }
+    }, []);
+
+    const handleLogout = () => {
+        // Clear token from localStorage
+        localStorage.removeItem('token');
+        setIsUserLoggedIn(false);
+        navigate('/');
+    };
 
     return (
         <div className="relative">
@@ -26,9 +49,7 @@ export default function EnhancedEcommerceNavbar() {
                                 <Menu className="h-6 w-6" />
                             </button>
                             <div className="flex-shrink-0 flex items-center ml-2 md:ml-0">
-                                <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                                    NPBookStore
-                                </span>
+                                <Logo />
                             </div>
                         </div>
 
@@ -72,12 +93,39 @@ export default function EnhancedEcommerceNavbar() {
                                 <Bell className="h-5 w-5" />
                             </button>
 
-                            <button
-                                className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary transition-colors"
-                                aria-label="Account"
-                            >
-                                <User className="h-5 w-5" />
-                            </button>
+                            {/* Dropdown user */}
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className='text-muted-foreground hover:text-primary'>
+                                    <User className="h-5 w-5" />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    {!isUserLoggedIn ? (
+                                        <>
+                                            <DropdownMenuItem>
+                                                <Link to="/signin">Đăng nhập</Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem>
+                                                <Link to="/signup">Đăng ký</Link>
+                                            </DropdownMenuItem>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <DropdownMenuItem>
+                                                <Link to="/profile">Hồ sơ</Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem>
+                                                <Link to="/orders">Đơn hàng</Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem>
+                                                <button onClick={() => handleLogout()}>Đăng xuất</button>
+                                            </DropdownMenuItem>
+                                        </>
+                                    )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                            {/* End dropdown user */}
 
                             <div className="relative">
                                 <button

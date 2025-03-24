@@ -2,13 +2,13 @@ import { ArrowLeft, Search, X, History } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState, useRef, useMemo } from "react";
 import useFetchPost from "../../../hooks/useFetchPost";
 import { getArray, saveArray } from "../../../utils/localStorageUtils";
-import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
+import { API_ENDPOINTS } from "../../../constants/apiInfo";
 import { Book } from "../../../types/ApiResponse/Book/book";
 import useFetch from "../../../hooks/useFetch";
 import { Button } from "../../../shadcn-components/ui/button";
 import { Link } from "react-router-dom";
 import { BookCard } from "../../vendor/Card/BookCard";
-import Logger from "../../../log/logger.ts";
+import Logger from "../../../log/logger";
 
 export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispatch<SetStateAction<boolean>> }) {
     const [searchTermsHistory, setSearchTermsHistory] = useState<string[]>([]);

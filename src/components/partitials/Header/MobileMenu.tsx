@@ -1,13 +1,12 @@
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Logo } from "../../vendor/Logo/Logo";
 
 export default function MobileMenu({ setIsMobileMenuOpen }: { setIsMobileMenuOpen: (value: boolean) => void }) {
     return (
         <>
             <div className="flex items-center justify-between h-16 px-6 border-b border-border">
-                <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                    NPBookStore
-                </span>
+                <Logo />
                 <button
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="text-muted-foreground hover:text-foreground transition-colors"

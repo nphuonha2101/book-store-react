@@ -4,55 +4,98 @@ import { Input } from "../../../shadcn-components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../shadcn-components/ui/card";
 import { Label } from "../../../shadcn-components/ui/label";
 import { Separator } from "../../../shadcn-components/ui/separator";
-import { Facebook, Twitter, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
+import { Logo } from "../../vendor/Logo/Logo";
+import { toast } from "react-toastify";
+import usePost from "../../../hooks/usePost";
+import { API_ENDPOINTS } from "../../../constants/apiInfo";
+import { saveString } from "../../../utils/localStorageUtils";
+import Logger from "../../../log/logger";
+import { useNavigate } from "react-router-dom";
 
 export const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const { postData, response } = usePost<{ email: string, password: string }, string>(API_ENDPOINTS.AUTH.SIGN_IN.URL);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (email === "" || password === "") {
+            toast.error("Vui lòng nhập email và mật khẩu");
+            return;
+        }
+
+        try {
+            const token = await postData({ email, password });
+
+            if (token) {
+                toast.success("Đăng nhập thành công");
+                saveString("token", token);
+                navigate("/");
+                return;
+            }
+
+            // If we get here and don't have a token but the response is successful
+            if (response?.success) {
+                toast.success("Đăng nhập thành công");
+                navigate("/");
+                return;
+            }
+
+            // Show error if we have a response with an error message
+            toast.error(response?.message || "Đã có lỗi xảy ra");
+        } catch (error) {
+            toast.error("Đã có lỗi xảy ra khi đăng nhập");
+            Logger.error("Sign in error:", error);
+        }
+    };
+
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
             <Card className="w-full max-w-md mx-auto">
                 <CardHeader className="space-y-1 flex flex-col items-center">
-                    <div className="w-full max-w-[160px] mb-6">
-                        <img
-                            src="https://cdn.tailgrids.com/2.0/image/assets/images/logo/logo-primary.svg"
-                            alt="logo"
-                            className="w-full"
-                        />
+                    <div className="w-full max-w-[160px] mb-6 flex items-center justify-center">
+                        <Logo />
                     </div>
-                    <CardTitle className="text-2xl font-semibold">Sign in</CardTitle>
-                    <CardDescription>Enter your credentials to access your account</CardDescription>
+                    <CardTitle className="text-2xl font-semibold">Đăng nhập</CardTitle>
+                    <CardDescription>Nhập thông tin đăng nhập của bạn</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            placeholder="name@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="password">Password</Label>
-                            <a href="/#" className="text-sm text-primary hover:underline">
-                                Forgot password?
-                            </a>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input
+                                id="email"
+                                type="email"
+                                placeholder="name@example.com"
+                                value={email}
+                                autoComplete="email"
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
                         </div>
-                        <Input
-                            id="password"
-                            type="password"
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <Button type="submit" className="w-full">
-                        Sign In
-                    </Button>
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <Label htmlFor="password">Mật khẩu</Label>
+                                <a href="/#" className="text-sm text-primary hover:underline">
+                                    Quên mật khẩu?
+                                </a>
+                            </div>
+                            <Input
+                                id="password"
+                                type="password"
+                                placeholder="••••••••"
+                                autoComplete="current-password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <Button type="submit" className="w-full">
+                            Đăng nhập
+                        </Button>
+                    </form>
 
                     <div className="relative my-4">
                         <div className="absolute inset-0 flex items-center">
@@ -60,18 +103,13 @@ export const SignIn = () => {
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
                             <span className="bg-background px-2 text-muted-foreground">
-                                Or continue with
+                                Hoặc đăng nhập bằng
                             </span>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-3 gap-3">
-                        <Button variant="outline" size="icon" className="bg-[#4064AC] hover:bg-[#4064AC]/90 text-white">
-                            <Facebook className="h-5 w-5" />
-                        </Button>
-                        <Button variant="outline" size="icon" className="bg-[#1C9CEA] hover:bg-[#1C9CEA]/90 text-white">
-                            <Twitter className="h-5 w-5" />
-                        </Button>
+
                         <Button variant="outline" size="icon" className="bg-[#D64937] hover:bg-[#D64937]/90 text-white">
                             <Mail className="h-5 w-5" />
                         </Button>
@@ -79,9 +117,9 @@ export const SignIn = () => {
                 </CardContent>
                 <CardFooter className="flex flex-col space-y-1 mt-2">
                     <div className="text-center text-sm">
-                        Not a member yet?{" "}
+                        Chưa phải là thành viên{" "}
                         <a href="/#" className="text-primary hover:underline">
-                            Sign Up
+                            Tạo tài khoản
                         </a>
                     </div>
                 </CardFooter>

@@ -10,6 +10,7 @@ const usePost = <T, R>(url: string, options?: FetchOptions) => {
     const [data, setData] = useState<R | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    // const [response, setResponse] = useState<ApiResponse<R> | null>(null);
 
     const postData = async (body: T): Promise<R | null> => {
         if (!url || options?.skip) return null;
