@@ -6,11 +6,19 @@ interface FetchOptions extends Omit<RequestInit, "body"> {
     skip?: boolean;
 }
 
+/**
+ * <code>T</code> - Type of the request body
+ * <br>
+ * <code>R</code> - Type of the response data
+ * @param url url to fetch
+ * @param options  options to fetch.
+ * @returns  data, loading, error, postData, response
+ */
 const usePost = <T, R>(url: string, options?: FetchOptions) => {
     const [data, setData] = useState<R | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    // const [response, setResponse] = useState<ApiResponse<R> | null>(null);
+    const [response, setResponse] = useState<ApiResponse<R> | null>(null);
 
     const postData = async (body: T): Promise<R | null> => {
         if (!url || options?.skip) return null;
@@ -44,6 +52,7 @@ const usePost = <T, R>(url: string, options?: FetchOptions) => {
             if (!result.success) throw new Error(result.message || "Unknown error");
 
             setData(result.data || null);
+            setResponse(result);
             return result.data || null;
         } catch (err) {
             if (!signal.aborted) setError((err as Error).message);
@@ -53,7 +62,7 @@ const usePost = <T, R>(url: string, options?: FetchOptions) => {
         }
     };
 
-    return { data, loading, error, postData };
+    return { data, loading, error, postData, response };
 };
 
 export default usePost;
