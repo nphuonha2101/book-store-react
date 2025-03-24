@@ -28,6 +28,9 @@ export const API_ENDPOINTS = {
         },
         FILTER: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/filter`,
+        },
+        GET_REVIEW: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/reviews`,
         }
     },
     CATEGORY: {
