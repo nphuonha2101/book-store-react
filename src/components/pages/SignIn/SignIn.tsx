@@ -9,14 +9,15 @@ import { Logo } from "../../vendor/Logo/Logo";
 import { toast } from "react-toastify";
 import usePost from "../../../hooks/usePost";
 import { API_ENDPOINTS } from "../../../constants/apiInfo";
-import { saveString } from "../../../utils/localStorageUtils";
 import Logger from "../../../log/logger";
 import { useNavigate } from "react-router-dom";
+import AuthUtil from "../../../utils/authUtil";
 
 export const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { postData, response } = usePost<{ email: string, password: string }, string>(API_ENDPOINTS.AUTH.SIGN_IN.URL);
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -28,11 +29,27 @@ export const SignIn = () => {
         }
 
         try {
-            const token = await postData({ email, password });
-
-            if (token) {
+            // Get JWT token
+            const userToken = await postData({ email, password });
+            // Get user info if we have a token
+            if (userToken) {
+                const userResponse = await fetch(API_ENDPOINTS.AUTH.ME.URL, {
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+                    },
+                }).then((res) => res.json())
+                    .catch((error) => {
+                        Logger.error("Fetch user error:", error);
+                        return null;
+                    });
+                if (!userResponse.success) {
+                    toast.error("Đã có lỗi xảy ra khi lấy thông tin người dùng");
+                    return;
+                }
+                // Save user info and token to local storage
+                AuthUtil.login(userResponse.data, userToken);
                 toast.success("Đăng nhập thành công");
-                saveString("token", token);
                 navigate("/");
                 return;
             }

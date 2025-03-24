@@ -6,8 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import MobileMenu from './MobileMenu';
 import { Logo } from '../../vendor/Logo/Logo';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../shadcn-components/ui/dropdown-menu';
-import { getString } from '../../../utils/localStorageUtils';
-import Logger from '../../../log/logger';
+import { toast } from 'react-toastify';
+import AuthUtil from '../../../utils/authUtil';
 
 export default function EnhancedEcommerceNavbar() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -17,19 +17,13 @@ export default function EnhancedEcommerceNavbar() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const token = getString('token');
-        Logger.log('Navbar', `Token: ${token}`);
-        if (token) {
-            setIsUserLoggedIn(true);
-        } else {
-            setIsUserLoggedIn(false);
-        }
+        setIsUserLoggedIn(AuthUtil.isLogged());
     }, []);
 
     const handleLogout = () => {
-        // Clear token from localStorage
-        localStorage.removeItem('token');
+        AuthUtil.logout();
         setIsUserLoggedIn(false);
+        toast.success('Đăng xuất thành công');
         navigate('/');
     };
 
@@ -99,7 +93,7 @@ export default function EnhancedEcommerceNavbar() {
                                     <User className="h-5 w-5" />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
-                                    <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
+                                    <DropdownMenuLabel>Xin chào {AuthUtil.getUser().name}</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     {!isUserLoggedIn ? (
                                         <>

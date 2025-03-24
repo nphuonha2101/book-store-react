@@ -5,28 +5,32 @@ import { ToastContainer } from 'react-toastify'
 import PrivateRoute from './middlewares/PrivateRoute'
 import { routes } from './routes/index'
 import './index.css'
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        {routes.map((route, index) => (
-          <Route
-            key={index}
-            path={route.path}
-            element={(
-              <PrivateRoute routeType={route.routeType}>
-                <route.Layout>
-                  <ToastContainer />
-                  <route.Component />
-                </route.Layout>
-              </PrivateRoute>
-            )
-            }
-          />
-        ))}
-      </Routes>
+      <Provider store={store}>
+        <Routes>
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={(
+                <PrivateRoute routeType={route.routeType}>
+                  <route.Layout>
+                    <ToastContainer />
+                    <route.Component />
+                  </route.Layout>
+                </PrivateRoute>
+              )
+              }
+            />
+          ))}
+        </Routes>
+      </Provider>
     </BrowserRouter>
   )
 }
