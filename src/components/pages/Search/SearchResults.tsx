@@ -22,6 +22,7 @@ import { Category } from '../../../types/ApiResponse/Category/category';
 import useFetch from '../../../hooks/useFetch';
 import { API_ENDPOINTS } from '../../../constants/apiInfo';
 import { BookCard } from '../../vendor/Card/BookCard';
+import {Loading} from "../../vendor/Loading/Loading.tsx";
 
 // Define TypeScript interfaces
 interface Book {
@@ -258,9 +259,7 @@ export default function SearchResults() {
 
                     {/* Books Grid */}
                     {isLoading ? (
-                        <div className="flex justify-center p-8">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-                        </div>
+                        <Loading />
                     ) : books && books.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
                             {books.map((book) => (

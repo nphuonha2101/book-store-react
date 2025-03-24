@@ -11,9 +11,14 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/sliders/all`,
         },
     },
+
     BOOK: {
         GET_BOOKS: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/all`,
+        },
+
+        BOOK_DETAIL: {
+            URL_DETAIL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books`,
         },
         SUGGESTIONS: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/suggest`,
