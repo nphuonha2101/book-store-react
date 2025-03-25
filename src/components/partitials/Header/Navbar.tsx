@@ -93,7 +93,7 @@ export default function EnhancedEcommerceNavbar() {
                                     <User className="h-5 w-5" />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
-                                    <DropdownMenuLabel>Xin chào {AuthUtil.getUser().name}</DropdownMenuLabel>
+                                    <DropdownMenuLabel>{AuthUtil.getUser() ? `Xin chào ${AuthUtil.getUser().name}` : "Xin chào bạn"}</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     {!isUserLoggedIn ? (
                                         <>

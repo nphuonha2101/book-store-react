@@ -5,6 +5,7 @@ import { SignIn } from '../components/pages/SignIn/SignIn';
 import { RouteType } from '../constants/routeTypes.ts';
 import { RouteProps } from '../types/Route/routeProps.ts';
 import SearchResults from '../components/pages/Search/SearchResults.tsx';
+import { UserProfile } from '../components/pages/User/UserProfile.tsx';
 
 export const routes: RouteProps[] = [
     {
@@ -25,5 +26,11 @@ export const routes: RouteProps[] = [
         Component: SignIn,
         Layout: Blank,
         routeType: RouteType.NOT_ALLOW_AUTH
+    },
+    {
+        path: '/profile',
+        Component: UserProfile,
+        Layout: Master,
+        routeType: RouteType.PRIVATE
     }
 ];
