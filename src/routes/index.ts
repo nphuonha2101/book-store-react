@@ -4,8 +4,9 @@ import { Home } from '../components/pages/Home/Home';
 import { SignIn } from '../components/pages/SignIn/SignIn';
 import { RouteProps } from '../types/Route/routeProps.ts';
 import SearchResults from '../components/pages/Search/SearchResults.tsx';
-import {RouteType} from "../constants/RouteTypes.ts";
 import {BookDetail} from "../components/vendor/Book/BookDetail.tsx";
+import {RouteType} from "../constants/RouteTypes.ts";
+import {SignUp} from "../components/pages/SignUp/SignUp.tsx";
 
 export const routes: RouteProps[] = [
     {
@@ -30,6 +31,12 @@ export const routes: RouteProps[] = [
     {
         path: '/signin',
         Component: SignIn,
+        Layout: Blank,
+        routeType: RouteType.NOT_ALLOW_AUTH
+    },
+    {
+        path: '/signup',
+        Component: SignUp,
         Layout: Blank,
         routeType: RouteType.NOT_ALLOW_AUTH
     }

@@ -135,7 +135,7 @@ export const SignIn = () => {
                 <CardFooter className="flex flex-col space-y-1 mt-2">
                     <div className="text-center text-sm">
                         Chưa phải là thành viên{" "}
-                        <a href="/#" className="text-primary hover:underline">
+                        <a href="/signup" className="text-primary hover:underline">
                             Tạo tài khoản
                         </a>
                     </div>
