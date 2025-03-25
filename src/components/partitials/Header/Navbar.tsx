@@ -156,7 +156,7 @@ export default function EnhancedEcommerceNavbar() {
                             exit={{ x: '-100%' }}
                             onClick={e => e.stopPropagation()}
                         >
-                            <MobileMenu setIsMobileMenuOpen={setIsMobileMenuOpen} />
+                            <MobileMenu setIsMobileMenuOpen={setIsMobileMenuOpen} handleLogout={handleLogout} />
                         </motion.div>
                     </motion.div>
                 )}

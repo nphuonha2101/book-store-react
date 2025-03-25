@@ -1,4 +1,3 @@
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar"
 import { Separator } from "@radix-ui/react-dropdown-menu"
 import { Menu, X, User, Shield, BellRing, CreditCard, Settings, LogOut } from "lucide-react"
 import { Button } from "../../../shadcn-components/ui/button"
