@@ -7,7 +7,6 @@ import { Separator } from "../../../shadcn-components/ui/separator";
 import { Mail } from "lucide-react";
 import { Logo } from "../../vendor/Logo/Logo";
 import { toast } from "react-toastify";
-import usePost from "../../../hooks/usePost";
 import { API_ENDPOINTS } from "../../../constants/apiInfo";
 import Logger from "../../../log/logger";
 import { useNavigate } from "react-router-dom";
@@ -16,9 +15,25 @@ import AuthUtil from "../../../utils/authUtil";
 export const SignIn = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { postData, response } = usePost<{ email: string, password: string }, string>(API_ENDPOINTS.AUTH.SIGN_IN.URL);
-
     const navigate = useNavigate();
+
+    const handleLogin = async (email: string, password: string) => {
+        const response = await fetch(API_ENDPOINTS.AUTH.SIGN_IN.URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+        }).then((res) => res.json())
+            .catch((error) => {
+                throw new Error(error);
+            });
+
+        if (!response.success) {
+            throw new Error(response.message);
+        }
+        return response.data;
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -30,7 +45,15 @@ export const SignIn = () => {
 
         try {
             // Get JWT token
-            const userToken = await postData({ email, password });
+            let userToken;
+            try {
+                userToken = await handleLogin(email, password);
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+                toast.error(errorMessage);
+                return;
+            }
+
             // Get user info if we have a token
             if (userToken) {
                 const userResponse = await fetch(API_ENDPOINTS.AUTH.ME.URL, {
@@ -53,22 +76,11 @@ export const SignIn = () => {
                 navigate("/");
                 return;
             }
-
-            // If we get here and don't have a token but the response is successful
-            if (response?.success) {
-                toast.success("Đăng nhập thành công");
-                navigate("/");
-                return;
-            }
-
-            // Show error if we have a response with an error message
-            toast.error(response?.message || "Đã có lỗi xảy ra");
         } catch (error) {
             toast.error("Đã có lỗi xảy ra khi đăng nhập");
             Logger.error("Sign in error:", error);
         }
     };
-
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">

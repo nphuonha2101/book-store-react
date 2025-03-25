@@ -7,6 +7,7 @@ import SearchResults from '../components/pages/Search/SearchResults.tsx';
 import {BookDetail} from "../components/vendor/Book/BookDetail.tsx";
 import {RouteType} from "../constants/RouteTypes.ts";
 import {SignUp} from "../components/pages/SignUp/SignUp.tsx";
+import { UserProfile } from '../components/pages/User/UserProfile.tsx';
 
 export const routes: RouteProps[] = [
     {
@@ -33,6 +34,12 @@ export const routes: RouteProps[] = [
         Component: SignIn,
         Layout: Blank,
         routeType: RouteType.NOT_ALLOW_AUTH
+    },
+    {
+        path: '/profile',
+        Component: UserProfile,
+        Layout: Master,
+        routeType: RouteType.PRIVATE
     },
     {
         path: '/signup',

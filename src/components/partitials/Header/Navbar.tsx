@@ -15,8 +15,6 @@ export default function EnhancedEcommerceNavbar() {
     const [cartCount] = useState(3);
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const navigate = useNavigate();
-    const user = AuthUtil.getUser();
-    console.log("user", user);
 
     useEffect(() => {
         setIsUserLoggedIn(AuthUtil.isLogged());
@@ -95,7 +93,8 @@ export default function EnhancedEcommerceNavbar() {
                                     <User className="h-5 w-5" />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
-                                    <DropdownMenuLabel>{AuthUtil.getUser() ? `Xin chào ${AuthUtil.getUser().name}` : "Xin chào bạn"}</DropdownMenuLabel>                                    <DropdownMenuSeparator />
+                                    <DropdownMenuLabel>{AuthUtil.getUser() ? `Xin chào ${AuthUtil.getUser().name}` : "Xin chào bạn"}</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
                                     {!isUserLoggedIn ? (
                                         <>
                                             <DropdownMenuItem>
@@ -157,7 +156,7 @@ export default function EnhancedEcommerceNavbar() {
                             exit={{ x: '-100%' }}
                             onClick={e => e.stopPropagation()}
                         >
-                            <MobileMenu setIsMobileMenuOpen={setIsMobileMenuOpen} />
+                            <MobileMenu setIsMobileMenuOpen={setIsMobileMenuOpen} handleLogout={handleLogout} />
                         </motion.div>
                     </motion.div>
                 )}
