@@ -6,7 +6,7 @@ import { API_ENDPOINTS } from "../../../constants/apiInfo";
 import { Book } from "../../../types/ApiResponse/Book/book";
 import useFetch from "../../../hooks/useFetch";
 import { Button } from "../../../shadcn-components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BookCard } from "../../vendor/Card/BookCard";
 import Logger from "../../../log/logger";
 
@@ -14,6 +14,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
     const [searchTermsHistory, setSearchTermsHistory] = useState<string[]>([]);
     const searchInputRef = useRef<HTMLInputElement>(null);
     const [searchTerm, setSearchTerm] = useState<string>("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         const storageHistory = getArray("searchTermsHistory");
@@ -46,10 +47,10 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
         setSearchTerm("");
     };
 
-    const handleClick = (bookId: number, bookTitle: string) => {
+    const handleBookCardClick = (bookId: number, bookTitle: string) => {
         saveArray("searchTermsHistory", [bookTitle, ...searchTermsHistory]);
         setIsSearchOpen(false);
-        Logger.log("SearchBar", `User clicked on book with id: ${bookId}`);
+        navigate("/book/" + bookId);
     };
 
     return (
@@ -114,40 +115,38 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
                                 <h3 className="text-lg font-medium text-foreground mb-4">Có thể bạn quan tâm</h3>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                     {suggestions && suggestions.length > 0 ? suggestions.map((book) => (
-                                        <BookCard key={book.id} book={book} />
+                                        <div key={book.id} onClick={() => { handleBookCardClick(book.id, book.title ? book.title : '') }} className="cursor-pointer">
+                                            <BookCard book={book} />
+                                        </div>
                                     )) : (
                                         <div className="col-span-4 text-center py-8">
                                             <p className="text-muted-foreground">Không có sản phẩm nào</p>
                                         </div>
                                     )}
                                 </div>
-                                {suggestions && suggestions.length > 0 && (
-                                    <div className="mt-6 text-center">
-                                        <button className="bg-transparent border border-input hover:bg-muted text-foreground py-2 px-4 rounded-md text-sm font-medium transition-colors">
-                                            Xem thêm sản phẩm
-                                        </button>
-                                    </div>
-                                )}
                             </div>
                         </>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                            {searchResults && searchResults.length > 0 ? searchResults.map((book) => (
-                                <div key={book.id} onClick={() => handleClick(book.id, book.title ? book.title : '')} className="cursor-pointer">
-                                    <BookCard book={book} />
-                                </div>
-                            )) : (
+                            {searchResults && searchResults.length > 0 ? (
+                                <>
+                                    {searchResults.map((book) => (
+                                        <div key={book.id} onClick={() => handleBookCardClick(book.id, book.title ? book.title : '')} className="cursor-pointer">
+                                            <BookCard book={book} />
+                                        </div>
+                                    ))}
+                                    <div className="col-span-full mt-4 flex justify-center">
+                                        <Link to={`/search?title=${searchTerm}`} onClick={() => setIsSearchOpen(false)}>
+                                            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground py-2 px-4 rounded-md font-medium transition-colors">
+                                                Xem thêm
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </>
+                            ) : (
                                 <div className="col-span-full text-center py-12">
                                     <p className="text-muted-foreground">Không tìm thấy sản phẩm phù hợp</p>
                                 </div>
-                            )}
-
-                            {(!searchResults || searchResults && searchResults.length == 0) ?? (
-                                <Link to="{`/search?title=${searchTerm}`}">
-                                    <Button className="bg-primary hover:bg-primary/90 text-primary-foreground py-2 px-4 rounded-md font-medium transition-colors">
-                                        Xem thêm
-                                    </Button>
-                                </Link>
                             )}
                         </div>
                     )}
