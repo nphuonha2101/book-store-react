@@ -19,7 +19,7 @@ function App() {
               key={index}
               path={route.path}
               element={(
-                <PrivateRoute routeType={route.routeType}>
+                <PrivateRoute routeType={route.routeType} path={route.path}>
                   <route.Layout>
                     <ToastContainer />
                     <route.Component />
