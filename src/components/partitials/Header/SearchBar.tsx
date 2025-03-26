@@ -47,7 +47,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
         setSearchTerm("");
     };
 
-    const handleClick = (bookId: number, bookTitle: string) => {
+    const handleBookCardClick = (bookId: number, bookTitle: string) => {
         saveArray("searchTermsHistory", [bookTitle, ...searchTermsHistory]);
         setIsSearchOpen(false);
         navigate("/book/" + bookId);
@@ -115,7 +115,9 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
                                 <h3 className="text-lg font-medium text-foreground mb-4">Có thể bạn quan tâm</h3>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                     {suggestions && suggestions.length > 0 ? suggestions.map((book) => (
-                                        <BookCard key={book.id} book={book} />
+                                        <div key={book.id} onClick={() => { handleBookCardClick(book.id, book.title ? book.title : '') }} className="cursor-pointer">
+                                            <BookCard book={book} />
+                                        </div>
                                     )) : (
                                         <div className="col-span-4 text-center py-8">
                                             <p className="text-muted-foreground">Không có sản phẩm nào</p>
@@ -129,7 +131,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
                             {searchResults && searchResults.length > 0 ? (
                                 <>
                                     {searchResults.map((book) => (
-                                        <div key={book.id} onClick={() => handleClick(book.id, book.title ? book.title : '')} className="cursor-pointer">
+                                        <div key={book.id} onClick={() => handleBookCardClick(book.id, book.title ? book.title : '')} className="cursor-pointer">
                                             <BookCard book={book} />
                                         </div>
                                     ))}
