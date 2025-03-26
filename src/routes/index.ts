@@ -2,9 +2,11 @@ import { Blank } from '../components/layout/Blank';
 import { Master } from '../components/layout/Master';
 import { Home } from '../components/pages/Home/Home';
 import { SignIn } from '../components/pages/SignIn/SignIn';
-import { RouteType } from '../constants/routeTypes.ts';
 import { RouteProps } from '../types/Route/routeProps.ts';
 import SearchResults from '../components/pages/Search/SearchResults.tsx';
+import {BookDetail} from "../components/vendor/Book/BookDetail.tsx";
+import {RouteType} from "../constants/RouteTypes.ts";
+import {SignUp} from "../components/pages/SignUp/SignUp.tsx";
 import { UserProfile } from '../components/pages/User/UserProfile.tsx';
 
 export const routes: RouteProps[] = [
@@ -20,7 +22,13 @@ export const routes: RouteProps[] = [
         Layout: Master,
         routeType: RouteType.PUBLIC
     },
-    // AUTH
+    {
+        path: '/books/:id',
+        Component: BookDetail,
+        Layout: Master,
+        routeType: RouteType.PUBLIC
+
+    },
     {
         path: '/signin',
         Component: SignIn,
@@ -32,5 +40,11 @@ export const routes: RouteProps[] = [
         Component: UserProfile,
         Layout: Master,
         routeType: RouteType.PRIVATE
+    },
+    {
+        path: '/signup',
+        Component: SignUp,
+        Layout: Blank,
+        routeType: RouteType.NOT_ALLOW_AUTH
     }
 ];

@@ -2,7 +2,7 @@ import React from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useFetch from "../../../hooks/useFetch";
-import { SliderItem } from "../../../types/ApiResponse/sliderItem";
+import { SliderItem } from "../../../types/ApiResponse/Slider/sliderItem.ts";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import {
     Carousel,
@@ -19,7 +19,7 @@ export const HeroSlider: React.FC = () => {
 
     return (
         <div className="relative">
-            <Carousel className="mx-auto w-full max-w-6xl">
+            <Carousel className="mx-auto w-full \">
                 <CarouselContent>
                     {sliders.map((slider) => (
                         <CarouselItem key={slider.id}>

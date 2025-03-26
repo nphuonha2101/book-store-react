@@ -11,7 +11,15 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/sliders/all`,
         },
     },
+
     BOOK: {
+        GET_BOOKS: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/all`,
+        },
+
+        BOOK_DETAIL: {
+            URL_DETAIL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books`,
+        },
         SUGGESTIONS: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/suggest`,
         },
@@ -20,6 +28,9 @@ export const API_ENDPOINTS = {
         },
         FILTER: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/filter`,
+        },
+        GET_REVIEW: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/reviews`,
         }
     },
     CATEGORY: {
@@ -30,6 +41,9 @@ export const API_ENDPOINTS = {
     AUTH: {
         SIGN_IN: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/login`,
+        },
+        SIGN_UP: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/register`,
         },
         ME: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/me`,
