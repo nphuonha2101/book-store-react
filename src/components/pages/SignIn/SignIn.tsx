@@ -8,7 +8,7 @@ import { Logo } from "../../vendor/Logo/Logo";
 import { toast } from "react-toastify";
 import { API_ENDPOINTS } from "../../../constants/apiInfo";
 import Logger from "../../../log/logger";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import AuthUtil from "../../../utils/authUtil";
 
 export const SignIn = () => {
@@ -210,9 +210,9 @@ export const SignIn = () => {
                 <CardFooter className="flex flex-col space-y-1 mt-2">
                     <div className="text-center text-sm">
                         Chưa phải là thành viên{" "}
-                        <a href="/signup" className="text-primary hover:underline">
+                        <Link to="/signup" className="text-red-500 hover:underline">
                             Tạo tài khoản
-                        </a>
+                        </Link>
                     </div>
                 </CardFooter>
             </Card>
