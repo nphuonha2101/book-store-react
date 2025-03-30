@@ -38,6 +38,23 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/categories/all`,
         },
     },
+    CART: {
+        GET_CART: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/all`,
+        },
+        GET_CART_BY_USER: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/userId`,
+        },
+        ADD_TO_CART: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/add`,
+        },
+        REMOVE_FROM_CART: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/delete`,
+        },
+        UPDATE_CART: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/update`,
+        },
+    },
     AUTH: {
         SIGN_IN: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/login`,
