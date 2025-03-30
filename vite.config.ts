@@ -10,5 +10,6 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
       "@shadcn-components": path.resolve(__dirname, "src/shadcn-components")
     }
-  }
+  },
+  publicDir: 'public',
 })
