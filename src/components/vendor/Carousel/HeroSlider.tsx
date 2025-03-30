@@ -19,7 +19,12 @@ export const HeroSlider: React.FC = () => {
 
     return (
         <div className="relative">
-            <Carousel className="mx-auto w-full \">
+            <Carousel className="mx-auto w-full \"
+                opts={{
+                    loop: true,
+                }
+                }
+            >
                 <CarouselContent>
                     {sliders.map((slider) => (
                         <CarouselItem key={slider.id}>

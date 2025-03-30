@@ -8,7 +8,6 @@ import useFetch from "../../../hooks/useFetch";
 import { Button } from "../../../shadcn-components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { BookCard } from "../../vendor/Card/BookCard";
-import Logger from "../../../log/logger";
 
 export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispatch<SetStateAction<boolean>> }) {
     const [searchTermsHistory, setSearchTermsHistory] = useState<string[]>([]);
@@ -113,7 +112,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
 
                             <div className="mb-6">
                                 <h3 className="text-lg font-medium text-foreground mb-4">Có thể bạn quan tâm</h3>
-                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                                     {suggestions && suggestions.length > 0 ? suggestions.map((book) => (
                                         <div key={book.id} onClick={() => { handleBookCardClick(book.id, book.title ? book.title : '') }} className="cursor-pointer">
                                             <BookCard book={book} />
@@ -127,7 +126,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
                             </div>
                         </>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {searchResults && searchResults.length > 0 ? (
                                 <>
                                     {searchResults.map((book) => (

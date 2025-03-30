@@ -67,6 +67,11 @@ export const API_ENDPOINTS = {
         },
         UPDATE: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/update`,
+        },
+        OAUTH2: {
+            GOOGLE: {
+                URL: `${API_INFO.BASE_URL}/oauth2/authorization/google`,
+            }
         }
     }
 } as const;

@@ -3,10 +3,13 @@ import { Navigate } from 'react-router-dom';
 import { RouteType } from '../constants/routeTypes';
 import { getString } from '../utils/localStorageUtils';
 
-const PrivateRoute = ({ children, routeType }: { children: React.ReactElement, routeType: number }) => {
+const PrivateRoute = ({ children, routeType, path }: { children: React.ReactElement, routeType: number, path?: string }) => {
     const isAuthenticated = !!getString('token');
 
     if (routeType === RouteType.PRIVATE && !isAuthenticated) {
+        if (path) {
+            return (<Navigate to={`/signin?continue=${path}`} />);
+        }
         return (<Navigate to="/signin" />);
     }
 
