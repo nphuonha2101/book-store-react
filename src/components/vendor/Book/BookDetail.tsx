@@ -1,10 +1,12 @@
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
-import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
+import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 import React, { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ShoppingCart, Heart, Truck, RotateCcw, Shield, Info } from "lucide-react";
+import { ShoppingCart, Heart, Truck, RotateCcw } from "lucide-react";
 import useFetchPost from "../../../hooks/useFetchPost.ts";
+import { BookCard } from "../Card/BookCard.tsx";
+import { formatDate } from "../../../utils/formatUtils.ts";
 
 export const BookDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -70,9 +72,8 @@ export const BookDetail: React.FC = () => {
                             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                                 {/* Main cover image thumbnail */}
                                 <div
-                                    className={`border-2 rounded-md overflow-hidden cursor-pointer ${
-                                        !selectedImage ? 'border-blue-500' : 'border-gray-200 hover:border-gray-300'
-                                    }`}
+                                    className={`border-2 rounded-md overflow-hidden cursor-pointer ${!selectedImage ? 'border-blue-500' : 'border-gray-200 hover:border-gray-300'
+                                        }`}
                                     onClick={() => setSelectedImage(null)}
                                 >
                                     <img
@@ -86,9 +87,8 @@ export const BookDetail: React.FC = () => {
                                 {book.images.slice(0, window.innerWidth < 640 ? 3 : 4).map((image, index) => (
                                     <div
                                         key={index}
-                                        className={`border-2 rounded-md overflow-hidden cursor-pointer ${
-                                            selectedImage === image.url ? 'border-blue-500' : 'border-gray-200 hover:border-gray-300'
-                                        }`}
+                                        className={`border-2 rounded-md overflow-hidden cursor-pointer ${selectedImage === image.url ? 'border-blue-500' : 'border-gray-200 hover:border-gray-300'
+                                            }`}
                                         onClick={() => setSelectedImage(image.url || null)}
                                     >
                                         <img
@@ -117,7 +117,7 @@ export const BookDetail: React.FC = () => {
                                         viewBox="0 0 24 24"
                                     >
                                         <path
-                                            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
                                     </svg>
                                 ))}
                             </div>
@@ -137,7 +137,7 @@ export const BookDetail: React.FC = () => {
                                 <p className="text-gray-600 text-sm mb-1">Số lượng: <span
                                     className="text-gray-800">{book.quantity || "Chưa cập nhật"}</span></p>
                                 <p className="text-gray-600 text-sm mb-1">Năm XB: <span
-                                    className="text-gray-800">{book.publishedAt || "Chưa cập nhật"}</span></p>
+                                    className="text-gray-800">{book?.publishedAt ? formatDate(book.publishedAt) : "Chưa cập nhật"}</span></p>
                             </div>
                         </div>
 
@@ -178,7 +178,7 @@ export const BookDetail: React.FC = () => {
                                 <div className="flex w-full gap-2">
                                     <button
                                         className="flex-1 bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-1 sm:gap-2">
-                                        <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5"/>
+                                        <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
                                         <span className="hidden sm:inline">Thêm vào giỏ hàng</span>
                                         <span className="sm:hidden">Thêm giỏ</span>
                                     </button>
@@ -189,7 +189,7 @@ export const BookDetail: React.FC = () => {
                                     </button>
 
                                     <button className="p-2 sm:p-3 border rounded-md hover:bg-gray-100">
-                                        <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-red-500"/>
+                                        <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
                                     </button>
                                 </div>
                             </div>
@@ -199,20 +199,12 @@ export const BookDetail: React.FC = () => {
                         <div className="border-t pt-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                                 <div className="flex items-center gap-2 text-gray-600">
-                                <Truck className="h-4 w-4 text-primary"/>
+                                    <Truck className="h-4 w-4 text-primary" />
                                     <span className="text-xs sm:text-sm">Giao hàng nhanh 1-3 ngày</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600">
-                                    <RotateCcw className="h-4 w-4 text-primary"/>
+                                    <RotateCcw className="h-4 w-4 text-primary" />
                                     <span className="text-xs sm:text-sm">Đổi trả trong 7 ngày</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-gray-600">
-                                    <Shield className="h-4 w-4 text-primary"/>
-                                    <span className="text-xs sm:text-sm">Bảo hành chính hãng</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-gray-600">
-                                    <Info className="h-4 w-4 text-primary"/>
-                                    <span className="text-xs sm:text-sm">Hỗ trợ 24/7</span>
                                 </div>
                             </div>
                         </div>
@@ -225,7 +217,7 @@ export const BookDetail: React.FC = () => {
                 <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Mô tả sách</h2>
                 <div className="prose max-w-none text-sm sm:text-base">
                     {book.description ? (
-                        <div dangerouslySetInnerHTML={{__html: book.description}}/>
+                        <div dangerouslySetInnerHTML={{ __html: book.description }} />
                     ) : (
                         <p className="text-gray-500 italic">Chưa có mô tả cho sách này.</p>
                     )}
@@ -238,32 +230,7 @@ export const BookDetail: React.FC = () => {
                 {suggestedBooks && suggestedBooks.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
                         {suggestedBooks.map((item) => (
-                            <div
-                                key={item.id}
-                                className="group bg-background border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all"
-                            >
-                                {/* Hình ảnh */}
-                                <div className="relative w-full aspect-[2/3] overflow-hidden rounded-t-xl bg-muted">
-                                    <img
-                                        src={item.coverImage || '/default-image.jpg'}
-                                        alt={item.title || "Không có tiêu đề"}
-                                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                        onError={(e) => (e.currentTarget.src = '/default-image.jpg')}
-                                    />
-                                </div>
-                                {/* Nội dung */}
-                                <div className="p-3 sm:p-4 flex flex-col">
-                                    <h3 className="text-xs sm:text-sm font-semibold text-foreground mb-1 line-clamp-2 group-hover:text-primary transition-colors">
-                                        {item.title || "Sách chưa có tiêu đề"}
-                                    </h3>
-                                    <p className="text-xs text-muted-foreground line-clamp-2 mb-2 sm:mb-3 hidden sm:block">
-                                        {item.description || "Mô tả sách"}
-                                    </p>
-                                    <p className="text-xs sm:text-sm font-bold text-primary mt-auto">
-                                        {item.price ? formatPrice(item.price) : "Liên hệ"}
-                                    </p>
-                                </div>
-                            </div>
+                            <BookCard key={item.id} book={item} />
                         ))}
                     </div>
                 ) : (
@@ -272,13 +239,6 @@ export const BookDetail: React.FC = () => {
                     </div>
                 )}
             </div>
-            {suggestedBooks && suggestedBooks.length > 0 && (
-                <div className="mt-4 sm:mt-6 text-center">
-                    <button className="bg-transparent border border-input hover:bg-muted text-foreground py-2 px-4 rounded-md text-xs sm:text-sm font-medium transition-colors">
-                        Xem thêm sản phẩm
-                    </button>
-                </div>
-            )}
         </div>
     );
 };

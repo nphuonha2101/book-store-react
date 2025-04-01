@@ -2,12 +2,12 @@ import { ArrowLeft, Search, X, History } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState, useRef, useMemo } from "react";
 import useFetchPost from "../../../hooks/useFetchPost";
 import { getArray, saveArray } from "../../../utils/localStorageUtils";
-import { API_ENDPOINTS } from "../../../constants/apiInfo";
 import { Book } from "../../../types/ApiResponse/Book/book";
 import useFetch from "../../../hooks/useFetch";
 import { Button } from "../../../shadcn-components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { BookCard } from "../../vendor/Card/BookCard";
+import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 
 export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispatch<SetStateAction<boolean>> }) {
     const [searchTermsHistory, setSearchTermsHistory] = useState<string[]>([]);
@@ -49,7 +49,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
     const handleBookCardClick = (bookId: number, bookTitle: string) => {
         saveArray("searchTermsHistory", [bookTitle, ...searchTermsHistory]);
         setIsSearchOpen(false);
-        navigate("/book/" + bookId);
+        navigate("/books/" + bookId);
     };
 
     return (
