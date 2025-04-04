@@ -49,7 +49,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
     const handleBookCardClick = (bookId: number, bookTitle: string) => {
         saveArray("searchTermsHistory", [bookTitle, ...searchTermsHistory]);
         setIsSearchOpen(false);
-        navigate("/book/" + bookId);
+        navigate("/books/" + bookId);
     };
 
     return (

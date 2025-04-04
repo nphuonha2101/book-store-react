@@ -1,6 +1,6 @@
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { ShoppingCart, Heart, Truck, RotateCcw, Shield, Info } from "lucide-react";
 import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
@@ -9,6 +9,8 @@ import { AppDispatch, RootState } from "../../../redux/store.ts";
 import { addToCart } from "../../../redux/slice/cartItemSlice.ts";
 import AuthUtil from "../../../utils/authUtil.ts";
 import {CartItemProps} from "../../../types/Cart/cartItemProps.ts";
+import { BookCard } from "../Card/BookCard.tsx";
+import { formatDate } from "../../../utils/formatUtils.ts";
 
 export const BookDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>(); // Book ID from URL
@@ -95,9 +97,8 @@ export const BookDetail: React.FC = () => {
                         {book.images && book.images.length > 0 && (
                             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                                 <div
-                                    className={`border-2 rounded-md overflow-hidden cursor-pointer ${
-                                        !selectedImage ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
-                                    }`}
+                                    className={`border-2 rounded-md overflow-hidden cursor-pointer ${!selectedImage ? 'border-blue-500' : 'border-gray-200 hover:border-gray-300'
+                                        }`}
                                     onClick={() => setSelectedImage(null)}
                                 >
                                     <img
@@ -155,12 +156,10 @@ export const BookDetail: React.FC = () => {
                                 </p>
                             </div>
                             <div>
-                                <p className="text-gray-600 text-sm mb-1">
-                                    Số lượng: <span className="text-gray-800">{book.quantity || "Chưa cập nhật"}</span>
-                                </p>
-                                <p className="text-gray-600 text-sm mb-1">
-                                    Năm XB: <span className="text-gray-800">{book.publishedAt || "Chưa cập nhật"}</span>
-                                </p>
+                                <p className="text-gray-600 text-sm mb-1">Số lượng: <span
+                                    className="text-gray-800">{book.quantity || "Chưa cập nhật"}</span></p>
+                                <p className="text-gray-600 text-sm mb-1">Năm XB: <span
+                                    className="text-gray-800">{book?.publishedAt ? formatDate(book.publishedAt) : "Chưa cập nhật"}</span></p>
                             </div>
                         </div>
                         <div className="bg-gray-50 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6">
@@ -248,30 +247,7 @@ export const BookDetail: React.FC = () => {
                 {suggestedBooks && suggestedBooks.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
                         {suggestedBooks.map((item) => (
-                            <div
-                                key={item.id}
-                                className="group bg-background border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all"
-                            >
-                                <div className="relative w-full aspect-[2/3] overflow-hidden rounded-t-xl bg-muted">
-                                    <img
-                                        src={item.coverImage || "/default-image.jpg"}
-                                        alt={item.title || "Không có tiêu đề"}
-                                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                                        onError={(e) => (e.currentTarget.src = "/default-image.jpg")}
-                                    />
-                                </div>
-                                <div className="p-3 sm:p-4 flex flex-col">
-                                    <h3 className="text-xs sm:text-sm font-semibold text-foreground mb-1 line-clamp-2 group-hover:text-primary transition-colors">
-                                        {item.title || "Sách chưa có tiêu đề"}
-                                    </h3>
-                                    <p className="text-xs text-muted-foreground line-clamp-2 mb-2 sm:mb-3 hidden sm:block">
-                                        {item.description || "Mô tả sách"}
-                                    </p>
-                                    <p className="text-xs sm:text-sm font-bold text-primary mt-auto">
-                                        {item.price ? formatPrice(item.price) : "Liên hệ"}
-                                    </p>
-                                </div>
-                            </div>
+                            <BookCard key={item.id} book={item} />
                         ))}
                     </div>
                 ) : (
@@ -280,13 +256,7 @@ export const BookDetail: React.FC = () => {
                     </div>
                 )}
             </div>
-            {suggestedBooks && suggestedBooks.length > 0 && (
-                <div className="mt-4 sm:mt-6 text-center">
-                    <button className="bg-transparent border border-input hover:bg-muted text-foreground py-2 px-4 rounded-md text-xs sm:text-sm font-medium transition-colors">
-                        Xem thêm sản phẩm
-                    </button>
-                </div>
-            )}
+
         </div>
     );
 };

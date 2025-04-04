@@ -1,13 +1,14 @@
 import {ShoppingCart, Eye, CreditCard} from "lucide-react";
 import {Button} from "../../../shadcn-components/ui/button";
 import {Book} from "../../../types/ApiResponse/Book/book";
-import {formatPrice} from "../../../utils/numberUtils";
+import {formatPrice} from "../../../utils/numberUtils.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState, AppDispatch} from "../../../redux/store"; // Đảm bảo bạn đã định nghĩa store
 import {addToCart} from "../../../redux/slice/cartItemSlice"; // Đường dẫn đến slice cartItemSlice
 import {CartItem} from "../../../types/ApiResponse/Cart/cart";
 import {toast} from "react-toastify";
 import AuthUtil from "../../../utils/authUtil.ts"; // Thư viện thông báo (tùy chọn)
+import { Link } from "react-router-dom";
 
 export const BookCard = ({book}: { book: Book }) => {
     const dispatch = useDispatch<AppDispatch>();
@@ -55,10 +56,10 @@ export const BookCard = ({book}: { book: Book }) => {
                         className="w-full bg-white text-black hover:bg-gray-100 font-medium"
                         asChild
                     >
-                        <a href={`/books/${book.id}`} className="flex items-center justify-center gap-2">
-                            <Eye className="h-4 w-4"/>
+                        <Link to={`/books/${book.id}`} className="flex items-center justify-center gap-2">
+                            <Eye className="h-4 w-4" />
                             Xem chi tiết
-                        </a>
+                        </Link>
                     </Button>
 
                     <Button
@@ -82,7 +83,7 @@ export const BookCard = ({book}: { book: Book }) => {
             <div className="p-4">
                 <p className="text-sm text-gray-500">{book.authorName}</p>
                 <h3 className="font-medium text-lg hover:text-blue-600 transition-colors mt-1 line-clamp-2">
-                    <a href={`/books/${book.id}`}>{book.title}</a>
+                    <Link to={`/books/${book.id}`}>{book.title}</Link>
                 </h3>
                 <div className="flex items-center justify-between mt-2">
                     <p className="font-bold text-lg text-black">{formatPrice(book.price ? book.price : 0)}</p>
