@@ -10,7 +10,7 @@ import AuthUtil from "../../../utils/authUtil.ts";
 import { Logo } from "../../vendor/Logo/Logo.tsx";
 import { Label } from "../../../shadcn-components/ui/label.tsx";
 import { Input } from "../../../shadcn-components/ui/input.tsx";
-import { Button } from "../../../../components/ui/button.tsx";
+import { Button } from "../../../shadcn-components/ui/button.tsx";
 import { Separator } from "../../../shadcn-components/ui/separator.tsx";
 
 export const SignUp = () => {

@@ -6,5 +6,6 @@ export interface CartItem {
     book ?: Book;
     quantity ?: number;
     price ?: number;
+    bookId ?: number;
 
 }

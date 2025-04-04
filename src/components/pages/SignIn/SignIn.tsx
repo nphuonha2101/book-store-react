@@ -6,7 +6,7 @@ import { Label } from "../../../shadcn-components/ui/label";
 import { Separator } from "../../../shadcn-components/ui/separator";
 import { Logo } from "../../vendor/Logo/Logo";
 import { toast } from "react-toastify";
-import { API_ENDPOINTS } from "../../../constants/apiInfo";
+import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 import Logger from "../../../log/logger";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import AuthUtil from "../../../utils/authUtil";

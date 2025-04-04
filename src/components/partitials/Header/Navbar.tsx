@@ -8,17 +8,33 @@ import { Logo } from '../../vendor/Logo/Logo';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../shadcn-components/ui/dropdown-menu';
 import { toast } from 'react-toastify';
 import AuthUtil from '../../../utils/authUtil';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from '../../../redux/store';
+import {fetchCartItems} from "../../../redux/slice/cartItemSlice.ts"; // Đảm bảo bạn đã định nghĩa store
 
 export default function EnhancedEcommerceNavbar() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [cartCount] = useState(3);
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+
+    // Lấy cartItems từ Redux store
+    const cartItems = useSelector((state: RootState) => state.cart.items);
+    const cartCount = cartItems.length; // Tính cartCount từ cartItems
+
+    // Lấy thông tin user từ Redux store (nếu bạn lưu user trong Redux)
+    const user = useSelector((state: RootState) => state.auth.user);
 
     useEffect(() => {
+        // Kiểm tra trạng thái đăng nhập
         setIsUserLoggedIn(AuthUtil.isLogged());
-    }, []);
+
+        // Nếu người dùng đã đăng nhập, lấy dữ liệu giỏ hàng
+        if (AuthUtil.isLogged() && user?.id) {
+            dispatch(fetchCartItems(user.id));
+        }
+    }, [dispatch, user]);
 
     const handleLogout = () => {
         AuthUtil.logout();
@@ -89,7 +105,7 @@ export default function EnhancedEcommerceNavbar() {
 
                             {/* Dropdown user */}
                             <DropdownMenu>
-                                <DropdownMenuTrigger className='text-muted-foreground hover:text-primary'>
+                                <DropdownMenuTrigger className="text-muted-foreground hover:text-primary">
                                     <User className="h-5 w-5" />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
@@ -123,15 +139,16 @@ export default function EnhancedEcommerceNavbar() {
 
                             <div className="relative">
                                 <button
+                                    onClick={() => navigate('/carts')}
                                     className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary transition-colors"
                                     aria-label="Shopping cart"
                                 >
                                     <ShoppingCart className="h-5 w-5" />
                                 </button>
                                 {cartCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm z-10">
-                                        {cartCount > 9 ? '9+' : cartCount}
-                                    </span>
+                                    <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs text-white font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-sm z-10">
+                    {cartCount > 9 ? '9+' : cartCount}
+                  </span>
                                 )}
                             </div>
                         </div>
@@ -154,7 +171,7 @@ export default function EnhancedEcommerceNavbar() {
                             initial={{ x: '-100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '-100%' }}
-                            onClick={e => e.stopPropagation()}
+                            onClick={(e) => e.stopPropagation()}
                         >
                             <MobileMenu setIsMobileMenuOpen={setIsMobileMenuOpen} handleLogout={handleLogout} />
                         </motion.div>

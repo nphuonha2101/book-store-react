@@ -5,9 +5,10 @@ import { SignIn } from '../components/pages/SignIn/SignIn';
 import { RouteProps } from '../types/Route/routeProps.ts';
 import SearchResults from '../components/pages/Search/SearchResults.tsx';
 import {BookDetail} from "../components/vendor/Book/BookDetail.tsx";
-import {RouteType} from "../constants/RouteTypes.ts";
 import {SignUp} from "../components/pages/SignUp/SignUp.tsx";
 import { UserProfile } from '../components/pages/User/UserProfile.tsx';
+import {RouteType} from "../constants/routeTypes.ts";
+import {Cart} from "../components/pages/Cart/CartItem.tsx";
 
 export const routes: RouteProps[] = [
     {
@@ -46,5 +47,12 @@ export const routes: RouteProps[] = [
         Component: SignUp,
         Layout: Blank,
         routeType: RouteType.NOT_ALLOW_AUTH
-    }
+    },
+    {
+    path: '/carts',
+    Component: Cart,
+    Layout: Master,
+    routeType: RouteType.PRIVATE
+}
+
 ];

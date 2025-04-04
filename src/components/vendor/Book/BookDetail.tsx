@@ -1,63 +1,58 @@
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
-import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ShoppingCart, Heart, Truck, RotateCcw, Shield, Info } from "lucide-react";
-import useFetchPost from "../../../hooks/useFetchPost.ts";
-import { CartItem } from "../../../types/ApiResponse/Cart/cart.ts";
+import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store.ts";
+import { addToCart } from "../../../redux/slice/cartItemSlice.ts";
+import AuthUtil from "../../../utils/authUtil.ts";
+import {CartItemProps} from "../../../types/Cart/cartItemProps.ts";
 
 export const BookDetail: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
-
-    // Fetch book details
+    const { id } = useParams<{ id: string }>(); // Book ID from URL
+    const dispatch = useDispatch<AppDispatch>();
+    const { status, error } = useSelector((state: RootState) => state.cart);
+    const user = AuthUtil.getUser();
     const { data: book } = useFetch<Book>(API_ENDPOINTS.BOOK.BOOK_DETAIL.URL_DETAIL + `/${id}`);
-
-    // Get book suggestions
-    const bookSuggestionRequestBody = useMemo(() => [book?.title || ""], [book]);
-    const { data: suggestedBooks } = useFetchPost<string[], Book[]>(
-        API_ENDPOINTS.BOOK.SUGGESTIONS.URL,
-        bookSuggestionRequestBody,
-        { autoFetch: !!book }
-    );
-
-    // Cart quantity
+    const { data: suggestedBooks } = useFetch<Book[]>(API_ENDPOINTS.BOOK.SUGGESTIONS.URL); // Fixed endpoint
     const [quantity, setQuantity] = useState<number>(1);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    // Handle quantity changes
-    const decreaseQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
     const increaseQuantity = () => setQuantity((prev) => prev + 1);
-    const [addToCartPayload, setAddToCartPayload] = useState<CartItem | null>(null);
-    // Fetch cart addition
-    const { data: cartResponse, error: cartError, fetchData } = useFetchPost(
-        API_ENDPOINTS.CART.ADD_TO_CART.URL,
-        addToCartPayload,
-        { autoFetch: false } // Manual fetch
-    );
-    // console.log("add to cart" + addToCartPayload);
-    // Handle cart response and errors
-    useEffect(() => {
-        if (cartResponse) {
-            alert("Thêm vào giỏ hàng thành công");
-            setAddToCartPayload(null); // Reset payload
-        }
-        if (cartError) {
-            console.error("Failed to add to cart", cartError);
-            alert("Thêm vào giỏ hàng thất bại");
-            setAddToCartPayload(null); // Reset payload
-        }
-    }, [cartResponse, cartError]);
+    const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
+
     // Handle add to cart
     const handleAddToCart = () => {
-        if (!book || !id) return; // Guard clause
-        setAddToCartPayload({
-            userId: Number(id), // Convert string to number since userId is number in CartItem
-            book: { id: book.id } as Book, // Assuming book.id is sufficient for the book object
+        const cartItem: CartItemProps = {
+            userId: user.id,
+            bookId: book && book?.id || 0,
             quantity,
-            price: book.price,
-        });
-        fetchData(); // Trigger manual fetch
+            price: book?.price ?? 0, // Fallback to 0 if price is undefined
+        };
+
+        console.log("Adding to cart:", cartItem); // Log payload for debugging
+        dispatch(addToCart(cartItem));
     };
+
+    // Handle cart status feedback
+    useEffect(() => {
+        if (status === "succeeded") {
+            alert("Thêm vào giỏ hàng thành công");
+        }
+        if (status === "failed" && error) {
+            console.error("Cart error:", error);
+            alert(`Thêm vào giỏ hàng thất bại: ${error}`);
+        }
+    }, [status, error]);
+
+    // Log book data for debugging
+    useEffect(() => {
+        if (book) {
+            console.log("Fetched book:", book);
+        }
+    }, [book]);
 
     // Loading state
     if (!book) {
@@ -71,7 +66,6 @@ export const BookDetail: React.FC = () => {
         );
     }
 
-    // Format price
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
     };
@@ -81,8 +75,8 @@ export const BookDetail: React.FC = () => {
         <div className="container mx-auto px-4 py-4 sm:py-8">
             {/* Breadcrumb */}
             <div className="text-sm text-gray-500 mb-4 sm:mb-6 overflow-x-auto whitespace-nowrap">
-                <a href="/" className="hover:text-primary">Trang chủ</a> &gt;
-                <a href="/books" className="hover:text-primary"> Sách</a> &gt;
+                <a href="/" className="hover:text-primary">Trang chủ</a>
+                <a href="/books" className="hover:text-primary"> Sách</a>
                 <span className="text-gray-700"> {book.title}</span>
             </div>
 
@@ -169,7 +163,7 @@ export const BookDetail: React.FC = () => {
                                 </p>
                             </div>
                         </div>
-                        <div className="bg jie-gray-50 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6">
+                        <div className="bg-gray-50 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6">
                             <p className="text-base sm:text-lg font-bold text-gray-600 mb-1">Giá bán:</p>
                             <p className="text-2xl sm:text-3xl font-bold text-black mb-2">
                                 {book.price ? formatPrice(book.price) : "Liên hệ"}
@@ -196,7 +190,8 @@ export const BookDetail: React.FC = () => {
                                 <div className="flex w-full gap-2">
                                     <button
                                         onClick={handleAddToCart}
-                                        className="flex-1 bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-1 sm:gap-2"
+                                        disabled={status === "loading"}
+                                        className="flex-1 bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-1 sm:gap-2 disabled:bg-gray-400"
                                     >
                                         <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
                                         <span className="hidden sm:inline">Thêm vào giỏ hàng</span>
