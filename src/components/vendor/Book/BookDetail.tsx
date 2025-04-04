@@ -1,6 +1,6 @@
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
-import React, {useState, useEffect, useMemo} from "react";
+import React, {useState, useEffect, useMemo, useRef} from "react";
 import {Link, useParams} from "react-router-dom";
 import { ShoppingCart, Heart, Truck, RotateCcw, Shield, Info } from "lucide-react";
 import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
@@ -14,7 +14,9 @@ import { formatDate } from "../../../utils/formatUtils.ts";
 import useFetchPost from "../../../hooks/useFetchPost.ts";
 import {toast} from "react-toastify";
 
+
 export const BookDetail: React.FC = () => {
+    const isInitialMount = useRef(true);
     const { id } = useParams<{ id: string }>(); // Book ID from URL
     const dispatch = useDispatch<AppDispatch>();
     const { status, error } = useSelector((state: RootState) => state.cart);
@@ -46,12 +48,17 @@ export const BookDetail: React.FC = () => {
 
     // Handle cart status feedback
     useEffect(() => {
+        // Skip the first render
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
         if (status === "succeeded") {
             toast.success("Thêm vào giỏ hàng thành công");
         }
         if (status === "failed" && error) {
             console.error("Cart error:", error);
-            toast.success(`Thêm vào giỏ hàng thất bại: ${error}`);
+            toast.error(`Thêm vào giỏ hàng thất bại: ${error}`);
         }
     }, [status, error]);
 
