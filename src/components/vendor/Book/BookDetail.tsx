@@ -1,7 +1,7 @@
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
-import React, { useState, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import React, {useState, useEffect, useMemo} from "react";
+import {Link, useParams} from "react-router-dom";
 import { ShoppingCart, Heart, Truck, RotateCcw, Shield, Info } from "lucide-react";
 import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,8 @@ import AuthUtil from "../../../utils/authUtil.ts";
 import {CartItemProps} from "../../../types/Cart/cartItemProps.ts";
 import { BookCard } from "../Card/BookCard.tsx";
 import { formatDate } from "../../../utils/formatUtils.ts";
+import useFetchPost from "../../../hooks/useFetchPost.ts";
+import {toast} from "react-toastify";
 
 export const BookDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>(); // Book ID from URL
@@ -18,7 +20,11 @@ export const BookDetail: React.FC = () => {
     const { status, error } = useSelector((state: RootState) => state.cart);
     const user = AuthUtil.getUser();
     const { data: book } = useFetch<Book>(API_ENDPOINTS.BOOK.BOOK_DETAIL.URL_DETAIL + `/${id}`);
-    const { data: suggestedBooks } = useFetch<Book[]>(API_ENDPOINTS.BOOK.SUGGESTIONS.URL); // Fixed endpoint
+    // Get book suggestions
+    const bookSuggestionRequestBody = useMemo(() => ([book?.title ? book?.title : ""]), [book]);
+    const { data: suggestedBooks } = useFetchPost<string[], Book[]>(API_ENDPOINTS.BOOK.SUGGESTIONS.URL,
+        bookSuggestionRequestBody, { autoFetch: !!book }
+    );
     const [quantity, setQuantity] = useState<number>(1);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -41,11 +47,11 @@ export const BookDetail: React.FC = () => {
     // Handle cart status feedback
     useEffect(() => {
         if (status === "succeeded") {
-            alert("Thêm vào giỏ hàng thành công");
+            toast.success("Thêm vào giỏ hàng thành công");
         }
         if (status === "failed" && error) {
             console.error("Cart error:", error);
-            alert(`Thêm vào giỏ hàng thất bại: ${error}`);
+            toast.success(`Thêm vào giỏ hàng thất bại: ${error}`);
         }
     }, [status, error]);
 
@@ -77,7 +83,7 @@ export const BookDetail: React.FC = () => {
         <div className="container mx-auto px-4 py-4 sm:py-8">
             {/* Breadcrumb */}
             <div className="text-sm text-gray-500 mb-4 sm:mb-6 overflow-x-auto whitespace-nowrap">
-                <a href="/" className="hover:text-primary">Trang chủ</a>
+                <Link to="/" className="hover:text-primary">Trang chủ</Link>
                 <a href="/books" className="hover:text-primary"> Sách</a>
                 <span className="text-gray-700"> {book.title}</span>
             </div>

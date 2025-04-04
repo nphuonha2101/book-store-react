@@ -1,14 +1,14 @@
 import {ShoppingCart, Eye, CreditCard} from "lucide-react";
 import {Button} from "../../../shadcn-components/ui/button";
 import {Book} from "../../../types/ApiResponse/Book/book";
-import {formatPrice} from "../../../utils/numberUtils.ts";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState, AppDispatch} from "../../../redux/store"; // Đảm bảo bạn đã định nghĩa store
-import {addToCart} from "../../../redux/slice/cartItemSlice"; // Đường dẫn đến slice cartItemSlice
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "../../../redux/store";
+import {addToCart} from "../../../redux/slice/cartItemSlice";
 import {CartItem} from "../../../types/ApiResponse/Cart/cart";
 import {toast} from "react-toastify";
-import AuthUtil from "../../../utils/authUtil.ts"; // Thư viện thông báo (tùy chọn)
+import AuthUtil from "../../../utils/authUtil.ts";
 import { Link } from "react-router-dom";
+import {formatPrice} from "../../../utils/formatUtils.ts";
 
 export const BookCard = ({book}: { book: Book }) => {
     const dispatch = useDispatch<AppDispatch>();
