@@ -7,7 +7,7 @@ import useFetch from "../../../hooks/useFetch";
 import { Button } from "../../../shadcn-components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { BookCard } from "../../vendor/Card/BookCard";
-import {API_ENDPOINTS} from "../../../constants/ApiInfo.ts";
+import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 
 export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispatch<SetStateAction<boolean>> }) {
     const [searchTermsHistory, setSearchTermsHistory] = useState<string[]>([]);
@@ -130,9 +130,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
                             {searchResults && searchResults.length > 0 ? (
                                 <>
                                     {searchResults.map((book) => (
-                                        <div key={book.id} onClick={() => handleBookCardClick(book.id, book.title ? book.title : '')} className="cursor-pointer">
-                                            <BookCard book={book} />
-                                        </div>
+                                        <BookCard key={book.id} book={book} onClick={() => handleBookCardClick(book.id, book.title ? book.title : '')} />
                                     ))}
                                     <div className="col-span-full mt-4 flex justify-center">
                                         <Link to={`/search?title=${searchTerm}`} onClick={() => setIsSearchOpen(false)}>

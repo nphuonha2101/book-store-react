@@ -1,25 +1,26 @@
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
-import React, {useState, useEffect, useMemo, useRef} from "react";
-import {Link, useParams} from "react-router-dom";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { Link, useParams } from "react-router-dom";
 import { ShoppingCart, Heart, Truck, RotateCcw, Shield, Info } from "lucide-react";
 import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store.ts";
 import { addToCart } from "../../../redux/slice/cartItemSlice.ts";
 import AuthUtil from "../../../utils/authUtil.ts";
-import {CartItemProps} from "../../../types/Cart/cartItemProps.ts";
+import { CartItemProps } from "../../../types/Cart/cartItemProps.ts";
 import { BookCard } from "../Card/BookCard.tsx";
 import { formatDate } from "../../../utils/formatUtils.ts";
 import useFetchPost from "../../../hooks/useFetchPost.ts";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 
 
 export const BookDetail: React.FC = () => {
-    const isInitialMount = useRef(true);
     const { id } = useParams<{ id: string }>(); // Book ID from URL
     const dispatch = useDispatch<AppDispatch>();
     const { status, error } = useSelector((state: RootState) => state.cart);
+    const prevStatus = useRef(status);
+    const actionRef = useRef<string | null>(null);
     const user = AuthUtil.getUser();
     const { data: book } = useFetch<Book>(API_ENDPOINTS.BOOK.BOOK_DETAIL.URL_DETAIL + `/${id}`);
     // Get book suggestions
@@ -43,23 +44,24 @@ export const BookDetail: React.FC = () => {
         };
 
         console.log("Adding to cart:", cartItem); // Log payload for debugging
+        actionRef.current = "ADD_TO_CART";
         dispatch(addToCart(cartItem));
     };
 
-    // Handle cart status feedback
     useEffect(() => {
-        // Skip the first render
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-            return;
+        // Nếu status vừa chuyển từ loading sang succeeded và action là ADD_TO_CART
+        if (prevStatus.current === "loading" && status === "succeeded" && actionRef.current === "ADD_TO_CART") {
+            toast.success("Đã thêm sản phẩm vào giỏ hàng!");
+            actionRef.current = null; // Reset action
         }
-        if (status === "succeeded") {
-            toast.success("Thêm vào giỏ hàng thành công");
+
+        // Nếu có lỗi và action là ADD_TO_CART
+        if (status === "failed" && error && actionRef.current === "ADD_TO_CART") {
+            toast.error(error || "Không thể thêm vào giỏ hàng");
+            actionRef.current = null; // Reset action
         }
-        if (status === "failed" && error) {
-            console.error("Cart error:", error);
-            toast.error(`Thêm vào giỏ hàng thất bại: ${error}`);
-        }
+
+        prevStatus.current = status;
     }, [status, error]);
 
     // Log book data for debugging
@@ -123,9 +125,8 @@ export const BookDetail: React.FC = () => {
                                 {book.images.slice(0, window.innerWidth < 640 ? 3 : 4).map((image, index) => (
                                     <div
                                         key={index}
-                                        className={`border-2 rounded-md overflow-hidden cursor-pointer ${
-                                            selectedImage === image.url ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
-                                        }`}
+                                        className={`border-2 rounded-md overflow-hidden cursor-pointer ${selectedImage === image.url ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
+                                            }`}
                                         onClick={() => setSelectedImage(image.url || null)}
                                     >
                                         <img
