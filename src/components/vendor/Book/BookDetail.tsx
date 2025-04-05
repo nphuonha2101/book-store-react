@@ -1,75 +1,133 @@
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
-import React, {useState, useEffect, useMemo, useRef} from "react";
-import {Link, useParams} from "react-router-dom";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { Link, useParams } from "react-router-dom";
 import { ShoppingCart, Heart, Truck, RotateCcw, Shield, Info } from "lucide-react";
 import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store.ts";
 import { addToCart } from "../../../redux/slice/cartItemSlice.ts";
+import { addToWishlist, removeFromWishlist, fetchWishlistItems } from "../../../redux/slice/wishlistSlice.ts";
 import AuthUtil from "../../../utils/authUtil.ts";
-import {CartItemProps} from "../../../types/Cart/cartItemProps.ts";
+import { CartItemProps } from "../../../types/Cart/cartItemProps.ts";
 import { BookCard } from "../Card/BookCard.tsx";
 import { formatDate } from "../../../utils/formatUtils.ts";
 import useFetchPost from "../../../hooks/useFetchPost.ts";
-import {toast} from "react-toastify";
-
+import { toast } from "react-toastify";
 
 export const BookDetail: React.FC = () => {
     const isInitialMount = useRef(true);
-    const { id } = useParams<{ id: string }>(); // Book ID from URL
+    const hasFetchedWishlist = useRef(false);
+    const { id } = useParams<{ id: string }>();
     const dispatch = useDispatch<AppDispatch>();
-    const { status, error } = useSelector((state: RootState) => state.cart);
+    const { status: cartStatus, error: cartError } = useSelector((state: RootState) => state.cart);
+    const { items: wishlistItems, status: wishlistStatus, error: wishlistError } = useSelector(
+        (state: RootState) => state.wishList
+    );
     const user = AuthUtil.getUser();
     const { data: book } = useFetch<Book>(API_ENDPOINTS.BOOK.BOOK_DETAIL.URL_DETAIL + `/${id}`);
-    // Get book suggestions
-    const bookSuggestionRequestBody = useMemo(() => ([book?.title ? book?.title : ""]), [book]);
-    const { data: suggestedBooks } = useFetchPost<string[], Book[]>(API_ENDPOINTS.BOOK.SUGGESTIONS.URL,
-        bookSuggestionRequestBody, { autoFetch: !!book }
+
+    const bookSuggestionRequestBody = useMemo(() => [book?.title ? book.title : ""], [book]);
+    const { data: suggestedBooks } = useFetchPost<string[], Book[]>(
+        API_ENDPOINTS.BOOK.SUGGESTIONS.URL,
+        bookSuggestionRequestBody,
+        { autoFetch: !!book }
     );
+
     const [quantity, setQuantity] = useState<number>(1);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+    const isInWishlist = wishlistItems.some((item) => item.book?.id === Number(id));
+    console.log("Wishlist items:", wishlistItems, "isInWishlist:", isInWishlist);
+
+    useEffect(() => {
+        if (user?.id && !hasFetchedWishlist.current) {
+            dispatch(fetchWishlistItems(user.id));
+            hasFetchedWishlist.current = true;
+        }
+    }, [dispatch, user?.id]);
 
     const increaseQuantity = () => setQuantity((prev) => prev + 1);
     const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
 
-    // Handle add to cart
     const handleAddToCart = () => {
+        if (!user?.id) {
+            toast.error("Vui lòng đăng nhập để thêm vào giỏ hàng");
+            return;
+        }
+
         const cartItem: CartItemProps = {
             userId: user.id,
-            bookId: book && book?.id || 0,
+            bookId: book?.id || 0,
             quantity,
-            price: book?.price ?? 0, // Fallback to 0 if price is undefined
+            price: book?.price ?? 0,
         };
 
-        console.log("Adding to cart:", cartItem); // Log payload for debugging
+        console.log("Adding to cart:", cartItem);
         dispatch(addToCart(cartItem));
     };
 
-    // Handle cart status feedback
+    const handleToggleWishlist = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!user?.id) {
+            toast.error("Vui lòng đăng nhập để thêm vào danh sách yêu thích");
+            return;
+        }
+
+        if (isInWishlist) {
+            dispatch(removeFromWishlist({ userId: user.id, bookId: Number(id) }))
+                .unwrap()
+                .then(() => {
+                    toast.success(`${book?.title} đã được xóa khỏi danh sách yêu thích!`);
+                })
+                .catch((error) => {
+                    toast.error(`Lỗi khi xóa khỏi danh sách yêu thích: ${error}`);
+                });
+        } else {
+            const wishlistItem = {
+                userId: user.id,
+                bookId: Number(id),
+            };
+            dispatch(addToWishlist(wishlistItem))
+                .unwrap()
+                .then(() => {
+                    toast.success(`${book?.title} đã được thêm vào danh sách yêu thích!`);
+                })
+                .catch((error) => {
+                    toast.error(`Lỗi khi thêm vào danh sách yêu thích: ${error}`);
+                });
+        }
+    };
+
     useEffect(() => {
-        // Skip the first render
         if (isInitialMount.current) {
             isInitialMount.current = false;
             return;
         }
-        if (status === "succeeded") {
+        if (cartStatus === "succeeded") {
             toast.success("Thêm vào giỏ hàng thành công");
         }
-        if (status === "failed" && error) {
-            console.error("Cart error:", error);
-            toast.error(`Thêm vào giỏ hàng thất bại: ${error}`);
+        if (cartStatus === "failed" && cartError) {
+            console.error("Cart error:", cartError);
+            toast.error(`Thêm vào giỏ hàng thất bại: ${cartError}`);
         }
-    }, [status, error]);
+    }, [cartStatus, cartError]);
 
-    // Log book data for debugging
+    useEffect(() => {
+        if (wishlistStatus === "failed" && wishlistError) {
+            console.error("Wishlist error:", wishlistError);
+            toast.error(`Lỗi với danh sách yêu thích: ${wishlistError}`);
+        }
+    }, [wishlistStatus, wishlistError]);
+
     useEffect(() => {
         if (book) {
             console.log("Fetched book:", book);
         }
     }, [book]);
 
-    // Loading state
     if (!book) {
         return (
             <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-screen">
@@ -88,17 +146,19 @@ export const BookDetail: React.FC = () => {
 
     return (
         <div className="container mx-auto px-4 py-4 sm:py-8">
-            {/* Breadcrumb */}
             <div className="text-sm text-gray-500 mb-4 sm:mb-6 overflow-x-auto whitespace-nowrap">
-                <Link to="/" className="hover:text-primary">Trang chủ</Link>
-                <a href="/books" className="hover:text-primary"> Sách</a>
+                <Link to="/" className="hover:text-primary">
+                    Trang chủ
+                </Link>
+                <a href="/books" className="hover:text-primary">
+                    {" "}
+                    Sách
+                </a>
                 <span className="text-gray-700"> {book.title}</span>
             </div>
 
-            {/* Book Detail Section */}
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                    {/* Book Cover and Images Section */}
                     <div>
                         <div className="mb-4 border rounded-lg overflow-hidden">
                             <img
@@ -110,8 +170,9 @@ export const BookDetail: React.FC = () => {
                         {book.images && book.images.length > 0 && (
                             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                                 <div
-                                    className={`border-2 rounded-md overflow-hidden cursor-pointer ${!selectedImage ? 'border-blue-500' : 'border-gray-200 hover:border-gray-300'
-                                        }`}
+                                    className={`border-2 rounded-md overflow-hidden cursor-pointer ${
+                                        !selectedImage ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
+                                    }`}
                                     onClick={() => setSelectedImage(null)}
                                 >
                                     <img
@@ -139,7 +200,6 @@ export const BookDetail: React.FC = () => {
                         )}
                     </div>
 
-                    {/* Book Info */}
                     <div className="flex flex-col">
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">{book.title}</h1>
                         <div className="flex items-center gap-2 mb-4 flex-wrap">
@@ -169,10 +229,15 @@ export const BookDetail: React.FC = () => {
                                 </p>
                             </div>
                             <div>
-                                <p className="text-gray-600 text-sm mb-1">Số lượng: <span
-                                    className="text-gray-800">{book.quantity || "Chưa cập nhật"}</span></p>
-                                <p className="text-gray-600 text-sm mb-1">Năm XB: <span
-                                    className="text-gray-800">{book?.publishedAt ? formatDate(book.publishedAt) : "Chưa cập nhật"}</span></p>
+                                <p className="text-gray-600 text-sm mb-1">
+                                    Số lượng: <span className="text-gray-800">{book.quantity || "Chưa cập nhật"}</span>
+                                </p>
+                                <p className="text-gray-600 text-sm mb-1">
+                                    Năm XB:{" "}
+                                    <span className="text-gray-800">
+                    {book?.publishedAt ? formatDate(book.publishedAt) : "Chưa cập nhật"}
+                  </span>
+                                </p>
                             </div>
                         </div>
                         <div className="bg-gray-50 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6">
@@ -202,7 +267,7 @@ export const BookDetail: React.FC = () => {
                                 <div className="flex w-full gap-2">
                                     <button
                                         onClick={handleAddToCart}
-                                        disabled={status === "loading"}
+                                        disabled={cartStatus === "loading"}
                                         className="flex-1 bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-1 sm:gap-2 disabled:bg-gray-400"
                                     >
                                         <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -212,8 +277,18 @@ export const BookDetail: React.FC = () => {
                                     <button className="flex-1 bg-black text-white px-3 py-2 sm:px-4 sm:py-3 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors duration-300 flex items-center justify-center">
                                         Mua ngay
                                     </button>
-                                    <button className="p-2 sm:p-3 border rounded-md hover:bg-gray-100">
-                                        <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
+                                    <button
+                                        onClick={handleToggleWishlist}
+                                        disabled={wishlistStatus === "loading"}
+                                        className={`p-2 sm:p-3 border rounded-md flex items-center justify-center ${
+                                            isInWishlist
+                                                ? "bg-red-500 text-white hover:bg-red-600"
+                                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                                        } transition-colors duration-300`}
+                                    >
+                                        <Heart
+                                            className={`h-4 w-4 sm:h-5 sm:w-5 ${isInWishlist ? "fill-current" : ""}`}
+                                        />
                                     </button>
                                 </div>
                             </div>
@@ -242,7 +317,6 @@ export const BookDetail: React.FC = () => {
                 </div>
             </div>
 
-            {/* Book Description */}
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
                 <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Mô tả sách</h2>
                 <div className="prose max-w-none text-sm sm:text-base">
@@ -254,7 +328,6 @@ export const BookDetail: React.FC = () => {
                 </div>
             </div>
 
-            {/* Related Books */}
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
                 <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Sách liên quan</h2>
                 {suggestedBooks && suggestedBooks.length > 0 ? (
@@ -269,7 +342,6 @@ export const BookDetail: React.FC = () => {
                     </div>
                 )}
             </div>
-
         </div>
     );
 };
