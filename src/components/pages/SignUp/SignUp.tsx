@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../shadcn-components/ui/card";
-import { Mail } from "lucide-react";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import usePost from "../../../hooks/usePost.ts";
-import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import Logger from "../../../log/logger";
 import AuthUtil from "../../../utils/authUtil.ts";
 import { Logo } from "../../vendor/Logo/Logo.tsx";
@@ -12,6 +10,7 @@ import { Label } from "../../../shadcn-components/ui/label.tsx";
 import { Input } from "../../../shadcn-components/ui/input.tsx";
 import { Button } from "../../../shadcn-components/ui/button.tsx";
 import { Separator } from "../../../shadcn-components/ui/separator.tsx";
+import {API_ENDPOINTS} from "../../../constants/ApiInfo.ts";
 
 export const SignUp = () => {
     const [email, setEmail] = useState("");

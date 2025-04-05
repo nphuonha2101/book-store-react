@@ -89,7 +89,7 @@ export default function EnhancedEcommerceNavbar() {
                                 <Search className="h-5 w-5" />
                             </button>
 
-                            <button
+                            <button  onClick={() => navigate('/wishlists')}
                                 className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary transition-colors hidden md:block"
                                 aria-label="Wishlist"
                             >
