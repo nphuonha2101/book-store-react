@@ -8,7 +8,7 @@ import {BookDetail} from "../components/vendor/Book/BookDetail.tsx";
 import {SignUp} from "../components/pages/SignUp/SignUp.tsx";
 import {UserProfile} from '../components/pages/User/UserProfile.tsx';
 import {RouteType} from "../constants/routeTypes.ts";
-import {Cart} from "../components/pages/Cart/CartItem.tsx";
+import {Cart} from "../components/pages/Cart/Cart.tsx";
 import Wishlist from "../components/pages/WishList/WishList.tsx";
 
 export const routes: RouteProps[] = [

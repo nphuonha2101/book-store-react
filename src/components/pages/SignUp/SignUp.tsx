@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import usePost from "../../../hooks/usePost.ts";
 import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
-import Logger from "../../../log/logger";
 import { Logo } from "../../vendor/Logo/Logo.tsx";
 import { Input } from "../../../shadcn-components/ui/input.tsx";
 import { Button } from "../../../shadcn-components/ui/button.tsx";
@@ -69,8 +68,7 @@ export const SignUp = () => {
             toast.success("Đăng ký thành công");
             navigate("/signin", { replace: true });
             return;
-        } catch (error) {
-            Logger.error("Đăng ký thất bại", error);
+        } catch {
             toast.error("Đăng ký thất bại. Vui lòng thử lại sau.");
         }
     };
