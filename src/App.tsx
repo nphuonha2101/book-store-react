@@ -21,7 +21,7 @@ function App() {
               element={(
                 <PrivateRoute routeType={route.routeType} path={route.path}>
                   <route.Layout>
-                    <ToastContainer />
+                    <ToastContainer position='bottom-right' />
                     <route.Component />
                   </route.Layout>
                 </PrivateRoute>

@@ -55,6 +55,14 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/update`,
         },
     },
+    VOUCHER: {
+        GET_VOUCHERS: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/vouchers/all`,
+        },
+        APPLY: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/vouchers/apply`,
+        },
+    },
     AUTH: {
         SIGN_IN: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/login`,

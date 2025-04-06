@@ -1,11 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface User {
-    id: string ;
-    email: string;
-    name: string;
-}
-
+import { User } from "../../types/ApiResponse/User/user.ts";
 interface AuthState {
     user: User | null;
     token: string | null;
@@ -32,8 +26,12 @@ const authSlice = createSlice({
             localStorage.removeItem("user");
             localStorage.removeItem("token");
         },
+        refreshUser: (state, action: PayloadAction<User>) => {
+            state.user = action.payload;
+            localStorage.setItem("user", JSON.stringify(action.payload));
+        }
     },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, refreshUser } = authSlice.actions;
 export default authSlice.reducer;

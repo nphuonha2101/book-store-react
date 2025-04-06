@@ -4,11 +4,11 @@ import { Home } from '../components/pages/Home/Home';
 import { SignIn } from '../components/pages/SignIn/SignIn';
 import { RouteProps } from '../types/Route/routeProps.ts';
 import SearchResults from '../components/pages/Search/SearchResults.tsx';
-import {BookDetail} from "../components/vendor/Book/BookDetail.tsx";
-import {SignUp} from "../components/pages/SignUp/SignUp.tsx";
+import { BookDetail } from "../components/vendor/Book/BookDetail.tsx";
+import { SignUp } from "../components/pages/SignUp/SignUp.tsx";
 import { UserProfile } from '../components/pages/User/UserProfile.tsx';
-import {RouteType} from "../constants/routeTypes.ts";
-import {Cart} from "../components/pages/Cart/CartItem.tsx";
+import { RouteType } from "../constants/routeTypes.ts";
+import { Cart } from "../components/pages/Cart/Cart.tsx";
 
 export const routes: RouteProps[] = [
     {
@@ -49,10 +49,10 @@ export const routes: RouteProps[] = [
         routeType: RouteType.NOT_ALLOW_AUTH
     },
     {
-    path: '/carts',
-    Component: Cart,
-    Layout: Master,
-    routeType: RouteType.PRIVATE
-}
+        path: '/carts',
+        Component: Cart,
+        Layout: Master,
+        routeType: RouteType.PRIVATE
+    }
 
 ];

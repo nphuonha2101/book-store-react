@@ -10,8 +10,12 @@ import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 import Logger from "../../../log/logger";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import AuthUtil from "../../../utils/authUtil";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store.ts";
+import { login } from "../../../redux/slice/authSlice.ts";
 
 export const SignIn = () => {
+    const dispatch = useDispatch<AppDispatch>();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -122,7 +126,7 @@ export const SignIn = () => {
                     return;
                 }
                 // Save user info and token to local storage
-                AuthUtil.login(userResponse.data, userToken);
+                dispatch(login({ user: userResponse.data, token: userToken }));
                 toast.success("Đăng nhập thành công");
                 handleRedirectToBeforeLogin();
                 return;
