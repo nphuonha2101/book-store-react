@@ -6,7 +6,7 @@ export const fetchCartItems = createAsyncThunk(
     "cart/fetchCartItems",
     async (userId: string, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_ENDPOINTS.CART.GET_CART.URL}?userId=${userId}`);
+            const response = await fetch(`${API_ENDPOINTS.CART.GET_CART_BY_USER.URL}${userId}`);
             if (!response.ok) {
                 const errorData = await response.text();
                 throw new Error(`API error: ${errorData || response.statusText}`);

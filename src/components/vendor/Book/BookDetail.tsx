@@ -16,11 +16,12 @@ import useFetchPost from "../../../hooks/useFetchPost.ts";
 import { toast } from "react-toastify";
 
 export const BookDetail: React.FC = () => {
-    const isInitialMount = useRef(true);
+    const { id } = useParams<{ id: string }>(); // Book ID from URL
     const hasFetchedWishlist = useRef(false);
-    const { id } = useParams<{ id: string }>();
     const dispatch = useDispatch<AppDispatch>();
     const { status: cartStatus, error: cartError } = useSelector((state: RootState) => state.cart);
+    const prevStatus = useRef(cartStatus);
+    const actionRef = useRef<string | null>(null);
     const { items: wishlistItems, status: wishlistStatus, error: wishlistError } = useSelector(
         (state: RootState) => state.wishList
     );
@@ -50,6 +51,7 @@ export const BookDetail: React.FC = () => {
     const increaseQuantity = () => setQuantity((prev) => prev + 1);
     const decreaseQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
 
+    // Handle add to cart
     const handleAddToCart = () => {
         if (!user?.id) {
             toast.error("Vui lòng đăng nhập để thêm vào giỏ hàng");
@@ -64,6 +66,8 @@ export const BookDetail: React.FC = () => {
         };
 
         console.log("Adding to cart:", cartItem);
+        console.log("Adding to cart:", cartItem); // Log payload for debugging
+        actionRef.current = "ADD_TO_CART";
         dispatch(addToCart(cartItem));
     };
 
@@ -102,17 +106,19 @@ export const BookDetail: React.FC = () => {
     };
 
     useEffect(() => {
-        if (isInitialMount.current) {
-            isInitialMount.current = false;
-            return;
+        // Nếu status vừa chuyển từ loading sang succeeded và action là ADD_TO_CART
+        if (prevStatus.current === "loading" && cartStatus === "succeeded" && actionRef.current === "ADD_TO_CART") {
+            toast.success("Đã thêm sản phẩm vào giỏ hàng!");
+            actionRef.current = null; // Reset action
         }
-        if (cartStatus === "succeeded") {
-            toast.success("Thêm vào giỏ hàng thành công");
+
+        // Nếu có lỗi và action là ADD_TO_CART
+        if (cartStatus === "failed" && cartError && actionRef.current === "ADD_TO_CART") {
+            toast.error(cartError || "Không thể thêm vào giỏ hàng");
+            actionRef.current = null; // Reset action
         }
-        if (cartStatus === "failed" && cartError) {
-            console.error("Cart error:", cartError);
-            toast.error(`Thêm vào giỏ hàng thất bại: ${cartError}`);
-        }
+
+        prevStatus.current = cartStatus;
     }, [cartStatus, cartError]);
 
     useEffect(() => {
@@ -128,6 +134,7 @@ export const BookDetail: React.FC = () => {
         }
     }, [book]);
 
+    // Loading state
     if (!book) {
         return (
             <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-screen">
@@ -157,8 +164,10 @@ export const BookDetail: React.FC = () => {
                 <span className="text-gray-700"> {book.title}</span>
             </div>
 
+            {/* Book Detail Section */}
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    {/* Book Cover and Images Section */}
                     <div>
                         <div className="mb-4 border rounded-lg overflow-hidden">
                             <img
@@ -184,9 +193,8 @@ export const BookDetail: React.FC = () => {
                                 {book.images.slice(0, window.innerWidth < 640 ? 3 : 4).map((image, index) => (
                                     <div
                                         key={index}
-                                        className={`border-2 rounded-md overflow-hidden cursor-pointer ${
-                                            selectedImage === image.url ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
-                                        }`}
+                                        className={`border-2 rounded-md overflow-hidden cursor-pointer ${selectedImage === image.url ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
+                                            }`}
                                         onClick={() => setSelectedImage(image.url || null)}
                                     >
                                         <img
@@ -200,6 +208,7 @@ export const BookDetail: React.FC = () => {
                         )}
                     </div>
 
+                    {/* Book Info */}
                     <div className="flex flex-col">
                         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">{book.title}</h1>
                         <div className="flex items-center gap-2 mb-4 flex-wrap">
@@ -317,6 +326,7 @@ export const BookDetail: React.FC = () => {
                 </div>
             </div>
 
+            {/* Book Description */}
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
                 <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Mô tả sách</h2>
                 <div className="prose max-w-none text-sm sm:text-base">
@@ -328,6 +338,7 @@ export const BookDetail: React.FC = () => {
                 </div>
             </div>
 
+            {/* Related Books */}
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
                 <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Sách liên quan</h2>
                 {suggestedBooks && suggestedBooks.length > 0 ? (

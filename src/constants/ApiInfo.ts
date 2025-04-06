@@ -58,7 +58,7 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/all`,
         },
         GET_CART_BY_USER: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/userId`,
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/`,
         },
         ADD_TO_CART: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/add`,

@@ -7,6 +7,7 @@ import {
     updateCartItem,
 } from "../../../redux/slice/cartItemSlice.ts";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Cart: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -115,9 +116,9 @@ export const Cart: React.FC = () => {
                     </div>
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4">Giỏ hàng của bạn đang trống</h2>
                     <p className="text-gray-600 mb-8 text-lg">Thêm mặt hàng vào giỏ hàng để tiếp tục mua sắm</p>
-                    <button className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium">
+                    <Link to="/" className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium">
                         Tiếp tục mua hàng
-                    </button>
+                    </Link>
                 </div>
             </div>
         );
@@ -162,20 +163,20 @@ export const Cart: React.FC = () => {
                                         <div className="flex items-center border border-gray-300 rounded-lg">
                                             <button type="button"
                                                 className="px-4 py-2 text-gray-600 hover:bg-gray-100"
-                                                    onClick={(e) => {
-                                                        e.preventDefault(); // Ngăn hành vi mặc định
-                                                        handleDecreaseQuantity(item.id, item.quantity ?? 1);
-                                                    }}                                                aria-label="Decrease quantity"
+                                                onClick={(e) => {
+                                                    e.preventDefault(); // Ngăn hành vi mặc định
+                                                    handleDecreaseQuantity(item.id, item.quantity ?? 1);
+                                                }} aria-label="Decrease quantity"
                                             >
                                                 <Minus className="h-5 w-5" />
                                             </button>
                                             <span className="px-5 py-2 border-x border-gray-300 text-lg">{item.quantity ?? 1}</span>
                                             <button type="button"
                                                 className="px-4 py-2 text-gray-600 hover:bg-gray-100"
-                                                    onClick={(e) => {
-                                                        e.preventDefault(); // Ngăn hành vi mặc định
-                                                        handleIncreaseQuantity(item.id, item.quantity ?? 1);
-                                                    }}                                                aria-label="Increase quantity"
+                                                onClick={(e) => {
+                                                    e.preventDefault(); // Ngăn hành vi mặc định
+                                                    handleIncreaseQuantity(item.id, item.quantity ?? 1);
+                                                }} aria-label="Increase quantity"
                                             >
                                                 <Plus className="h-5 w-5" />
                                             </button>
@@ -228,20 +229,20 @@ export const Cart: React.FC = () => {
                                         <div className="flex items-center border border-gray-300 rounded-lg">
                                             <button type="button"
                                                 className="px-3 py-2 text-gray-600 hover:bg-gray-100"
-                                                    onClick={(e) => {
-                                                        e.preventDefault(); // Ngăn hành vi mặc định
-                                                        handleDecreaseQuantity(item.id, item.quantity ?? 1);
-                                                    }}                                                aria-label="Decrease quantity"
+                                                onClick={(e) => {
+                                                    e.preventDefault(); // Ngăn hành vi mặc định
+                                                    handleDecreaseQuantity(item.id, item.quantity ?? 1);
+                                                }} aria-label="Decrease quantity"
                                             >
                                                 <Minus className="h-4 w-4" />
                                             </button>
                                             <span className="px-4 py-2 border-x border-gray-300 text-base">{item.quantity ?? 1}</span>
                                             <button type="button"
                                                 className="px-3 py-2 text-gray-600 hover:bg-gray-100"
-                                                    onClick={(e) => {
-                                                        e.preventDefault(); // Ngăn hành vi mặc định
-                                                        handleIncreaseQuantity(item.id, item.quantity ?? 1);
-                                                    }}                                                aria-label="Increase quantity"
+                                                onClick={(e) => {
+                                                    e.preventDefault(); // Ngăn hành vi mặc định
+                                                    handleIncreaseQuantity(item.id, item.quantity ?? 1);
+                                                }} aria-label="Increase quantity"
                                             >
                                                 <Plus className="h-4 w-4" />
                                             </button>
