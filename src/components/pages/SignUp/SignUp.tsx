@@ -1,153 +1,77 @@
-import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../shadcn-components/ui/card";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import usePost from "../../../hooks/usePost.ts";
+import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 import Logger from "../../../log/logger";
-import AuthUtil from "../../../utils/authUtil.ts";
 import { Logo } from "../../vendor/Logo/Logo.tsx";
-import { Label } from "../../../shadcn-components/ui/label.tsx";
 import { Input } from "../../../shadcn-components/ui/input.tsx";
 import { Button } from "../../../shadcn-components/ui/button.tsx";
 import { Separator } from "../../../shadcn-components/ui/separator.tsx";
-import {API_ENDPOINTS} from "../../../constants/ApiInfo.ts";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../shadcn-components/ui/form";
+
+// Định nghĩa schema validation với Zod
+const signUpSchema = z.object({
+    email: z.string()
+        .min(1, { message: "Email không được để trống" })
+        .email({ message: "Email không hợp lệ" }),
+    name: z.string()
+        .min(1, { message: "Tên không được để trống" })
+        .max(50, { message: "Tên không được quá 50 ký tự" }),
+    password: z.string()
+        .min(8, { message: "Mật khẩu phải có ít nhất 8 ký tự" }),
+    confirmPassword: z.string()
+        .min(1, { message: "Vui lòng xác nhận mật khẩu" }),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Mật khẩu không khớp",
+    path: ["confirmPassword"],
+});
+
+// Định nghĩa kiểu dữ liệu từ schema
+type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export const SignUp = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [name, setName] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [passwordError, setPasswordError] = useState("");
-    const { postData, response } = usePost<{ email: string; password: string, name: string }, string>(API_ENDPOINTS.AUTH.SIGN_UP.URL);
+    const { postData } = usePost<{ email: string; password: string, name: string }, string>(API_ENDPOINTS.AUTH.SIGN_UP.URL);
     const navigate = useNavigate();
 
-    const validatePasswordMatch = () => {
-        if (password && confirmPassword && password !== confirmPassword) {
-            setPasswordError("Mật khẩu không khớp");
-            return false;
-        }
-        setPasswordError("");
-        return true;
-    };
+    // Khởi tạo form với react-hook-form và zod resolver
+    const form = useForm<SignUpFormValues>({
+        resolver: zodResolver(signUpSchema),
+        defaultValues: {
+            email: "",
+            name: "",
+            password: "",
+            confirmPassword: "",
+        },
+    });
 
-    const validateForm = () => {
-        // Reset password error
-        setPasswordError("");
-
-        // Email validation
-        if (!email) {
-            toast.error("Please enter your email");
-            return false;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            toast.error("Please enter a valid email address");
-            return false;
-        }
-
-        // Password validation
-        if (!password) {
-            toast.error("Please enter a password");
-            return false;
-        }
-
-        if (password.length < 8) {
-            toast.error("Password must be at least 8 characters long");
-            return false;
-        }
-
-        // Password confirmation validation
-        if (!confirmPassword) {
-            toast.error("Please confirm your password");
-            return false;
-        }
-
-        if (password !== confirmPassword) {
-            setPasswordError("Passwords do not match");
-            return false;
-        }
-
-        return true;
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        // Validate form first
-        if (!validateForm()) {
-            return;
-        }
-
-        // Prepare user data payload
-        const userData = {
-            email,
-            password,
-            name: name.trim() // Ensure no accidental whitespace
-        };
-
+    const handleSubmit = async (values: SignUpFormValues) => {
         try {
-            // Log the payload being sent for debugging
+            // Chuẩn bị dữ liệu đăng ký
+            const userData = {
+                email: values.email,
+                password: values.password,
+                name: values.name.trim(),
+            };
+
             console.log('Signup Payload:', userData);
 
-            // Attempt to sign up user
-            const userToken = await postData(userData);
-
-            // Debug response
-            console.log('Signup Response:', { userToken, response });
-
-            // If token is received
-            if (userToken) {
-                try {
-                    // Fetch user information
-                    const userResponse = await fetch(API_ENDPOINTS.AUTH.ME.URL, {
-                        method: "POST",
-                        headers: {
-                            Authorization: `Bearer ${userToken}`,
-                            'Content-Type': 'application/json'
-                        },
-                    });
-
-                    const parsedResponse = await userResponse.json();
-
-                    // More detailed error logging
-                    if (!parsedResponse?.success) {
-                        console.error('User Fetch Error:', parsedResponse);
-                        toast.error(parsedResponse?.message || "Không thể lấy thông tin người dùng");
-                        return;
-                    }
-
-                    // Login user
-                    AuthUtil.login(parsedResponse.data, userToken);
-
-                    toast.success("Đăng ký thành công");
-                    navigate("/login");
-                } catch (fetchError) {
-                    console.error('Fetch User Error:', fetchError);
-                    toast.error("Lỗi khi lấy thông tin người dùng");
-                }
+            // Gửi yêu cầu đăng ký
+            const user = await postData(userData);
+            if (!user) {
+                toast.error("Đăng ký thất bại. Vui lòng thử lại sau.");
                 return;
             }
 
-            // Handle response errors
-            if (response) {
-                console.error('Signup Response Error:', response);
-                toast.error(response.message || "Đã có lỗi xảy ra trong quá trình đăng ký");
-            } else {
-                toast.error("Không nhận được phản hồi từ máy chủ");
-            }
-
+            toast.success("Đăng ký thành công");
+            navigate("/signin", { replace: true });
+            return;
         } catch (error) {
-            // More detailed error logging
-            console.error('Signup Catch Error:', error);
-
-            // Try to extract more meaningful error message
-            const errorMessage = error instanceof Error
-                ? error.message
-                : "Đã có lỗi xảy ra khi đăng ký";
-
-            toast.error(errorMessage);
-            Logger.error("Sign up error:", error);
+            Logger.error("Đăng ký thất bại", error);
+            toast.error("Đăng ký thất bại. Vui lòng thử lại sau.");
         }
     };
 
@@ -162,59 +86,87 @@ export const SignUp = () => {
                     <CardDescription>Đăng ký tài khoản mới</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="name@example.com"
-                                value={email}
-                                autoComplete="email"
-                                onChange={(e) => setEmail(e.target.value)}
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="name@example.com"
+                                                type="email"
+                                                autoComplete="email"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Tên đăng ký</Label>
-                            <Input
-                                id="name"
-                                type="text"
-                                placeholder="Nguyễn Văn A"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
+
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Tên đăng ký</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Nguyễn Văn A"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Mật khẩu</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="new-password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Mật khẩu</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="password"
+                                                placeholder="••••••••"
+                                                autoComplete="new-password"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="confirm-password">Nhập lại mật khẩu</Label>
-                            <Input
-                                id="confirm-password"
-                                type="password"
-                                placeholder="••••••••"
-                                autoComplete="new-password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                onBlur={validatePasswordMatch}
-                                className={passwordError ? "border-destructive focus-visible:ring-destructive" : ""}
+
+                            <FormField
+                                control={form.control}
+                                name="confirmPassword"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Nhập lại mật khẩu</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="password"
+                                                placeholder="••••••••"
+                                                autoComplete="new-password"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
-                            {passwordError && (
-                                <p className="text-xs text-destructive mt-1">{passwordError}</p>
-                            )}
-                        </div>
-                        <Button type="submit" className="w-full">
-                            Đăng ký
-                        </Button>
-                    </form>
+
+                            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+                                {form.formState.isSubmitting ? "Đang xử lý..." : "Đăng ký"}
+                            </Button>
+                        </form>
+                    </Form>
 
                     <div className="relative my-4">
                         <div className="absolute inset-0 flex items-center">
@@ -232,11 +184,11 @@ export const SignUp = () => {
                             variant="outline"
                             size="lg"
                             className="w-full flex items-center gap-3 
-                                    bg-white hover:bg-gray-50 
-                                    border-gray-300 hover:border-gray-400
-                                    text-gray-700 hover:text-gray-900
-                                    transition-all duration-200
-                                    py-6 shadow-sm"
+                      bg-white hover:bg-gray-50
+                      border-gray-300 hover:border-gray-400
+                      text-gray-700 hover:text-gray-900
+                      transition-all duration-200
+                      py-6 shadow-sm"
                             onClick={() => window.open(API_ENDPOINTS.AUTH.OAUTH2.GOOGLE.URL, "_blank")}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 48 48">

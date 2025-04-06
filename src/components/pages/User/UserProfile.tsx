@@ -11,7 +11,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "../../../shadcn-components/ui/label";
 import { Button } from "../../../shadcn-components/ui/button";
 import { Input } from "../../../shadcn-components/ui/input";
-import { User as UserType } from "../../../types/ApiResponse/User/user";
 import AuthUtil from "../../../utils/authUtil";
 import { LeftUserSideBar } from "./LeftUserSideBar";
 import { z } from "zod";
@@ -19,6 +18,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 import { toast } from "react-toastify";
 import Logger from "../../../log/logger";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../redux/store.ts";
+import { refreshUser } from "../../../redux/slice/authSlice.ts";
 
 // Define form input types
 interface UserProfileFormInputs {
@@ -60,11 +62,11 @@ const UserProfileSchema = z.object({
 });
 
 export const UserProfile = () => {
-    const [user, setUser] = useState<UserType>();
+    const dispatch = useDispatch<AppDispatch>();
+    const { user: userData } = useSelector((state: RootState) => state.auth);
     const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [isProfileChanged, setIsProfileChanged] = useState(false);
 
     // Use react-hook-form for form validation and submission
     const {
@@ -78,8 +80,7 @@ export const UserProfile = () => {
     });
 
     useEffect(() => {
-        const userData = AuthUtil.getUser();
-        setUser(userData);
+
 
         if (userData) {
             // Set form fields with user data
@@ -109,6 +110,7 @@ export const UserProfile = () => {
 
     const onSubmit = async (data: UserProfileFormInputs) => {
         try {
+            setIsSubmitting(true);
             // Create a FormData object to send both file and other form data
             const formData = new FormData();
 
@@ -155,8 +157,7 @@ export const UserProfile = () => {
             toast.error(response.message || "Đã có lỗi xảy ra khi cập nhật thông tin");
             return;
         }
-        AuthUtil.refreshUser();
-        setIsProfileChanged(true);
+        dispatch(refreshUser(response.data));
         toast.success("Cập nhật thông tin thành công");
     }
 
@@ -169,9 +170,9 @@ export const UserProfile = () => {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className="flex bg-gray-50">
             {/* Left sidebar */}
-            <LeftUserSideBar isProfileChanged={isProfileChanged} />
+            <LeftUserSideBar />
 
             {/* Main content */}
             <div className="flex-1 pl-8 pr-4">
@@ -201,15 +202,15 @@ export const UserProfile = () => {
                                     onClick={handleAvatarClick}
                                 >
                                     <div className="w-42 h-42 rounded-full border-2 border-transparent group-hover:border-blue-500 transition-all overflow-hidden relative">
-                                        {previewAvatar || (user && user.avatar) ? (
+                                        {previewAvatar || (userData && userData.avatar) ? (
                                             <img
-                                                src={previewAvatar || (user && user.avatar)}
-                                                alt={user?.name || 'Người dùng'}
+                                                src={previewAvatar || (userData && userData.avatar) || undefined}
+                                                alt={userData?.name || 'Người dùng'}
                                                 className="w-full h-full object-cover"
                                             />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-800 text-xl">
-                                                {getInitials(user?.name || 'Người dùng')}
+                                                {getInitials(userData?.name || 'Người dùng')}
                                             </div>
                                         )}
                                     </div>
@@ -335,7 +336,6 @@ export const UserProfile = () => {
                         </CardContent>
 
                         <CardFooter className="flex justify-end space-x-4 pt-2">
-                            <Button variant="outline" type="button">Hủy bỏ</Button>
                             <Button type="submit" disabled={isSubmitting} className="flex items-center gap-2">
                                 {isSubmitting ? ("Đang lưu...") : (
                                     <>

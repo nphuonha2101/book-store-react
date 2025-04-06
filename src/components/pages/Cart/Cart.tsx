@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../redux/store.ts";
 import {
@@ -8,11 +8,21 @@ import {
 } from "../../../redux/slice/cartItemSlice.ts";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
+import { VoucherDialog } from "./VoucherDialog.tsx";
+import Logger from "../../../log/logger.ts";
+import { Voucher } from "../../../types/ApiResponse/Voucher/voucher.ts";
+import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
+import AuthUtil from "../../../utils/authUtil.ts";
+import { toast } from "react-toastify";
 
 export const Cart: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { user } = useSelector((state: RootState) => state.auth);
     const { items: cartItems, status, error } = useSelector((state: RootState) => state.cart);
+    const [cartCategoryIds, setCartCategoryIds] = React.useState<number[]>([]);
+    const [discountValue, setDiscountValue] = React.useState<number>(0);
+    const [total, setTotal] = React.useState<number>(0);
+    const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat("en-US", { style: "currency", currency: "VND" }).format(price);
@@ -27,20 +37,25 @@ export const Cart: React.FC = () => {
 
     const handleRemoveFromCart = (cartItemId: number) => {
         if (!user?.id) {
-            alert("Xin vui lòng đăng nhập để xóa khỏi giỏ hàng");
+            toast.error("Xin vui lòng đăng nhập để xóa khỏi giỏ hàng");
             return;
         }
         dispatch(removeFromCart({ userId: user.id, cartItemId }));
     };
 
+    useEffect(() => {
+        const uniqueCategoryIds = Array.from(new Set(cartItems.map(item => item.book?.category?.id).filter(Boolean))) as number[];
+        setCartCategoryIds(uniqueCategoryIds);
+    }, [cartItems, cartItems.length]);
+
     const updateQuantity = (cartItemId: number | undefined, newQuantity: number) => {
         if (newQuantity < 1) return;
         if (!user?.id) {
-            alert("Vui lòng đăng nhập để cập nhật giỏ hàng");
+            toast.error("Vui lòng đăng nhập để cập nhật giỏ hàng");
             return;
         }
         if (!cartItemId) {
-            alert("Không tìm thấy ID của sản phẩm trong giỏ hàng");
+            toast.error("Không tìm thấy ID của sản phẩm trong giỏ hàng");
             return;
         }
         dispatch(updateCartItem({ userId: user.id, cartItemId, quantity: newQuantity }));
@@ -56,14 +71,72 @@ export const Cart: React.FC = () => {
         updateQuantity(cartItemId, currentQuantity + 1);
     };
 
+    const handleApplyVoucher = async (voucher: Voucher) => {
+        setSelectedVoucher(voucher); // Lưu voucher đã chọn
+        await applyVoucherToCart(voucher);
+    };
+
+    const applyVoucherToCart = async (voucher: Voucher | null) => {
+        if (!voucher || Object.keys(voucher).length === 0) {
+            setDiscountValue(0);
+            return;
+        }
+
+        try {
+            const response = await fetch(API_ENDPOINTS.VOUCHER.APPLY.URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${AuthUtil.getToken()}`,
+                },
+                body: JSON.stringify({
+                    code: voucher.code,
+                    totalPrice: subtotal,
+                }),
+            });
+
+            if (!response.ok) {
+                Logger.error("Failed to apply voucher:", response.statusText);
+                toast.error("Không thể áp dụng mã giảm giá. Vui lòng thử lại.");
+                return;
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                setDiscountValue(data.data);
+            } else {
+                toast.error("Mã giảm giá không hợp lệ hoặc đã hết hạn.");
+                setSelectedVoucher(null); // Reset voucher nếu không hợp lệ
+                setDiscountValue(0);
+            }
+        } catch (error) {
+            Logger.error("Error applying voucher:", error);
+            toast.error("Có lỗi xảy ra khi áp dụng mã giảm giá");
+        }
+    };
+
     const subtotal = cartItems.reduce((total, item) => {
         const price = item.book?.price ?? 0;
         const quantity = item.quantity ?? 1;
         return total + price * quantity;
     }, 0);
 
-    const tax = subtotal * 0.1;
-    const total = subtotal + tax;
+    useEffect(() => {
+        const totalAmount = subtotal - discountValue;
+        setTotal(totalAmount);
+    }, [subtotal, discountValue]);
+
+    useEffect(() => {
+        if (selectedVoucher && cartItems.length > 0) {
+            const timer = setTimeout(() => {
+                applyVoucherToCart(selectedVoucher);
+            }, 300);
+
+            return () => clearTimeout(timer);
+        } else if (cartItems.length === 0) {
+            setDiscountValue(0);
+        }
+    }, [cartItems, subtotal]);
 
     const getItemSubtotal = (price: number, quantity: number) => {
         return price * quantity;
@@ -263,12 +336,21 @@ export const Cart: React.FC = () => {
                         <h2 className="text-xl font-bold text-gray-800 mb-6">Đơn hàng của bạn</h2>
                         <div className="space-y-5">
                             <div className="flex justify-between text-lg">
+                                <span className="text-gray-600">Tổng số sản phẩm</span>
+                                <span className="font-medium">{cartItems.length}</span>
+                            </div>
+
+                            <div className="flex justify-between text-lg">
+                                <VoucherDialog categoryIds={cartCategoryIds} minSpend={subtotal} onSelectVoucher={handleApplyVoucher} />
+                            </div>
+
+                            <div className="flex justify-between text-lg">
                                 <span className="text-gray-600">Tổng sản phẩm</span>
                                 <span className="font-medium">{formatPrice(subtotal)}</span>
                             </div>
                             <div className="flex justify-between text-lg">
-                                <span className="text-gray-600">Phí vận chuyển (10%)</span>
-                                <span className="font-medium">{formatPrice(tax)}</span>
+                                <span className="text-gray-600">Giảm giá</span>
+                                <span className="font-medium text-green-500">{formatPrice(discountValue)}</span>
                             </div>
                             <div className="h-px bg-gray-200 my-4"></div>
                             <div className="flex justify-between text-xl font-bold">

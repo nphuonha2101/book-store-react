@@ -4,7 +4,7 @@ import { CartItem } from "../../types/ApiResponse/Cart/cart.ts";
 
 export const fetchCartItems = createAsyncThunk(
     "cart/fetchCartItems",
-    async (userId: string, { rejectWithValue }) => {
+    async (userId: number, { rejectWithValue }) => {
         try {
             const response = await fetch(`${API_ENDPOINTS.CART.GET_CART_BY_USER.URL}${userId}`);
             if (!response.ok) {
@@ -46,7 +46,7 @@ export const addToCart = createAsyncThunk(
 
 export const removeFromCart = createAsyncThunk(
     "cart/removeFromCart",
-    async ({ userId, cartItemId }: { userId: string; cartItemId: number }, { rejectWithValue }) => {
+    async ({ userId, cartItemId }: { userId: number; cartItemId: number }, { rejectWithValue }) => {
         try {
             const response = await fetch(`${API_ENDPOINTS.CART.REMOVE_FROM_CART.URL}/${cartItemId}`, {
                 method: "DELETE",
@@ -68,7 +68,7 @@ export const removeFromCart = createAsyncThunk(
 export const updateCartItem = createAsyncThunk(
     "cart/updateCartItem",
     async (
-        { userId, cartItemId, quantity }: { userId: string; cartItemId: number; quantity: number },
+        { userId, cartItemId, quantity }: { userId: number; cartItemId: number; quantity: number },
         { rejectWithValue }
     ) => {
         try {
