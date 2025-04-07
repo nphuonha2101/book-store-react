@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
-import { API_ENDPOINTS } from "../constants/apiInfo";
-import Logger from "../log/logger";
 import { User } from "../types/ApiResponse/User/user";
+import Logger from "../log/Logger.ts";
+import {API_ENDPOINTS} from "../constants/ApiInfo.ts";
 
 export default class AuthUtil {
     /**

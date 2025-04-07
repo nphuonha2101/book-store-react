@@ -38,6 +38,21 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/categories/all`,
         },
     },
+    WISHLIST: {
+        GET_WISHLIST: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/wishlists/all`,
+        },
+        GET_WISHLIST_BY_USER: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/wishlists/userId`,
+        },
+        ADD_TO_WISHLIST: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/wishlists/add`,
+        },
+        REMOVE_FROM_WISHLIST: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/wishlists/delete`,
+        },
+
+    },
     CART: {
         GET_CART: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/all`,

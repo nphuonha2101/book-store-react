@@ -1,14 +1,15 @@
-import { Blank } from '../components/layout/Blank';
-import { Master } from '../components/layout/Master';
-import { Home } from '../components/pages/Home/Home';
-import { SignIn } from '../components/pages/SignIn/SignIn';
-import { RouteProps } from '../types/Route/routeProps.ts';
+import {Blank} from '../components/layout/Blank';
+import {Master} from '../components/layout/Master';
+import {Home} from '../components/pages/Home/Home';
+import {SignIn} from '../components/pages/SignIn/SignIn';
+import {RouteProps} from '../types/Route/routeProps.ts';
 import SearchResults from '../components/pages/Search/SearchResults.tsx';
-import { BookDetail } from "../components/vendor/Book/BookDetail.tsx";
-import { SignUp } from "../components/pages/SignUp/SignUp.tsx";
-import { UserProfile } from '../components/pages/User/UserProfile.tsx';
-import { RouteType } from "../constants/routeTypes.ts";
-import { Cart } from "../components/pages/Cart/Cart.tsx";
+import {BookDetail} from "../components/vendor/Book/BookDetail.tsx";
+import {SignUp} from "../components/pages/SignUp/SignUp.tsx";
+import {UserProfile} from '../components/pages/User/UserProfile.tsx';
+import {RouteType} from "../constants/routeTypes.ts";
+import {Cart} from "../components/pages/Cart/Cart.tsx";
+import Wishlist from "../components/pages/WishList/WishList.tsx";
 
 export const routes: RouteProps[] = [
     {
@@ -51,6 +52,12 @@ export const routes: RouteProps[] = [
     {
         path: '/carts',
         Component: Cart,
+        Layout: Master,
+        routeType: RouteType.PRIVATE
+    },
+    {
+        path: '/wishlists',
+        Component: Wishlist,
         Layout: Master,
         routeType: RouteType.PRIVATE
     }

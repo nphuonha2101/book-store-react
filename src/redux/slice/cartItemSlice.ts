@@ -1,4 +1,3 @@
-// src/features/cart/cartSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../../constants/ApiInfo.ts";
 import { CartItem } from "../../types/ApiResponse/Cart/cart.ts";
