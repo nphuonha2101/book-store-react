@@ -63,6 +63,11 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/vouchers/apply`,
         },
     },
+    RIBBON: {
+        ALL: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/ribbons/all`,
+        }
+    },
     AUTH: {
         SIGN_IN: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/login`,
