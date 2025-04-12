@@ -22,7 +22,8 @@ export const VoucherDialog: React.FC<{
     onSelectVoucher?: (voucher: Voucher) => void;
     categoryIds?: number[];
     minSpend?: number;
-}> = ({ onSelectVoucher, categoryIds, minSpend }) => {
+    voucherAvailable?: boolean;
+}> = ({ onSelectVoucher, categoryIds, minSpend, voucherAvailable }) => {
     const [open, setOpen] = useState(false);
     const [voucherCode, setVoucherCode] = useState<string>('');
     const [selectedVoucherCode, setSelectedVoucherCode] = useState<string | null>(null);
@@ -97,14 +98,14 @@ export const VoucherDialog: React.FC<{
                                 <Tag className="h-4 w-4 text-primary" />
                                 Mã giảm giá
                             </h3>
-                            {selectedVoucherCode && (
+                            {selectedVoucherCode && voucherAvailable && (
                                 <Badge variant="outline" className="text-green-600 bg-green-50 border-green-200">
                                     Đã áp dụng
                                 </Badge>
                             )}
                         </div>
 
-                        {selectedVoucherCode ? (
+                        {selectedVoucherCode && voucherAvailable ? (
                             <div className="flex items-center gap-2 w-full border rounded-md p-2 bg-blue-50/50">
                                 <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 px-2 py-1 font-mono">
                                     {selectedVoucherCode}
@@ -118,7 +119,6 @@ export const VoucherDialog: React.FC<{
                                         e.stopPropagation();
                                         if (onSelectVoucher) onSelectVoucher({} as Voucher);
                                         setSelectedVoucherCode(null);
-
                                     }}
                                 >
                                     Hủy
@@ -191,7 +191,7 @@ export const VoucherDialog: React.FC<{
                                         onClick={() => handleSelectVoucher(voucher)}
                                     >
                                         <div className="relative">
-                                            {selectedVoucherCode === voucher.code && (
+                                            {(selectedVoucherCode === voucher.code && voucherAvailable) && (
                                                 <div className="absolute top-0 right-0 z-10">
                                                     <Badge className="bg-primary text-white rounded-none rounded-bl-md px-3 py-1">
                                                         <Check className="h-4 w-4 mr-1" />

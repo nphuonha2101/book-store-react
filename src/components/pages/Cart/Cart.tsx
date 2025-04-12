@@ -23,6 +23,7 @@ export const Cart: React.FC = () => {
     const [discountValue, setDiscountValue] = React.useState<number>(0);
     const [total, setTotal] = React.useState<number>(0);
     const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
+    const [voucherAvailable, setVoucherAvailable] = useState<boolean>(false);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat("en-US", { style: "currency", currency: "VND" }).format(price);
@@ -82,6 +83,7 @@ export const Cart: React.FC = () => {
             return;
         }
 
+        // Call API để áp dụng voucher
         try {
             const response = await fetch(API_ENDPOINTS.VOUCHER.APPLY.URL, {
                 method: "POST",
@@ -98,15 +100,21 @@ export const Cart: React.FC = () => {
             if (!response.ok) {
                 Logger.error("Failed to apply voucher:", response.statusText);
                 toast.error("Không thể áp dụng mã giảm giá. Vui lòng thử lại.");
+                setVoucherAvailable(false);
+                setSelectedVoucher(null);
+                setDiscountValue(0);
                 return;
             }
 
             const data = await response.json();
             if (data.success) {
                 setDiscountValue(data.data);
+                setVoucherAvailable(true);
+                toast.success(`Mã giảm giá ${voucher.code} đã được áp dụng!`);
             } else {
                 toast.error("Mã giảm giá không hợp lệ hoặc đã hết hạn.");
-                setSelectedVoucher(null); // Reset voucher nếu không hợp lệ
+                setVoucherAvailable(false);
+                setSelectedVoucher(null);
                 setDiscountValue(0);
             }
         } catch (error) {
@@ -126,6 +134,7 @@ export const Cart: React.FC = () => {
         setTotal(totalAmount);
     }, [subtotal, discountValue]);
 
+    // Áp d dụng voucher khi có sự thay đổi trong giỏ hàng hoặc voucher đã chọn
     useEffect(() => {
         if (selectedVoucher && cartItems.length > 0) {
             const timer = setTimeout(() => {
@@ -341,7 +350,7 @@ export const Cart: React.FC = () => {
                             </div>
 
                             <div className="flex justify-between text-lg">
-                                <VoucherDialog categoryIds={cartCategoryIds} minSpend={subtotal} onSelectVoucher={handleApplyVoucher} />
+                                <VoucherDialog voucherAvailable={voucherAvailable} categoryIds={cartCategoryIds} minSpend={subtotal} onSelectVoucher={handleApplyVoucher} />
                             </div>
 
                             <div className="flex justify-between text-lg">

@@ -83,7 +83,7 @@ export const BookCard = ({ book, onClick }: { book: Book, onClick?: () => void }
                 </div>
             </div>
             <div className="p-4">
-                <p className="text-sm text-gray-500">{book.authorName}</p>
+                <p className="text-sm text-gray-500 line-clamp-1">{book.authorName}</p>
                 <h3 className="font-medium text-lg hover:text-blue-600 transition-colors mt-1 line-clamp-2">
                     <Link to={`/books/${book.id}`}>{book.title}</Link>
                 </h3>

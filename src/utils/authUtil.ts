@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { User } from "../types/ApiResponse/User/user";
-import Logger from "../log/Logger.ts";
-import {API_ENDPOINTS} from "../constants/ApiInfo.ts";
+import { API_ENDPOINTS } from "../constants/ApiInfo.ts";
+import Logger from "../log/logger.ts";
 
 export default class AuthUtil {
     /**
@@ -43,7 +43,21 @@ export default class AuthUtil {
      * @returns JWT token from local storage
      */
     static getToken() {
-        return localStorage.getItem("token");
+        if (!AuthUtil.isLogged()) {
+            return null;
+        }
+        // Check if token is expired
+        const token = localStorage.getItem("token");
+        if (!token) {
+            return null;
+        }
+        const isExpired = AuthUtil.checkTokenExpired(token);
+        if (isExpired) {
+            AuthUtil.logout();
+            toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+            return null;
+        }
+        return token;
     }
 
     /**
@@ -85,5 +99,44 @@ export default class AuthUtil {
             this.login(user, AuthUtil.getToken()!);
         else
             this.logout();
+    }
+
+    static decodeToken(token: string) {
+        try {
+            const parts = token.split(".");
+            if (parts.length !== 3) {
+                console.error("Invalid JWT token format");
+                return null;
+            }
+
+            const payload = parts[1];
+            // Sửa lỗi padding khi decode base64url
+            const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+            const paddedBase64 = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
+            const decodedPayload = atob(paddedBase64);
+
+            return JSON.parse(decodedPayload);
+        } catch (error) {
+            console.error("Failed to decode JWT token:", error);
+            return null;
+        }
+    }
+
+    static checkTokenExpired(token: string) {
+        try {
+            const decodedToken = AuthUtil.decodeToken(token);
+            if (!decodedToken || !decodedToken.exp) {
+                console.error("Invalid token or missing exp claim");
+                return true; // Coi như token hết hạn
+            }
+
+            const currentTime = Math.floor(Date.now() / 1000);
+            const bufferTime = 60; // Thời gian đệm 60 giây
+
+            return decodedToken.exp < (currentTime + bufferTime);
+        } catch (error) {
+            console.error("Error checking token expiration:", error);
+            return true; // Coi như token hết hạn nếu có lỗi
+        }
     }
 }
