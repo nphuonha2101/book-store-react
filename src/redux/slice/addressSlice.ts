@@ -11,32 +11,8 @@ interface AddressState {
     error: string | null;
 }
 
-// Khôi phục state từ localStorage nếu có
-const loadStateFromLocalStorage = (): Address[] => {
-    try {
-        const serializedState = localStorage.getItem("addresses");
-        if (serializedState === null) {
-            return [];
-        }
-        return JSON.parse(serializedState);
-    } catch (err) {
-        console.error("Could not load addresses from localStorage:", err);
-        return [];
-    }
-};
-
-// Lưu state vào localStorage
-const saveStateToLocalStorage = (addresses: Address[]) => {
-    try {
-        const serializedState = JSON.stringify(addresses);
-        localStorage.setItem("addresses", serializedState);
-    } catch (err) {
-        console.error("Could not save addresses to localStorage:", err);
-    }
-};
-
 const initialState: AddressState = {
-    addresses: loadStateFromLocalStorage(),
+    addresses: [],
     status: "idle",
     error: null,
 };
@@ -120,7 +96,9 @@ export const updateAddress = createAsyncThunk<
     { rejectValue: string }
 >(
     "address/updateAddress",
-    async ({ addressData }, { rejectWithValue }) => {
+    async ({ addressData
+
+           }, { rejectWithValue }) => {
         try {
             console.log("Updating address with data:", addressData); // Debug
             const response = await fetch(`${API_ENDPOINTS.ADDRESS.UPDATE_ADDRESS.URL}`, {
@@ -199,7 +177,6 @@ const addressSlice = createSlice({
             state.addresses = [];
             state.status = "idle";
             state.error = null;
-            saveStateToLocalStorage(state.addresses);
         },
     },
     extraReducers: (builder) => {
@@ -209,28 +186,27 @@ const addressSlice = createSlice({
             })
             .addCase(fetchAddresses.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                if (action.payload && Array.isArray(action.payload) && action.payload.length > 0) {
+                // Chỉ cập nhật nếu dữ liệu trả về không rỗng và hợp lệ
+                if (action.payload && Array.isArray(action.payload)) {
                     state.addresses = action.payload;
-                    saveStateToLocalStorage(state.addresses);
-                } else {
-                    console.log("Fetched addresses is empty, keeping current state:", state.addresses); // Debug
                 }
                 state.error = null;
-                console.log("State after fetchAddresses:", state.addresses); // Debug
+                console.log("State updated with fetched addresses:", state.addresses); // Debug
             })
             .addCase(fetchAddresses.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload as string;
                 console.log("Fetch addresses failed:", action.payload); // Debug
                 toast.error(action.payload || "Đã có lỗi xảy ra khi tải danh sách địa chỉ");
+                // Không ghi đè state.addresses
             })
             .addCase(addAddress.pending, (state) => {
                 state.status = "loading";
             })
             .addCase(addAddress.fulfilled, (state, action) => {
                 state.status = "succeeded";
+                // Thêm địa chỉ mới vào state ngay lập tức
                 state.addresses.push(action.payload);
-                saveStateToLocalStorage(state.addresses);
                 state.error = null;
                 toast.success("Thêm địa chỉ thành công");
             })
@@ -245,10 +221,10 @@ const addressSlice = createSlice({
             })
             .addCase(updateAddress.fulfilled, (state, action) => {
                 state.status = "succeeded";
+                // Cập nhật địa chỉ trong state
                 const index = state.addresses.findIndex((addr) => addr.id === action.payload.id);
                 if (index !== -1) {
                     state.addresses[index] = action.payload;
-                    saveStateToLocalStorage(state.addresses);
                 }
                 state.error = null;
                 toast.success("Cập nhật địa chỉ thành công");
@@ -270,8 +246,8 @@ const addressSlice = createSlice({
             })
             .addCase(deleteAddress.fulfilled, (state, action) => {
                 state.status = "succeeded";
+                // Xóa địa chỉ khỏi state
                 state.addresses = state.addresses.filter((addr) => addr.id !== action.meta.arg.id);
-                saveStateToLocalStorage(state.addresses);
                 state.error = null;
                 toast.success("Xóa địa chỉ thành công");
             })
