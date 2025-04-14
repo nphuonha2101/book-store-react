@@ -9,32 +9,31 @@ import {
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { VoucherDialog } from "./VoucherDialog.tsx";
-import Logger from "../../../log/logger.ts";
-import { Voucher } from "../../../types/ApiResponse/Voucher/voucher.ts";
-import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
-import AuthUtil from "../../../utils/authUtil.ts";
 import { toast } from "react-toastify";
+import { formatPrice } from "../../../utils/formatUtils.ts";
+import {
+    applyVoucher,
+    clearVoucher
+} from '../../../redux/slice/voucherSlice';
 
 export const Cart: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const { user } = useSelector((state: RootState) => state.auth);
     const { items: cartItems, status, error } = useSelector((state: RootState) => state.cart);
-    const [cartCategoryIds, setCartCategoryIds] = React.useState<number[]>([]);
-    const [discountValue, setDiscountValue] = React.useState<number>(0);
-    const [total, setTotal] = React.useState<number>(0);
-    const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
+    const [cartCategoryIds, setCartCategoryIds] = useState<number[]>([]);
+    const [total, setTotal] = useState<number>(0);
 
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat("en-US", { style: "currency", currency: "VND" }).format(price);
-    };
+    // Lấy thông tin voucher từ Redux store
+    const { selectedVoucher, discount, status: voucherStatus } = useSelector((state: RootState) => state.voucher);
 
+    // Lấy danh sách sản phẩm trong giỏ hàng khi component được mount
     useEffect(() => {
-        console.log("User ID:", user?.id);
         if (user?.id) {
             dispatch(fetchCartItems(user.id));
         }
     }, [dispatch, user?.id]);
 
+    // Xử lý xóa sản phẩm khỏi giỏ hàng
     const handleRemoveFromCart = (cartItemId: number) => {
         if (!user?.id) {
             toast.error("Xin vui lòng đăng nhập để xóa khỏi giỏ hàng");
@@ -46,7 +45,7 @@ export const Cart: React.FC = () => {
     useEffect(() => {
         const uniqueCategoryIds = Array.from(new Set(cartItems.map(item => item.book?.category?.id).filter(Boolean))) as number[];
         setCartCategoryIds(uniqueCategoryIds);
-    }, [cartItems, cartItems.length]);
+    }, [cartItems]);
 
     const updateQuantity = (cartItemId: number | undefined, newQuantity: number) => {
         if (newQuantity < 1) return;
@@ -71,72 +70,39 @@ export const Cart: React.FC = () => {
         updateQuantity(cartItemId, currentQuantity + 1);
     };
 
-    const handleApplyVoucher = async (voucher: Voucher) => {
-        setSelectedVoucher(voucher); // Lưu voucher đã chọn
-        await applyVoucherToCart(voucher);
-    };
-
-    const applyVoucherToCart = async (voucher: Voucher | null) => {
-        if (!voucher || Object.keys(voucher).length === 0) {
-            setDiscountValue(0);
-            return;
-        }
-
-        try {
-            const response = await fetch(API_ENDPOINTS.VOUCHER.APPLY.URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${AuthUtil.getToken()}`,
-                },
-                body: JSON.stringify({
-                    code: voucher.code,
-                    totalPrice: subtotal,
-                }),
-            });
-
-            if (!response.ok) {
-                Logger.error("Failed to apply voucher:", response.statusText);
-                toast.error("Không thể áp dụng mã giảm giá. Vui lòng thử lại.");
-                return;
-            }
-
-            const data = await response.json();
-            if (data.success) {
-                setDiscountValue(data.data);
-            } else {
-                toast.error("Mã giảm giá không hợp lệ hoặc đã hết hạn.");
-                setSelectedVoucher(null); // Reset voucher nếu không hợp lệ
-                setDiscountValue(0);
-            }
-        } catch (error) {
-            Logger.error("Error applying voucher:", error);
-            toast.error("Có lỗi xảy ra khi áp dụng mã giảm giá");
-        }
-    };
-
     const subtotal = cartItems.reduce((total, item) => {
         const price = item.book?.price ?? 0;
         const quantity = item.quantity ?? 1;
         return total + price * quantity;
     }, 0);
 
+    // Tính tổng tiền = subtotal - discount từ Redux
     useEffect(() => {
-        const totalAmount = subtotal - discountValue;
+        const totalAmount = Math.max(0, subtotal - discount);
         setTotal(totalAmount);
-    }, [subtotal, discountValue]);
+    }, [subtotal, discount]);
 
+    // Áp dụng lại voucher khi giỏ hàng thay đổi
     useEffect(() => {
-        if (selectedVoucher && cartItems.length > 0) {
+        // Chỉ áp dụng lại voucher khi:
+        // 1. Có voucher đã chọn
+        // 2. Có sản phẩm trong giỏ hàng
+        // 3. Subtotal thay đổi
+        if (selectedVoucher?.code && cartItems.length > 0) {
             const timer = setTimeout(() => {
-                applyVoucherToCart(selectedVoucher);
+                dispatch(applyVoucher({
+                    code: selectedVoucher.code,
+                    totalPrice: subtotal
+                }));
             }, 300);
 
             return () => clearTimeout(timer);
-        } else if (cartItems.length === 0) {
-            setDiscountValue(0);
+        } else if (cartItems.length === 0 && selectedVoucher) {
+            // Nếu giỏ hàng trống mà có voucher, xóa voucher
+            dispatch(clearVoucher());
         }
-    }, [cartItems, subtotal]);
+
+    }, [cartItems, subtotal, dispatch, selectedVoucher]);
 
     const getItemSubtotal = (price: number, quantity: number) => {
         return price * quantity;
@@ -341,7 +307,11 @@ export const Cart: React.FC = () => {
                             </div>
 
                             <div className="flex justify-between text-lg">
-                                <VoucherDialog categoryIds={cartCategoryIds} minSpend={subtotal} onSelectVoucher={handleApplyVoucher} />
+                                <VoucherDialog
+                                    voucherAvailable={voucherStatus === "succeeded"}
+                                    categoryIds={cartCategoryIds}
+                                    minSpend={subtotal}
+                                />
                             </div>
 
                             <div className="flex justify-between text-lg">
@@ -350,7 +320,7 @@ export const Cart: React.FC = () => {
                             </div>
                             <div className="flex justify-between text-lg">
                                 <span className="text-gray-600">Giảm giá</span>
-                                <span className="font-medium text-green-500">{formatPrice(discountValue)}</span>
+                                <span className="font-medium text-green-500">{formatPrice(discount)}</span>
                             </div>
                             <div className="h-px bg-gray-200 my-4"></div>
                             <div className="flex justify-between text-xl font-bold">

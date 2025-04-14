@@ -3,7 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useFetch from "../../../hooks/useFetch";
 import { SliderItem } from "../../../types/ApiResponse/Slider/sliderItem.ts";
-import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
+import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 import {
     Carousel,
     CarouselContent,
@@ -18,22 +18,24 @@ export const HeroSlider: React.FC = () => {
     if (!sliders || sliders.length === 0) return null;
 
     return (
-        <div className="relative">
-            <Carousel className="mx-auto w-full \"
+        <div className="w-full max-w-full overflow-hidden">
+            <Carousel
+                className="w-full max-w-full"
                 opts={{
                     loop: true,
-                }
-                }
+                    align: "start",
+                }}
             >
-                <CarouselContent>
+                <CarouselContent className="w-full">
                     {sliders.map((slider) => (
-                        <CarouselItem key={slider.id}>
-                            <div className="block w-full h-80 md:h-[500px] relative overflow-hidden rounded-lg shadow-xl">
+                        <CarouselItem key={slider.id} className="w-full">
+                            <div className="w-full h-80 md:h-[500px] relative overflow-hidden rounded-lg shadow-xl">
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
                                 <img
                                     src={slider.image}
                                     alt={slider.title}
                                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                                    style={{ objectPosition: 'center' }}
                                 />
                                 <div className="absolute bottom-0 left-0 p-6 z-20 w-full">
                                     {slider.title && (
@@ -61,8 +63,8 @@ export const HeroSlider: React.FC = () => {
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className="left-2 bg-white/30 hover:bg-white/50 backdrop-blur-sm text-black" />
-                <CarouselNext className="right-2 bg-white/30 hover:bg-white/50 backdrop-blur-sm text-black" />
+                <CarouselPrevious className="left-4 sm:left-8 z-30 bg-white/30 hover:bg-white/50 backdrop-blur-sm text-black" />
+                <CarouselNext className="right-4 sm:right-8 z-30 bg-white/30 hover:bg-white/50 backdrop-blur-sm text-black" />
             </Carousel>
         </div>
     )

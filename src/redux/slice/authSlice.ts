@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../types/ApiResponse/User/user.ts";
+import AuthUtil from "../../utils/authUtil.ts";
 interface AuthState {
     user: User | null;
     token: string | null;
@@ -7,7 +8,7 @@ interface AuthState {
 
 const initialState: AuthState = {
     user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null,
-    token: localStorage.getItem("token") || null,
+    token: AuthUtil.getToken() || null,
 };
 
 const authSlice = createSlice({

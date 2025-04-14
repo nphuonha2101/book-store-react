@@ -146,6 +146,16 @@ export const UserAddress = () => {
         console.log("Editing address:", editingAddress); // Debug
 
         try {
+            // Xác nhận nếu thay đổi thành địa chỉ mặc định
+            if (editingAddress && !editingAddress.isDefault && data.isDefault) {
+                const confirmChange = window.confirm(
+                    "Bạn có chắc chắn muốn đặt địa chỉ này làm mặc định? Điều này sẽ bỏ chọn địa chỉ mặc định hiện tại (nếu có)."
+                );
+                if (!confirmChange) {
+                    return;
+                }
+            }
+
             if (editingAddress) {
                 if (!addressData.id || addressData.id <= 0) {
                     toast.error("Địa chỉ không hợp lệ. Vui lòng làm mới danh sách và thử lại.");
@@ -158,6 +168,8 @@ export const UserAddress = () => {
                     console.log("Update failed:", result.payload); // Debug
                 } else if (updateAddress.fulfilled.match(result)) {
                     console.log("Update succeeded, response:", result.payload); // Debug
+                    // Tự động làm mới danh sách địa chỉ
+                    dispatch(fetchAddresses(userId.toString()));
                 }
                 setEditingAddress(null);
                 reset();
@@ -166,6 +178,8 @@ export const UserAddress = () => {
                 const result = await dispatch(addAddress(addressData));
                 if (addAddress.fulfilled.match(result)) {
                     console.log("Add succeeded, response:", result.payload); // Debug
+                    // Tự động làm mới danh sách địa chỉ
+                    dispatch(fetchAddresses(userId.toString()));
                 } else if (addAddress.rejected.match(result)) {
                     console.log("Add failed:", result.payload); // Debug
                     toast.error("Không thể thêm địa chỉ. Vui lòng thử lại.");
@@ -206,6 +220,9 @@ export const UserAddress = () => {
             if (deleteAddress.rejected.match(result)) {
                 console.log("Delete address failed:", result.payload); // Debug
                 toast.error("Không thể xóa địa chỉ. Vui lòng thử lại.");
+            } else {
+                // Tự động làm mới danh sách sau khi xóa
+                dispatch(fetchAddresses(userId!.toString()));
             }
         });
     };
@@ -478,7 +495,10 @@ export const UserAddress = () => {
                                             <p>{address.phone}</p>
                                             <p>{address.addInfo}, {address.ward}, {address.district}, {address.province}</p>
                                             {address.isDefault && (
-                                                <span className="inline-block mt-1 px-2 py-1 text-xs font-semibold text-white bg-green-500 rounded-full">
+                                                <span
+                                                    className="inline-block mt-1 px-2 py-1 text-xs font-semibold text-white bg-green-500 rounded-full transition-all duration-300 hover:bg-green-600"
+                                                    title="Đây là địa chỉ mặc định của bạn"
+                                                >
                                                     Mặc định
                                                 </span>
                                             )}

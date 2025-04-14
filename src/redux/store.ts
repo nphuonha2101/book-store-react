@@ -3,12 +3,14 @@ import authReducer from "./slice/authSlice";
 import cartReducer from "./slice/cartItemSlice";
 import wishListReducer from "./slice/wishlistSlice";
 import addressReducer from "./slice/addressSlice";
+import voucherReducer from "./slice/voucherSlice";
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         cart: cartReducer,
         wishList: wishListReducer,
+        voucher: voucherReducer,
         address: addressReducer,
 
     },
