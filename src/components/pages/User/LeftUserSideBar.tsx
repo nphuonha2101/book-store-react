@@ -27,7 +27,7 @@ export const LeftUserSideBar = () => {
 
     const navigationItems = [
         { to: "/profile", icon: <User size={16} className="mr-2" />, label: "Thông tin cá nhân" },
-        { to: "/profile/security", icon: <Shield size={16} className="mr-2" />, label: "Bảo mật" },
+        { to: "/addresses", icon: <Shield size={16} className="mr-2" />, label: "Địa chỉ người dùng" },
         { to: "/profile/notifications", icon: <BellRing size={16} className="mr-2" />, label: "Thông báo" },
         { to: "/profile/payments", icon: <CreditCard size={16} className="mr-2" />, label: "Thanh toán" },
         { to: "/profile/settings", icon: <Settings size={16} className="mr-2" />, label: "Cài đặt" }

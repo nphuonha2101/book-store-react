@@ -101,5 +101,19 @@ export const API_ENDPOINTS = {
                 URL: `${API_INFO.BASE_URL}/oauth2/authorization/google`,
             }
         }
-    }
+    },
+    ADDRESS : {
+        GET_ADDRESS: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/addresses`,
+        },
+        ADD_ADDRESS: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/addresses/add`,
+        },
+        UPDATE_ADDRESS: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/addresses/update`,
+        },
+        DELETE_ADDRESS: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/addresses/delete`,
+        },
+    },
 } as const;

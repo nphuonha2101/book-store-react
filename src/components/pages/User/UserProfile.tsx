@@ -17,10 +17,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
 import { toast } from "react-toastify";
-import Logger from "../../../log/logger";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store.ts";
 import { refreshUser } from "../../../redux/slice/authSlice.ts";
+import Logger from "../../../log/Logger.ts";
 
 // Define form input types
 interface UserProfileFormInputs {

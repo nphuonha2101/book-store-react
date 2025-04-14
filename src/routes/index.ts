@@ -10,6 +10,7 @@ import {UserProfile} from '../components/pages/User/UserProfile.tsx';
 import {RouteType} from "../constants/routeTypes.ts";
 import {Cart} from "../components/pages/Cart/Cart.tsx";
 import Wishlist from "../components/pages/WishList/WishList.tsx";
+import {UserAddress} from "../components/pages/User/UserAddress.tsx";
 
 export const routes: RouteProps[] = [
     {
@@ -40,6 +41,12 @@ export const routes: RouteProps[] = [
     {
         path: '/profile',
         Component: UserProfile,
+        Layout: Master,
+        routeType: RouteType.PRIVATE
+    },
+    {
+      path: '/addresses',
+        Component: UserAddress,
         Layout: Master,
         routeType: RouteType.PRIVATE
     },
