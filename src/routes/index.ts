@@ -11,6 +11,7 @@ import {RouteType} from "../constants/routeTypes.ts";
 import {Cart} from "../components/pages/Cart/Cart.tsx";
 import Wishlist from "../components/pages/WishList/WishList.tsx";
 import {UserAddress} from "../components/pages/User/UserAddress.tsx";
+import {ForgotPassword} from "../components/pages/FogotPasswd/FogotPasswd.tsx";
 
 export const routes: RouteProps[] = [
     {
@@ -61,6 +62,12 @@ export const routes: RouteProps[] = [
         Component: Cart,
         Layout: Master,
         routeType: RouteType.PRIVATE
+    },
+    {
+        path: '/forgot-password',
+        Component: ForgotPassword,
+        Layout: Blank,
+        routeType: RouteType.NOT_ALLOW_AUTH
     },
     {
         path: '/wishlists',

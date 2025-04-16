@@ -66,12 +66,7 @@ export const SignIn = () => {
     }
 
 
-    /** 
-     * Handle normal login
-     * @param email email of user
-     * @param password password of user
-     * @returns void
-     */
+
     const handleLogin = async (email: string, password: string) => {
         const response = await fetch(API_ENDPOINTS.AUTH.SIGN_IN.URL, {
             method: "POST",
@@ -163,9 +158,9 @@ export const SignIn = () => {
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
                                 <Label htmlFor="password">Mật khẩu</Label>
-                                <a href="/#" className="text-sm text-primary hover:underline">
+                                <Link to="/forgot-password" className="text-sm text-primary hover:underline">
                                     Quên mật khẩu?
-                                </a>
+                                </Link>
                             </div>
                             <Input
                                 id="password"
