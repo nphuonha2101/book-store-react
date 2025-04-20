@@ -12,6 +12,7 @@ import { Cart } from "../components/pages/Cart/Cart.tsx";
 import Wishlist from "../components/pages/WishList/WishList.tsx";
 import { UserAddress } from "../components/pages/User/UserAddress.tsx";
 import { ForgotPassword } from '../components/pages/FogotPasswd/FogotPasswd.tsx';
+import { Checkout } from '../components/pages/Checkout/Checkout.tsx';
 
 export const routes: RouteProps[] = [
     {
