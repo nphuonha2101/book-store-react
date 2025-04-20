@@ -13,6 +13,7 @@ import Wishlist from "../components/pages/WishList/WishList.tsx";
 import { UserAddress } from "../components/pages/User/UserAddress.tsx";
 import { ForgotPassword } from '../components/pages/FogotPasswd/FogotPasswd.tsx';
 import { Checkout } from '../components/pages/Checkout/Checkout.tsx';
+import Products from '../components/pages/Products/Products.tsx';
 
 export const routes: RouteProps[] = [
     {
@@ -81,6 +82,12 @@ export const routes: RouteProps[] = [
         Component: Checkout,
         Layout: Master,
         routeType: RouteType.PRIVATE
+    },
+    {
+        path: '/products',
+        Component: Products,
+        Layout: Master,
+        routeType: RouteType.PUBLIC
     }
 
 ];

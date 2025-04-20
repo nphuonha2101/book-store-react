@@ -47,7 +47,7 @@ export const Checkout: React.FC = () => {
     const [addressInfo, setAddressInfo] = useState<Address>();
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("1");
     const [subtotal, setSubtotal] = useState<number>(0);
-    const [shippingFee, setShippingFee] = useState<number>(30000);
+    const [shippingFee] = useState<number>(30000);
     const [total, setTotal] = useState<number>(0);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const [addresses, setAddresses] = useState<Address[]>([]);

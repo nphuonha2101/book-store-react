@@ -15,6 +15,7 @@ import {
     applyVoucher,
     clearVoucher
 } from '../../../redux/slice/voucherSlice';
+import { Button } from "../../../shadcn-components/ui/button.tsx";
 
 export const Cart: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -149,16 +150,18 @@ export const Cart: React.FC = () => {
 
     if (!cartItems || cartItems.length === 0) {
         return (
-            <div className="container mx-auto px-4 py-12 flex justify-center items-center min-h-screen">
+            <div className="container mx-auto px-4 py-5 flex justify-center items-center min-h-screen">
                 <div className="bg-white rounded-xl shadow-lg p-10 text-center max-w-3xl w-full">
                     <div className="text-gray-400 mb-6">
                         <ShoppingBag className="h-24 w-24 mx-auto" />
                     </div>
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4">Giỏ hàng của bạn đang trống</h2>
                     <p className="text-gray-600 mb-8 text-lg">Thêm mặt hàng vào giỏ hàng để tiếp tục mua sắm</p>
-                    <Link to="/" className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium">
-                        Tiếp tục mua hàng
-                    </Link>
+                    <Button className="w-full">
+                        <Link to="/">
+                            Tiếp tục mua hàng
+                        </Link>
+                    </Button>
                 </div>
             </div>
         );
