@@ -4,13 +4,18 @@ import { PaginationProps } from "../../../types/Pagination/paginationProps";
 export default function PaginationComponent({ pagination, onPageChange }: PaginationProps) {
     if (!pagination) return null;
 
+    // Đảm bảo các giá trị phù hợp với API Spring
+    const currentPage = pagination.currentPage; // index bắt đầu từ 0 trong Spring
+    const totalPages = pagination.totalPages;
+    const displayCurrentPage = currentPage + 1; // Hiển thị cho người dùng từ 1
+
     return (
         <Pagination>
             <PaginationContent>
                 {/* Nút Previous */}
                 <PaginationItem>
                     <PaginationPrevious
-                        onClick={() => !pagination.isFirst && onPageChange(pagination.currentPage - 1)}
+                        onClick={() => !pagination.isFirst && onPageChange(currentPage - 1)}
                         className={pagination.isFirst ? "pointer-events-none opacity-50" : "cursor-pointer"}
                         aria-disabled={pagination.isFirst}
                     />
@@ -18,18 +23,16 @@ export default function PaginationComponent({ pagination, onPageChange }: Pagina
 
                 {/* Logic hiển thị các trang với dấu ellipsis */}
                 {(() => {
-                    const currentPage = pagination.currentPage;
-                    const totalPages = pagination.totalPages;
                     const visiblePageCount = 5; // Số trang hiển thị tối đa (không tính nút prev/next)
                     const pages = [];
 
                     // Luôn hiển thị trang đầu
-                    if (currentPage > 2) {
+                    if (displayCurrentPage > 2) {
                         pages.push(
-                            <PaginationItem key={1}>
+                            <PaginationItem key={0}>
                                 <PaginationLink
-                                    onClick={() => onPageChange(1)}
-                                    isActive={currentPage === 1}
+                                    onClick={() => onPageChange(0)}
+                                    isActive={currentPage === 0}
                                 >
                                     1
                                 </PaginationLink>
@@ -38,7 +41,7 @@ export default function PaginationComponent({ pagination, onPageChange }: Pagina
                     }
 
                     // Hiển thị "..." nếu vị trí hiện tại cách xa trang đầu
-                    if (currentPage > 3) {
+                    if (displayCurrentPage > 3) {
                         pages.push(
                             <PaginationItem key="ellipsis-1">
                                 <PaginationEllipsis />
@@ -47,21 +50,23 @@ export default function PaginationComponent({ pagination, onPageChange }: Pagina
                     }
 
                     // Xác định trang bắt đầu và kết thúc để hiển thị
-                    let startPage = Math.max(currentPage - Math.floor(visiblePageCount / 2), 1);
-                    const endPage = Math.min(startPage + visiblePageCount - 1, totalPages);
+                    // Lưu ý: startPage bắt đầu từ 1 cho hiển thị, nhưng khi gọi API sẽ trừ 1
+                    let startDisplayPage = Math.max(displayCurrentPage - Math.floor(visiblePageCount / 2), 1);
+                    const endDisplayPage = Math.min(startDisplayPage + visiblePageCount - 1, totalPages);
 
                     // Điều chỉnh lại nếu không đủ trang để hiển thị
-                    if (endPage - startPage + 1 < visiblePageCount) {
-                        startPage = Math.max(endPage - visiblePageCount + 1, 1);
+                    if (endDisplayPage - startDisplayPage + 1 < visiblePageCount) {
+                        startDisplayPage = Math.max(endDisplayPage - visiblePageCount + 1, 1);
                     }
 
                     // Tạo các nút trang
-                    for (let i = startPage; i <= endPage; i++) {
+                    for (let i = startDisplayPage; i <= endDisplayPage; i++) {
+                        const pageIndex = i - 1; // Chuyển đổi thành index 0-based cho API
                         pages.push(
                             <PaginationItem key={i}>
                                 <PaginationLink
-                                    onClick={() => onPageChange(i)}
-                                    isActive={currentPage === i}
+                                    onClick={() => onPageChange(pageIndex)}
+                                    isActive={currentPage === pageIndex}
                                 >
                                     {i}
                                 </PaginationLink>
@@ -70,7 +75,7 @@ export default function PaginationComponent({ pagination, onPageChange }: Pagina
                     }
 
                     // Hiển thị "..." nếu vị trí hiện tại cách xa trang cuối
-                    if (currentPage < totalPages - 2) {
+                    if (displayCurrentPage < totalPages - 1) {
                         pages.push(
                             <PaginationItem key="ellipsis-2">
                                 <PaginationEllipsis />
@@ -79,12 +84,12 @@ export default function PaginationComponent({ pagination, onPageChange }: Pagina
                     }
 
                     // Luôn hiển thị trang cuối nếu không nằm trong dải trang hiển thị
-                    if (currentPage < totalPages - 1 && endPage !== totalPages) {
+                    if (displayCurrentPage < totalPages && endDisplayPage !== totalPages) {
                         pages.push(
                             <PaginationItem key={totalPages}>
                                 <PaginationLink
-                                    onClick={() => onPageChange(totalPages)}
-                                    isActive={currentPage === totalPages}
+                                    onClick={() => onPageChange(totalPages - 1)} // Index của trang cuối = totalPages - 1
+                                    isActive={currentPage === totalPages - 1}
                                 >
                                     {totalPages}
                                 </PaginationLink>
@@ -98,7 +103,7 @@ export default function PaginationComponent({ pagination, onPageChange }: Pagina
                 {/* Nút Next */}
                 <PaginationItem>
                     <PaginationNext
-                        onClick={() => !pagination.isLast && onPageChange(pagination.currentPage + 1)}
+                        onClick={() => !pagination.isLast && onPageChange(currentPage + 1)}
                         className={pagination.isLast ? "pointer-events-none opacity-50" : "cursor-pointer"}
                         aria-disabled={pagination.isLast}
                     />
