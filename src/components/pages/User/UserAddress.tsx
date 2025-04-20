@@ -9,10 +9,10 @@ import {
     Edit,
     RefreshCw,
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../shadcn-components/ui/card";
-import { Label } from "../../../shadcn-components/ui/label";
-import { Button } from "../../../shadcn-components/ui/button";
-import { Input } from "../../../shadcn-components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card";
+import { Label } from "../../ui/label";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import AuthUtil from "../../../utils/authUtil";
 import { LeftUserSideBar } from "./LeftUserSideBar";
 import { zodResolver } from "@hookform/resolvers/zod";

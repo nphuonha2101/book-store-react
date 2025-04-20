@@ -4,7 +4,7 @@ import useFetchPost from "../../../hooks/useFetchPost";
 import { getArray, saveArray } from "../../../utils/localStorageUtils";
 import { Book } from "../../../types/ApiResponse/Book/book";
 import useFetch from "../../../hooks/useFetch";
-import { Button } from "../../../shadcn-components/ui/button";
+import { Button } from "../../ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { BookCard } from "../../vendor/Card/BookCard";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";

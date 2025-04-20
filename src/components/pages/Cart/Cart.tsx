@@ -15,7 +15,7 @@ import {
     applyVoucher,
     clearVoucher
 } from '../../../redux/slice/voucherSlice';
-import { Button } from "../../../shadcn-components/ui/button.tsx";
+import { Button } from "../../ui/button.tsx";
 
 export const Cart: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();

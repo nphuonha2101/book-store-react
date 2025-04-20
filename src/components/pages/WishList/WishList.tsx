@@ -7,7 +7,7 @@ import AuthUtil from "../../../utils/authUtil.ts";
 import {AppDispatch, RootState} from "../../../redux/store.ts";
 import {fetchWishlistItems, removeFromWishlist} from "../../../redux/slice/wishlistSlice.ts";
 import {BookCard} from "../../vendor/Card/BookCard.tsx";
-import Logger from "../../../log/Logger.ts";
+import Logger from "../../../utils/logger.ts";
 
 const Wishlist: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();

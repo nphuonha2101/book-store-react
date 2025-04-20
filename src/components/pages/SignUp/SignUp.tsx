@@ -1,16 +1,16 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../shadcn-components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import usePost from "../../../hooks/usePost.ts";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { Logo } from "../../vendor/Logo/Logo.tsx";
-import { Input } from "../../../shadcn-components/ui/input.tsx";
-import { Button } from "../../../shadcn-components/ui/button.tsx";
-import { Separator } from "../../../shadcn-components/ui/separator.tsx";
+import { Input } from "../../ui/input.tsx";
+import { Button } from "../../ui/button.tsx";
+import { Separator } from "../../ui/separator.tsx";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../../shadcn-components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
 
 // Định nghĩa schema validation với Zod
 const signUpSchema = z.object({

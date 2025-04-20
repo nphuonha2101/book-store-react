@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import { User } from "../types/ApiResponse/User/user";
 import { API_ENDPOINTS } from "../constants/apiInfo.ts";
-import Logger from "../log/logger.ts";
+import Logger from "./logger.ts";
 
 export default class AuthUtil {
     /**
@@ -9,12 +9,12 @@ export default class AuthUtil {
      * @returns true if user is logged in, false otherwise
      */
     static isLogged() {
-        return localStorage.getItem("token") ? true : false;
+        return !!localStorage.getItem("token");
     }
 
     /**
      * Login user by saving user info and token to local storage
-     * @param user (User from ../types/ApiResponse/User/user) user object
+     * @param user user object
      * @param token  JWT token
      */
     static login(user: object, token: string) {

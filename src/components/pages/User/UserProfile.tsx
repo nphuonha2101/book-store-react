@@ -7,10 +7,10 @@ import {
     Save,
     Upload
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../shadcn-components/ui/card";
-import { Label } from "../../../shadcn-components/ui/label";
-import { Button } from "../../../shadcn-components/ui/button";
-import { Input } from "../../../shadcn-components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card";
+import { Label } from "../../ui/label";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
 import AuthUtil from "../../../utils/authUtil";
 import { LeftUserSideBar } from "./LeftUserSideBar";
 import { z } from "zod";
@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store.ts";
 import { refreshUser } from "../../../redux/slice/authSlice.ts";
-import Logger from "../../../log/Logger.ts";
+import Logger from "../../../utils/logger.ts";
 
 // Define form input types
 interface UserProfileFormInputs {

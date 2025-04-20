@@ -10,7 +10,7 @@ import {
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from "../../../shadcn-components/ui/carousel"
+} from "../../ui/carousel"
 
 export const HeroSlider: React.FC = () => {
     const { data: sliders } = useFetch<SliderItem[]>(API_ENDPOINTS.SLIDER.GET_SLIDER.URL);

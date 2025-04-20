@@ -5,7 +5,7 @@ import SearchBar from './SearchBar';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import MobileMenu from './MobileMenu';
 import { Logo } from '../../vendor/Logo/Logo';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../../shadcn-components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 import { toast } from 'react-toastify';
 import AuthUtil from '../../../utils/authUtil';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +33,7 @@ export default function EnhancedEcommerceNavbar() {
 
         // Nếu người dùng đã đăng nhập, lấy dữ liệu giỏ hàng
         if (AuthUtil.isLogged() && user?.id) {
-            dispatch(fetchCartItems(user.id));
+            dispatch(fetchCartItems());
         }
     }, [dispatch, user]);
 

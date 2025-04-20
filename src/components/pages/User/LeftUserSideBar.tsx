@@ -1,6 +1,6 @@
 import { Separator } from "@radix-ui/react-dropdown-menu"
 import { Menu, X, User, Shield, BellRing, CreditCard, Settings, LogOut } from "lucide-react"
-import { Button } from "../../../shadcn-components/ui/button"
+import { Button } from "../../ui/button"
 import { NavLink } from "react-router-dom"
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"

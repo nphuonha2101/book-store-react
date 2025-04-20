@@ -1,5 +1,5 @@
 import { ShoppingCart, Eye, CreditCard } from "lucide-react";
-import { Button } from "../../../shadcn-components/ui/button";
+import { Button } from "../../ui/button";
 import { Book } from "../../../types/ApiResponse/Book/book";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";

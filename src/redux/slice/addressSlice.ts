@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import AuthUtil from "../../utils/authUtil";
 import { Address } from "../../types/ApiResponse/Address/Address.ts";
 import { API_ENDPOINTS } from "../../constants/apiInfo.ts";
-import Logger from "../../log/Logger.ts";
+import Logger from "../../utils/logger.ts";
 
 interface AddressState {
     addresses: Address[];

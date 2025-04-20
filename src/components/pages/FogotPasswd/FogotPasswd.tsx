@@ -2,11 +2,11 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../../../shadcn-components/ui/card.tsx";
-import {Input} from "../../../shadcn-components/ui/input.tsx";
-import {API_ENDPOINTS} from "../../../constants/ApiInfo.ts";
-import {Label} from "../../../shadcn-components/ui/label.tsx";
-import {Button} from "../../../shadcn-components/ui/button.tsx";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../../ui/card.tsx";
+import {Input} from "../../ui/input.tsx";
+import {API_ENDPOINTS} from "../../../constants/apiInfo.ts";
+import {Label} from "../../ui/label.tsx";
+import {Button} from "../../ui/button.tsx";
 import {Loader2} from "lucide-react";
 import {Link} from "react-router-dom";
 
@@ -58,12 +58,16 @@ export const ForgotPassword = () => {
             }
 
             toast.success("Yêu cầu quên mật khẩu thành công. Vui lòng kiểm tra email của bạn!");
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Forgot password error:", error);
-            if (error.name === "AbortError") {
-                toast.error("Yêu cầu đã hết thời gian. Vui lòng kiểm tra kết nối và thử lại.");
+            if (error instanceof Error) {
+                if (error.name === "AbortError") {
+                    toast.error("Yêu cầu đã hết thời gian. Vui lòng kiểm tra kết nối và thử lại.");
+                } else {
+                    toast.error(error.message || "Đã có lỗi xảy ra. Vui lòng thử lại.");
+                }
             } else {
-                toast.error(error.message || "Đã có lỗi xảy ra. Vui lòng thử lại.");
+                toast.error("Đã có lỗi xảy ra. Vui lòng thử lại.");
             }
         }
     };

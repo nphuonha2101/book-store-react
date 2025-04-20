@@ -5,17 +5,17 @@ import {
     CardHeader,
     CardTitle,
     CardContent
-} from '../../../shadcn-components/ui/card';
+} from '../../ui/card';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue
-} from '../../../shadcn-components/ui/select';
-import { Input } from '../../../shadcn-components/ui/input';
-import { Button } from '../../../shadcn-components/ui/button';
-import { Label } from '../../../shadcn-components/ui/label';
+} from '../../ui/select';
+import { Input } from '../../ui/input';
+import { Button } from '../../ui/button';
+import { Label } from '../../ui/label';
 import PaginationComponent from '../../vendor/Pagination/Pagination';
 import { Search, RefreshCw } from 'lucide-react';
 import { Category } from '../../../types/ApiResponse/Category/category';

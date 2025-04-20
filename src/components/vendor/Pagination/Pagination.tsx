@@ -1,4 +1,4 @@
-import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink, PaginationEllipsis } from "../../../shadcn-components/ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink, PaginationEllipsis } from "../../ui/pagination";
 import { PaginationProps } from "../../../types/Pagination/paginationProps";
 
 export default function PaginationComponent({ pagination, onPageChange }: PaginationProps) {

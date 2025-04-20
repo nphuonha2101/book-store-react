@@ -6,17 +6,17 @@ import { ShoppingBag, CreditCard, Truck, ChevronRight, ArrowLeft } from "lucide-
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { formatPrice } from "../../../utils/formatUtils.ts";
-import { Button } from "../../../shadcn-components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../../shadcn-components/ui/card";
-import { Label } from "../../../shadcn-components/ui/label";
-import { RadioGroup, RadioGroupItem } from "../../../shadcn-components/ui/radio-group";
-import { Separator } from "../../../shadcn-components/ui/separator";
-import { Badge } from "../../../shadcn-components/ui/badge";
-import { Alert, AlertDescription } from "../../../shadcn-components/ui/alert";
-import { Progress } from "../../../shadcn-components/ui/progress"
+import { Button } from "../../ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card";
+import { Label } from "../../ui/label";
+import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
+import { Separator } from "../../ui/separator";
+import { Badge } from "../../ui/badge";
+import { Alert, AlertDescription } from "../../ui/alert";
+import { Progress } from "../../ui/progress"
 import { Address } from "../../../types/ApiResponse/Address/Address.ts";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from "../../../shadcn-components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from "../../ui/drawer";
 import { PAYMENT_METHOD } from "../../../constants/paymentMethod.ts";
 import AuthUtil from "../../../utils/authUtil.ts";
 

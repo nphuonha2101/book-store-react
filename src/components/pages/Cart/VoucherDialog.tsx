@@ -7,14 +7,14 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '../../../shadcn-components/ui/dialog';
-import { Button } from '../../../shadcn-components/ui/button';
-import { Badge } from '../../../shadcn-components/ui/badge';
-import { Card, CardContent } from '../../../shadcn-components/ui/card';
+} from '../../ui/dialog';
+import { Button } from '../../ui/button';
+import { Badge } from '../../ui/badge';
+import { Card, CardContent } from '../../ui/card';
 import { toast } from 'react-toastify';
 import { daysUntilNow, formatDate, formatPrice } from '../../../utils/formatUtils';
 import { Voucher } from '../../../types/ApiResponse/Voucher/voucher';
-import { Separator } from '../../../shadcn-components/ui/separator';
+import { Separator } from '../../ui/separator';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../redux/store';
 import {
