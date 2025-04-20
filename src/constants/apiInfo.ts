@@ -97,6 +97,9 @@ export const API_ENDPOINTS = {
         ME: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/me`,
         },
+        FORGOT_PASSWORD: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/forgot-password`,
+        },
         UPDATE: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/update`,
         },
