@@ -29,7 +29,7 @@ export const Cart: React.FC = () => {
     // Lấy danh sách sản phẩm trong giỏ hàng khi component được mount
     useEffect(() => {
         if (user?.id) {
-            dispatch(fetchCartItems(user.id));
+            dispatch(fetchCartItems());
         }
     }, [dispatch, user?.id]);
 
@@ -90,6 +90,7 @@ export const Cart: React.FC = () => {
         // 3. Subtotal thay đổi
         if (selectedVoucher?.code && cartItems.length > 0) {
             const timer = setTimeout(() => {
+                // Gọi action applyVoucher với mã giảm giá và tổng tiền (voucherSlice.ts)
                 dispatch(applyVoucher({
                     code: selectedVoucher.code,
                     totalPrice: subtotal
@@ -329,9 +330,11 @@ export const Cart: React.FC = () => {
                             </div>
                         </div>
                         <div className="mt-8 space-y-4">
-                            <button className="w-full bg-black text-white py-4 rounded-lg hover:bg-gray-800 transition-colors font-semibold text-lg">
-                                Đặt hàng
-                            </button>
+                            <Link to="/checkout">
+                                <button className="w-full bg-black text-white py-4 rounded-lg hover:bg-gray-800 transition-colors font-semibold text-lg">
+                                    Đặt hàng
+                                </button>
+                            </Link>
                             <button className="w-full bg-white text-gray-800 border border-gray-300 py-4 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg">
                                 Tiếp tục mua hàng
                             </button>

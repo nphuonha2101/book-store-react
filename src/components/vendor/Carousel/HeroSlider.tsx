@@ -3,7 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import useFetch from "../../../hooks/useFetch";
 import { SliderItem } from "../../../types/ApiResponse/Slider/sliderItem.ts";
-import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
+import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import {
     Carousel,
     CarouselContent,

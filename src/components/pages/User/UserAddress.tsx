@@ -17,7 +17,7 @@ import AuthUtil from "../../../utils/authUtil";
 import { LeftUserSideBar } from "./LeftUserSideBar";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Address } from "../../vendor/Address/Address";
+import { Address } from "../../../types/ApiResponse/Address/Address";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import {

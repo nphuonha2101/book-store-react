@@ -1,7 +1,7 @@
 import React from "react";
 import { HeroSlider } from "../../vendor/Carousel/HeroSlider";
 import useFetch from "../../../hooks/useFetch.ts";
-import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
+import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { RibbonsContainer } from "../../vendor/Ribbon/RibbonsContainer.tsx";
 import { Ribbon } from "../../../types/ApiResponse/Ribbon/ribbon.ts";
 

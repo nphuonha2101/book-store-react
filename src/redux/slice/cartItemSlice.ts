@@ -1,12 +1,18 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { API_ENDPOINTS } from "../../constants/ApiInfo.ts";
+import { API_ENDPOINTS } from "../../constants/apiInfo.ts";
 import { CartItem } from "../../types/ApiResponse/Cart/cart.ts";
+import AuthUtil from "../../utils/authUtil.ts";
 
 export const fetchCartItems = createAsyncThunk(
     "cart/fetchCartItems",
-    async (userId: number, { rejectWithValue }) => {
+    async (_, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${API_ENDPOINTS.CART.GET_CART_BY_USER.URL}${userId}`);
+            const response = await fetch(`${API_ENDPOINTS.CART.GET_CART_BY_USER.URL}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${AuthUtil.getToken()}`
+                },
+            });
             if (!response.ok) {
                 const errorData = await response.text();
                 throw new Error(`API error: ${errorData || response.statusText}`);
@@ -16,7 +22,7 @@ export const fetchCartItems = createAsyncThunk(
             // Truy cập vào data.data thay vì data
             return Array.isArray(data.data) ? data.data : [];
         } catch (error) {
-            console.error("fetchCartItems error:", error, { userId });
+            console.error("fetchCartItems error:", error);
             return rejectWithValue((error as Error).message);
         }
     }
@@ -28,7 +34,10 @@ export const addToCart = createAsyncThunk(
         try {
             const response = await fetch(API_ENDPOINTS.CART.ADD_TO_CART.URL, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${AuthUtil.getToken()}`
+                },
                 body: JSON.stringify(cartItem),
             });
             if (!response.ok) {
@@ -50,7 +59,10 @@ export const removeFromCart = createAsyncThunk(
         try {
             const response = await fetch(`${API_ENDPOINTS.CART.REMOVE_FROM_CART.URL}/${cartItemId}`, {
                 method: "DELETE",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${AuthUtil.getToken()}`
+                },
                 body: JSON.stringify({ userId }),
             });
             if (!response.ok) {
@@ -74,7 +86,10 @@ export const updateCartItem = createAsyncThunk(
         try {
             const response = await fetch(API_ENDPOINTS.CART.UPDATE_CART.URL, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${AuthUtil.getToken()}`
+                },
                 body: JSON.stringify({ userId, cartItemId, quantity }),
             });
             if (!response.ok) {
@@ -88,6 +103,30 @@ export const updateCartItem = createAsyncThunk(
         }
     }
 );
+
+export const clearAllCartItems = createAsyncThunk("cart/clearCart", async (
+    _, { rejectWithValue }
+) => {
+    try {
+        const response = await fetch(API_ENDPOINTS.CART.CLEAR_CART.URL, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${AuthUtil.getToken()}`
+            },
+        });
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`API error: ${errorData || response.statusText}`);
+        }
+        return null;
+    } catch (error) {
+        console.error("clearCart error:", error);
+        return rejectWithValue((error as Error).message);
+    }
+});
+
+
 
 interface CartState {
     items: CartItem[];
@@ -126,6 +165,7 @@ const cartSlice = createSlice({
                 state.status = "failed";
                 state.error = action.payload as string;
             })
+
             // Add to Cart
             .addCase(addToCart.pending, (state) => {
                 state.status = "loading";
@@ -152,6 +192,7 @@ const cartSlice = createSlice({
                 state.status = "failed";
                 state.error = action.payload as string;
             })
+
             // Update Cart Item
             .addCase(updateCartItem.pending, (state) => {
                 // state.status = "loading";
@@ -164,6 +205,20 @@ const cartSlice = createSlice({
                 if (item) item.quantity = quantity;
             })
             .addCase(updateCartItem.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload as string;
+            })
+
+            // Clear All Cart Items
+            .addCase(clearAllCartItems.pending, (state) => {
+                state.status = "loading";
+                state.error = null;
+            })
+            .addCase(clearAllCartItems.fulfilled, (state) => {
+                state.status = "succeeded";
+                state.items = [];
+            })
+            .addCase(clearAllCartItems.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload as string;
             });

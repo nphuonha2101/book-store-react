@@ -7,7 +7,7 @@ import useFetch from "../../../hooks/useFetch";
 import { Button } from "../../../shadcn-components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { BookCard } from "../../vendor/Card/BookCard";
-import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
+import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 
 export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispatch<SetStateAction<boolean>> }) {
     const [searchTermsHistory, setSearchTermsHistory] = useState<string[]>([]);

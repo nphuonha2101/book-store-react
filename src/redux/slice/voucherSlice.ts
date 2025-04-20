@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { Voucher } from "../../types/ApiResponse/Voucher/voucher";
-import { API_ENDPOINTS } from "../../constants/ApiInfo";
+import { API_ENDPOINTS } from "../../constants/apiInfo.ts";
 import AuthUtil from "../../utils/authUtil";
 import Logger from "../../log/logger";
 

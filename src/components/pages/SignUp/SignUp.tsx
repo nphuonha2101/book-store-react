@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import usePost from "../../../hooks/usePost.ts";
-import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
+import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { Logo } from "../../vendor/Logo/Logo.tsx";
 import { Input } from "../../../shadcn-components/ui/input.tsx";
 import { Button } from "../../../shadcn-components/ui/button.tsx";

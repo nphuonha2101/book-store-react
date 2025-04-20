@@ -20,7 +20,7 @@ import PaginationComponent from '../../vendor/Pagination/Pagination';
 import { Search, RefreshCw } from 'lucide-react';
 import { Category } from '../../../types/ApiResponse/Category/category';
 import useFetch from '../../../hooks/useFetch';
-import { API_ENDPOINTS } from '../../../constants/apiInfo';
+import { API_ENDPOINTS } from '../../../constants/apiInfo.ts';
 import { BookCard } from '../../vendor/Card/BookCard';
 import {Loading} from "../../vendor/Loading/Loading.tsx";
 

@@ -15,7 +15,7 @@ import AuthUtil from "../../../utils/authUtil";
 import { LeftUserSideBar } from "./LeftUserSideBar";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { API_ENDPOINTS } from "../../../constants/ApiInfo.ts";
+import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store.ts";

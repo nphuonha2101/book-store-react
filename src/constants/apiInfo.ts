@@ -55,20 +55,24 @@ export const API_ENDPOINTS = {
     },
     CART: {
         GET_CART: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/all`,
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/carts`,
         },
         GET_CART_BY_USER: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/`,
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/carts/me`,
         },
         ADD_TO_CART: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/add`,
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/carts/add`,
         },
         REMOVE_FROM_CART: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/delete`,
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/carts/delete`,
         },
         UPDATE_CART: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/carts/update`,
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/carts/update`,
         },
+        CLEAR_CART: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/carts/clear`,
+        },
+
     },
     VOUCHER: {
         GET_VOUCHERS: {
@@ -102,7 +106,7 @@ export const API_ENDPOINTS = {
             }
         }
     },
-    ADDRESS : {
+    ADDRESS: {
         GET_ADDRESS: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/addresses`,
         },
@@ -116,4 +120,9 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/addresses/delete`,
         },
     },
+    ORDER: {
+        PLACE_ORDER: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders/order`,
+        }
+    }
 } as const;

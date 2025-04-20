@@ -77,7 +77,7 @@ export const VoucherDialog: React.FC<{
                     code: voucherCode,
                     totalPrice: minSpend
                 }))
-                    .unwrap()
+                    .unwrap() // Giải nén promise để lấy giá trị trả về (nếu thành công thì trả về discount, nếu thất bại thì ném lỗi)
                     .then((discount) => {
                         if (discount > 0) {
                             // Nếu áp dụng thành công, tạo một voucher tạm thời

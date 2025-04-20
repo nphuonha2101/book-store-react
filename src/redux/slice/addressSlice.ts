@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import AuthUtil from "../../utils/authUtil";
-import { Address } from "../../components/vendor/Address/Address.ts";
-import { API_ENDPOINTS } from "../../constants/ApiInfo.ts";
+import { Address } from "../../types/ApiResponse/Address/Address.ts";
+import { API_ENDPOINTS } from "../../constants/apiInfo.ts";
 import Logger from "../../log/Logger.ts";
 
 interface AddressState {
