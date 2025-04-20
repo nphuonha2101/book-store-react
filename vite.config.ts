@@ -8,8 +8,11 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      "@shadcn-components": path.resolve(__dirname, "src/shadcn-components")
+      "@components": path.resolve(__dirname, "src/components")
     }
   },
   publicDir: 'public',
+  build: {
+    outDir: 'dist'
+  }
 })
