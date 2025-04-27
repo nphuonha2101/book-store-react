@@ -11,7 +11,12 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/sliders/all`,
         },
     },
+    SEND_MAIL: {
 
+        SEND: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/contacts`,
+        },
+    },
     BOOK: {
         GET_BOOKS: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/all`,
