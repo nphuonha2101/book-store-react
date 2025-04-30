@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import Logger from "../../../utils/logger.ts";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import AuthUtil from "../../../utils/authUtil";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store.ts";
 import { login } from "../../../redux/slice/authSlice.ts";
@@ -44,7 +43,7 @@ export const SignIn = () => {
                     return;
                 }
                 // Save user info and token to local storage
-                AuthUtil.login(userResponse.data, token);
+                dispatch(login({ user: userResponse.data, token: token }));
                 toast.success("Đăng nhập thành công");
                 handleRedirectToBeforeLogin();
             } catch (error) {

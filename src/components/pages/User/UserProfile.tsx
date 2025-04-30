@@ -80,8 +80,6 @@ export const UserProfile = () => {
     });
 
     useEffect(() => {
-
-
         if (userData) {
             // Set form fields with user data
             setValue('name', userData.name || '');

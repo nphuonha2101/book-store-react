@@ -22,7 +22,7 @@ import { Category } from '../../../types/ApiResponse/Category/category';
 import useFetch from '../../../hooks/useFetch';
 import { API_ENDPOINTS } from '../../../constants/apiInfo.ts';
 import { BookCard } from '../../vendor/Card/BookCard';
-import {Loading} from "../../vendor/Loading/Loading.tsx";
+import { Loading } from "../../vendor/Loading/Loading.tsx";
 
 // Define TypeScript interfaces
 interface Book {
