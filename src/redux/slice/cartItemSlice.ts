@@ -132,12 +132,16 @@ interface CartState {
     items: CartItem[];
     status: "idle" | "loading" | "succeeded" | "failed";
     error: string | null;
+    shippingFee: number;
+    totalItemsPrice: number;
 }
 
 const initialState: CartState = {
     items: [],
     status: "idle",
     error: null,
+    shippingFee: 0,
+    totalItemsPrice: 0,
 };
 
 const cartSlice = createSlice({
@@ -148,7 +152,15 @@ const cartSlice = createSlice({
             state.items = [];
             state.status = "idle";
             state.error = null;
+            state.shippingFee = 0;
+            state.totalItemsPrice = 0;
         },
+        updateShippingFee: (state, action: PayloadAction<number>) => {
+            state.shippingFee = action.payload;
+        },
+        updateItemsPrice: (state, action: PayloadAction<number>) => {
+            state.totalItemsPrice = action.payload;
+        }
     },
     extraReducers: (builder) => {
         // Fetch Cart Items
@@ -225,5 +237,5 @@ const cartSlice = createSlice({
     },
 });
 
-export const { clearCart } = cartSlice.actions;
+export const { clearCart, updateShippingFee, updateItemsPrice } = cartSlice.actions;
 export default cartSlice.reducer;

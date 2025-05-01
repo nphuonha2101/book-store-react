@@ -5,6 +5,8 @@ import {
     fetchCartItems,
     removeFromCart,
     updateCartItem,
+    updateShippingFee,
+    updateItemsPrice,
 } from "../../../redux/slice/cartItemSlice.ts";
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -23,8 +25,13 @@ export const Cart: React.FC = () => {
     const { user } = useSelector((state: RootState) => state.auth);
     const { items: cartItems, status, error } = useSelector((state: RootState) => state.cart);
     const [cartCategoryIds, setCartCategoryIds] = useState<number[]>([]);
+    // State nội bộ để tính toán tổng tiền
+    // Tổng tiền = subtotal - discount + shipping fee
     const [total, setTotal] = useState<number>(0);
+    // State nội bộ để tính toán phí vận chuyển
     const [shippingFee, setShippingFee] = useState<number>(0);
+    // State nội bộ để tính toán subtotal = tổng tiền sản phẩm trong giỏ hàng
+    const [subtotal, setSubtotal] = useState<number>(0);
 
     // Lấy thông tin voucher từ Redux store
     const { selectedVoucher, discount, status: voucherStatus } = useSelector((state: RootState) => state.voucher);
@@ -73,17 +80,29 @@ export const Cart: React.FC = () => {
         updateQuantity(cartItemId, currentQuantity + 1);
     };
 
-    const subtotal = cartItems.reduce((total, item) => {
-        const price = item.book?.price ?? 0;
-        const quantity = item.quantity ?? 1;
-        return total + price * quantity;
-    }, 0);
+    // Tính toán subtotal từ danh sách sản phẩm trong giỏ hàng
+    useEffect(() => {
+        const newSubtotal = cartItems.reduce((total, item) => {
+            const price = item.book?.price ?? 0;
+            const quantity = item.quantity ?? 1;
+            return total + price * quantity;
+        }, 0);
+        setSubtotal(newSubtotal);
+    }, [cartItems]);
 
     // Tính tổng tiền = subtotal - discount từ Redux
     useEffect(() => {
-        const totalAmount = Math.max(0, subtotal - discount);
+        const totalAmount = Math.max(0, subtotal - discount + getShippingFee(subtotal));
         setShippingFee(getShippingFee(totalAmount));
-        setTotal(totalAmount + shippingFee);
+        // Total amount = subtotal - discount + shipping fee
+        // State này chỉ dùng để hiển thị tổng tiền trong giỏ hàng
+        setTotal(totalAmount);
+
+        // Update state trong Redux
+        dispatch(updateShippingFee(getShippingFee(totalAmount)));
+        // Đưa tổng giá trị sản phẩm vào Redux store
+        // Ở checkout sẽ dùng để tính toán lại tổng tiền
+        dispatch(updateItemsPrice(subtotal));
     }, [subtotal, discount]);
 
     // Áp dụng lại voucher khi giỏ hàng thay đổi

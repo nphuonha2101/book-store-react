@@ -29,6 +29,7 @@ interface OrderRequest {
     note?: string;
     totalAmount: number;
     totalDiscount: number;
+    shippingFee?: number;
     orderItems: {
         bookId: number;
         quantity: number;
@@ -40,14 +41,12 @@ export const Checkout: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const { user } = useSelector((state: RootState) => state.auth);
-    const { items: cartItems, status, error } = useSelector((state: RootState) => state.cart);
+    const { items: cartItems, status, error, totalItemsPrice: subtotal, shippingFee } = useSelector((state: RootState) => state.cart);
     const { selectedVoucher, discount } = useSelector((state: RootState) => state.voucher);
 
     const [step, setStep] = useState<number>(1);
     const [addressInfo, setAddressInfo] = useState<Address>();
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("1");
-    const [subtotal, setSubtotal] = useState<number>(0);
-    const [shippingFee] = useState<number>(30000);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("0");
     const [total, setTotal] = useState<number>(0);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
     const [addresses, setAddresses] = useState<Address[]>([]);
@@ -82,15 +81,6 @@ export const Checkout: React.FC = () => {
         }
     }, []);
 
-    // Tính tổng tiền sản phẩm
-    useEffect(() => {
-        const productTotal = cartItems.reduce((total, item) => {
-            const price = item.book?.price ?? 0;
-            const quantity = item.quantity ?? 1;
-            return total + price * quantity;
-        }, 0);
-        setSubtotal(productTotal);
-    }, [cartItems]);
 
     // Tính tổng thanh toán = subtotal - discount + shippingFee
     useEffect(() => {
@@ -133,6 +123,7 @@ export const Checkout: React.FC = () => {
                 note: "",
                 totalAmount: total,
                 totalDiscount: discount,
+                shippingFee: shippingFee,
                 orderItems: cartItems.map((item) => ({
                     bookId: item.book?.id || 0,
                     quantity: item.quantity || 1,
@@ -460,7 +451,7 @@ export const Checkout: React.FC = () => {
                                                 htmlFor={method.id}
                                                 className="flex items-center gap-3 flex-1 cursor-pointer"
                                             >
-                                                {method.icon}
+                                                <method.icon className="h-6 w-6 text-primary" />
                                                 <div>
                                                     <p className="font-medium">{method.name}</p>
                                                     <p className="text-sm text-muted-foreground">{method.description}</p>
