@@ -16,6 +16,7 @@ import {
     clearVoucher
 } from '../../../redux/slice/voucherSlice';
 import { Button } from "../../ui/button.tsx";
+import { getShippingFee } from "../../../constants/shippingFee.ts";
 
 export const Cart: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -23,6 +24,7 @@ export const Cart: React.FC = () => {
     const { items: cartItems, status, error } = useSelector((state: RootState) => state.cart);
     const [cartCategoryIds, setCartCategoryIds] = useState<number[]>([]);
     const [total, setTotal] = useState<number>(0);
+    const [shippingFee, setShippingFee] = useState<number>(0);
 
     // Lấy thông tin voucher từ Redux store
     const { selectedVoucher, discount, status: voucherStatus } = useSelector((state: RootState) => state.voucher);
@@ -80,7 +82,8 @@ export const Cart: React.FC = () => {
     // Tính tổng tiền = subtotal - discount từ Redux
     useEffect(() => {
         const totalAmount = Math.max(0, subtotal - discount);
-        setTotal(totalAmount);
+        setShippingFee(getShippingFee(totalAmount));
+        setTotal(totalAmount + shippingFee);
     }, [subtotal, discount]);
 
     // Áp dụng lại voucher khi giỏ hàng thay đổi
@@ -326,6 +329,10 @@ export const Cart: React.FC = () => {
                                 <span className="text-gray-600">Giảm giá</span>
                                 <span className="font-medium text-green-500">{formatPrice(discount)}</span>
                             </div>
+                            <div className="flex justify-between text-lg">
+                                <span className="text-gray-600">Phí vận chuyển</span>
+                                <span className="font-medium text-green-500">{formatPrice(shippingFee)}</span>
+                            </div>
                             <div className="h-px bg-gray-200 my-4"></div>
                             <div className="flex justify-between text-xl font-bold">
                                 <span>Tổng thanh toán</span>
@@ -338,7 +345,7 @@ export const Cart: React.FC = () => {
                                     Đặt hàng
                                 </button>
                             </Link>
-                            <button className="w-full bg-white text-gray-800 border border-gray-300 py-4 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg">
+                            <button className="mt-2 w-full bg-white text-gray-800 border border-gray-300 py-4 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg">
                                 Tiếp tục mua hàng
                             </button>
                         </div>
