@@ -95,7 +95,7 @@ export const markNotificationAsRead = createAsyncThunk(
 // Đánh dấu tất cả thông báo là đã đọc
 export const markAllNotificationsAsRead = createAsyncThunk(
     "notification/markAllAsRead",
-    async (rejectWithValue) => {
+    async (_, { rejectWithValue }) => {
         try {
             const response = await fetch(
                 `${API_ENDPOINTS.AUTH.NOTIFICATION.READ_ALL.URL}`,
