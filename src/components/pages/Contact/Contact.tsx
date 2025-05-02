@@ -2,7 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Mail, MapPin, Phone } from "lucide-react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card.tsx";
 import { Button } from "../../ui/button.tsx";

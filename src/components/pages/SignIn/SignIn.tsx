@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "../../ui/label";
 import { Separator } from "../../ui/separator";
 import { Logo } from "../../vendor/Logo/Logo";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import Logger from "../../../utils/logger.ts";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";

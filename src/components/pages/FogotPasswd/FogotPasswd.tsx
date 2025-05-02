@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../../ui/card.tsx";
 import {Input} from "../../ui/input.tsx";
 import {API_ENDPOINTS} from "../../../constants/apiInfo.ts";

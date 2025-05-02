@@ -11,7 +11,7 @@ import {
 import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { VoucherDialog } from "./VoucherDialog.tsx";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { formatPrice } from "../../../utils/formatUtils.ts";
 import {
     applyVoucher,

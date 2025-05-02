@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import AuthUtil from "../../utils/authUtil";
 import { Address } from "../../types/ApiResponse/Address/Address.ts";
 import { API_ENDPOINTS } from "../../constants/apiInfo.ts";

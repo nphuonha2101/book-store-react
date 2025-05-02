@@ -1,29 +1,26 @@
-// public/firebase-messaging-sw.js
-importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.11.0/firebase-messaging-compat.js');
 
-// Thông tin cấu hình từ Firebase console (giống với file firebase.js)
-const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_APP_ID,
-};
-
-firebase.initializeApp(firebaseConfig);
+// Khởi tạo Firebase App
+firebase.initializeApp({
+    apiKey: "AIzaSyC-D208X-of1kaPoxuav6Uomu93YHk_ZZc",
+    authDomain: "nha03-a2ab5.firebaseapp.com",
+    projectId: "nha03-a2ab5",
+    storageBucket: "nha03-a2ab5.appspot.com",
+    messagingSenderId: "1029515674999",
+    appId: "1:1029515674999:web:1f8a2c88c3c09e6bb40d72",
+});
 
 const messaging = firebase.messaging();
 
-// Xử lý tin nhắn nền 
+// Lắng nghe background messages
 messaging.onBackgroundMessage((payload) => {
-    console.log('Background message received:', payload);
+    console.log('[firebase-messaging-sw.ts] Received background message ', payload);
 
-    const notificationTitle = payload.notification.title;
+    const notificationTitle = payload.notification?.title || 'Thông báo';
     const notificationOptions = {
-        body: payload.notification.body,
-        icon: '/firebase-logo.png'
+        body: payload.notification?.body,
+        icon: '/logo.png'
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);

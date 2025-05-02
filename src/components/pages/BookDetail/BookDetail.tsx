@@ -13,7 +13,7 @@ import { CartItemProps } from "../../../types/Cart/cartItemProps.ts";
 import { BookCard } from "../../vendor/Card/BookCard.tsx";
 import { formatDate } from "../../../utils/formatUtils.ts";
 import useFetchPost from "../../../hooks/useFetchPost.ts";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 export const BookDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>(); // Book ID from URL
