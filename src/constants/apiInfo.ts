@@ -112,6 +112,22 @@ export const API_ENDPOINTS = {
             GOOGLE: {
                 URL: `${API_INFO.BASE_URL}/oauth2/authorization/google`,
             }
+        },
+        FCM_TOKEN: {
+            ADD: {
+                URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/fcm/token`,
+            },
+            DELETE: {
+                URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/fcm/delete`,
+            },
+        },
+        NOTIFICATION: {
+            GET: {
+                URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/notifications`,
+            },
+            READ: {
+                URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/notifications/read`,
+            },
         }
     },
     ADDRESS: {

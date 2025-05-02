@@ -11,7 +11,7 @@ import {
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
 import { Card, CardContent } from '../../ui/card';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { daysUntilNow, formatDate, formatPrice } from '../../../utils/formatUtils';
 import { Voucher } from '../../../types/ApiResponse/Voucher/voucher';
 import { Separator } from '../../ui/separator';

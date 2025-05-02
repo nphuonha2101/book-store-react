@@ -4,7 +4,7 @@ import { RootState, AppDispatch } from "../../../redux/store.ts";
 import { clearAllCartItems, fetchCartItems } from "../../../redux/slice/cartItemSlice.ts";
 import { ShoppingBag, CreditCard, Truck, ChevronRight, ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { formatPrice } from "../../../utils/formatUtils.ts";
 import { Button } from "../../ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card";

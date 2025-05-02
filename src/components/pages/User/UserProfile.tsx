@@ -16,7 +16,7 @@ import { LeftUserSideBar } from "./LeftUserSideBar";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store.ts";
 import { refreshUser } from "../../../redux/slice/authSlice.ts";

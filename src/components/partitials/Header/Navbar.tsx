@@ -6,7 +6,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import MobileMenu from './MobileMenu';
 import { Logo } from '../../vendor/Logo/Logo';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../ui/dropdown-menu';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import AuthUtil from '../../../utils/authUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../../redux/store';
@@ -108,7 +108,7 @@ export default function EnhancedEcommerceNavbar() {
                                 <Search className="h-5 w-5" />
                             </button>
 
-                            <button  onClick={() => navigate('/wishlists')}
+                            <button onClick={() => navigate('/wishlists')}
                                 className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary transition-colors hidden md:block"
                                 aria-label="Wishlist"
                             >

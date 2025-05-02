@@ -26,7 +26,7 @@ import {
     updateAddress,
     deleteAddress,
 } from "../../../redux/slice/addressSlice";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 // Định nghĩa schema và types
 interface AddressFormInputs {

@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { User } from "../types/ApiResponse/User/user";
 import { API_ENDPOINTS } from "../constants/apiInfo.ts";
 import Logger from "./logger.ts";

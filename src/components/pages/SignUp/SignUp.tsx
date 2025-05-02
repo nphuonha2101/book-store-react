@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import usePost from "../../../hooks/usePost.ts";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";

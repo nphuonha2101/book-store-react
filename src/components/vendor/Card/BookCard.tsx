@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import { addToCart } from "../../../redux/slice/cartItemSlice";
 import { CartItem } from "../../../types/ApiResponse/Cart/cart";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import AuthUtil from "../../../utils/authUtil.ts";
 import { Link } from "react-router-dom";
 import { formatPrice } from "../../../utils/formatUtils.ts";
