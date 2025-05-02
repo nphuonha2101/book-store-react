@@ -131,6 +131,28 @@ export const API_ENDPOINTS = {
     ORDER: {
         PLACE_ORDER: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders/order`,
+        },
+        GET_HISTORY: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders/history`,
+        },
+        CANCLE_ORDER: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders/cancle`,
         }
+
+    },
+    REVIEW: {
+        GET_REVIEW: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/all`,
+        },
+        ADD_REVIEW: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/add`,
+        },
+        UPDATE_REVIEW: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/update`,
+        },
+        DELETE_REVIEW: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/delete`,
+        },
+
     }
 } as const;
