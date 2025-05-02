@@ -11,9 +11,11 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "../../ui/carousel"
+import { useNavigate } from "react-router-dom";
 
 export const HeroSlider: React.FC = () => {
     const { data: sliders } = useFetch<SliderItem[]>(API_ENDPOINTS.SLIDER.GET_SLIDER.URL);
+    const navigate = useNavigate();
 
     if (!sliders || sliders.length === 0) return null;
 
@@ -49,14 +51,13 @@ export const HeroSlider: React.FC = () => {
                                         </p>
                                     )}
                                     {slider.url && (
-                                        <a
-                                            href={slider.url}
-                                            target="_blank"
+                                        <button
+                                            onClick={() => slider.url && navigate(slider.url)}
                                             rel="noopener noreferrer"
                                             className="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-md backdrop-blur-sm transition-colors"
                                         >
                                             Xem thêm
-                                        </a>
+                                        </button>
                                     )}
                                 </div>
                             </div>

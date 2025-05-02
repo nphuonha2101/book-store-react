@@ -3,12 +3,14 @@ export interface ApiResponse<T> {
     message: string;
     statusCode: number;
     data: T;
-    pagination? : {
-        isFirst: boolean;
-        isLast: boolean;
-        totalPages: number;
-        pageSize: number;
-        currentPage: number;
-        totalElements: number;
-    }
+    pagination?: ApiPaginationResponse;
+}
+
+export interface ApiPaginationResponse {
+    isFirst: boolean;
+    isLast: boolean;
+    totalPages: number;
+    pageSize: number;
+    currentPage: number;
+    totalElements: number;
 }

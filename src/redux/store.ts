@@ -4,6 +4,7 @@ import cartReducer from "./slice/cartItemSlice";
 import wishListReducer from "./slice/wishlistSlice";
 import addressReducer from "./slice/addressSlice";
 import voucherReducer from "./slice/voucherSlice";
+import notificationReducer from "./slice/notificationSlice";
 
 const combinedReducer = combineReducers({
     auth: authReducer,
@@ -11,6 +12,7 @@ const combinedReducer = combineReducers({
     wishList: wishListReducer,
     voucher: voucherReducer,
     address: addressReducer,
+    notification: notificationReducer
 });
 
 const rootReducer = (state: ReturnType<typeof combinedReducer> | undefined, action: AnyAction) => {
