@@ -15,6 +15,7 @@ import { ForgotPassword } from '../components/pages/FogotPasswd/FogotPasswd.tsx'
 import { Checkout } from '../components/pages/Checkout/Checkout.tsx';
 import Products from '../components/pages/Products/Products.tsx';
 import {ContactAbout} from "../components/pages/Contact/Contact.tsx";
+import OrderHistory from "../components/vendor/Order/OrderHistory.tsx";
 
 export const routes: RouteProps[] = [
     {
@@ -94,6 +95,12 @@ export const routes: RouteProps[] = [
     Component: ContactAbout,
     Layout: Master,
     routeType: RouteType.PUBLIC
+    },
+    {
+        path: '/orders/history',
+        Component: OrderHistory,
+        Layout: Master,
+        routeType: RouteType.PRIVATE
     }
 
 ];
