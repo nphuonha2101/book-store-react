@@ -72,14 +72,31 @@ export const Checkout: React.FC = () => {
                         method: "GET"
                     });
                     const data = await response.json();
-                    setAddresses(data.data || []);
+                    const addressList: Address[] = data.data || [];
+                    setAddresses(addressList);
+
+                    // Tự động chọn địa chỉ mặc định hoặc địa chỉ đầu tiên
+                    if (addressList.length > 0) {
+                        // Tìm địa chỉ mặc định
+                        const defaultAddress = addressList.find(addr => addr.isDefault);
+
+                        if (defaultAddress) {
+                            // Nếu có địa chỉ mặc định, chọn nó
+                            setAddressInfo(defaultAddress);
+                            setSelectedAddressId(String(defaultAddress.id));
+                        } else {
+                            // Nếu không có địa chỉ mặc định, chọn địa chỉ đầu tiên
+                            setAddressInfo(addressList[0]);
+                            setSelectedAddressId(String(addressList[0].id));
+                        }
+                    }
                 } catch (error) {
                     console.error("Lỗi khi lấy danh sách địa chỉ:", error);
                 }
             };
             fetchAddresses();
         }
-    }, []);
+    }, [user?.id]); // Thêm user?.id vào dependency để React không cảnh báo
 
 
     // Tính tổng thanh toán = subtotal - discount + shippingFee
