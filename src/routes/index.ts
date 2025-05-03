@@ -14,7 +14,8 @@ import { UserAddress } from "../components/pages/User/UserAddress.tsx";
 import { ForgotPassword } from '../components/pages/FogotPasswd/FogotPasswd.tsx';
 import { Checkout } from '../components/pages/Checkout/Checkout.tsx';
 import Products from '../components/pages/Products/Products.tsx';
-import {ContactAbout} from "../components/pages/Contact/Contact.tsx";
+import { ContactAbout } from "../components/pages/Contact/Contact.tsx";
+import { OrderSuccess } from '../components/pages/OrderStatus/OrderSuccess.tsx';
 
 export const routes: RouteProps[] = [
     {
@@ -89,11 +90,18 @@ export const routes: RouteProps[] = [
         Component: Products,
         Layout: Master,
         routeType: RouteType.PUBLIC
-    }, {
-    path: '/contact-us',
-    Component: ContactAbout,
-    Layout: Master,
-    routeType: RouteType.PUBLIC
+    },
+    {
+        path: '/contact-us',
+        Component: ContactAbout,
+        Layout: Master,
+        routeType: RouteType.PUBLIC
+    },
+    {
+        path: '/order-success/:orderId',
+        Component: OrderSuccess,
+        Layout: Master,
+        routeType: RouteType.PRIVATE
     }
 
 ];

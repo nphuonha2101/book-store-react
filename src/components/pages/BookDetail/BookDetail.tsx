@@ -179,9 +179,8 @@ export const BookDetail: React.FC = () => {
                         {book.images && book.images.length > 0 && (
                             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                                 <div
-                                    className={`border-2 rounded-md overflow-hidden cursor-pointer ${
-                                        !selectedImage ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
-                                    }`}
+                                    className={`border-2 rounded-md overflow-hidden cursor-pointer ${!selectedImage ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
+                                        }`}
                                     onClick={() => setSelectedImage(null)}
                                 >
                                     <img
@@ -226,7 +225,11 @@ export const BookDetail: React.FC = () => {
                             </div>
                             <span className="text-gray-500 text-xs sm:text-sm">(12 đánh giá)</span>
                             <span className="text-gray-400 hidden sm:inline">|</span>
-                            <span className="text-green-600 text-xs sm:text-sm">Còn hàng</span>
+                            {book.available ? (
+                                <span className="text-green-600 text-xs sm:text-sm">Còn hàng</span>
+                            ) : (
+                                <span className="text-red-600 text-xs sm:text-sm">Hết hàng</span>
+                            )}
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-4 sm:mb-6">
                             <div>
@@ -244,8 +247,8 @@ export const BookDetail: React.FC = () => {
                                 <p className="text-gray-600 text-sm mb-1">
                                     Năm XB:{" "}
                                     <span className="text-gray-800">
-                    {book?.publishedAt ? formatDate(book.publishedAt) : "Chưa cập nhật"}
-                  </span>
+                                        {book?.publishedAt ? formatDate(book.publishedAt) : "Chưa cập nhật"}
+                                    </span>
                                 </p>
                             </div>
                         </div>
@@ -283,17 +286,14 @@ export const BookDetail: React.FC = () => {
                                         <span className="hidden sm:inline">Thêm vào giỏ hàng</span>
                                         <span className="sm:hidden">Thêm giỏ</span>
                                     </button>
-                                    <button className="flex-1 bg-black text-white px-3 py-2 sm:px-4 sm:py-3 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors duration-300 flex items-center justify-center">
-                                        Mua ngay
-                                    </button>
+
                                     <button
                                         onClick={handleToggleWishlist}
                                         disabled={wishlistStatus === "loading"}
-                                        className={`p-2 sm:p-3 border rounded-md flex items-center justify-center ${
-                                            isInWishlist
-                                                ? "bg-red-500 text-white hover:bg-red-600"
-                                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                                        } transition-colors duration-300`}
+                                        className={`p-2 sm:p-3 border rounded-md flex items-center justify-center ${isInWishlist
+                                            ? "bg-red-500 text-white hover:bg-red-600"
+                                            : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                                            } transition-colors duration-300`}
                                     >
                                         <Heart
                                             className={`h-4 w-4 sm:h-5 sm:w-5 ${isInWishlist ? "fill-current" : ""}`}

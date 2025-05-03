@@ -172,7 +172,7 @@ export const Cart: React.FC = () => {
 
     if (!cartItems || cartItems.length === 0) {
         return (
-            <div className="container mx-auto px-4 py-5 flex justify-center items-center min-h-screen">
+            <div className="container mx-auto px-4 py-5 flex justify-center items-center">
                 <div className="bg-white rounded-xl shadow-lg p-10 text-center max-w-3xl w-full">
                     <div className="text-gray-400 mb-6">
                         <ShoppingBag className="h-24 w-24 mx-auto" />

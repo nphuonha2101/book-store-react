@@ -154,5 +154,8 @@ export const API_ENDPOINTS = {
         PLACE_ORDER: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders/order`,
         }
+    },
+    TRANSCRIBE: {
+        URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/vosk/transcribe`,
     }
 } as const;

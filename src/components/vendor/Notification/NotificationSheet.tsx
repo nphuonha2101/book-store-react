@@ -1,7 +1,7 @@
 import { Bell, Check, ChevronRight, PackageCheck, PackageX, ShoppingBag, Loader2 } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../../ui/sheet";
-import { daysUntilNow } from "../../../utils/formatUtils";
+import { daysUntilNow, diffTimeUtilNow } from "../../../utils/formatUtils";
 import { Skeleton } from "../../ui/skeleton";
 import { Separator } from "../../ui/separator";
 import { Badge } from "../../ui/badge";
@@ -173,9 +173,7 @@ export const NotificationSheet = () => {
                                             </p>
                                             <div className="flex items-center justify-between">
                                                 <span className="text-xs text-muted-foreground">
-                                                    {daysUntilNow(notification.createdAt) === 0
-                                                        ? "Hôm nay"
-                                                        : `${daysUntilNow(notification.createdAt)} ngày trước`}
+                                                    {diffTimeUtilNow(notification.createdAt)}
                                                 </span>
                                                 <ChevronRight className="h-4 w-4 text-muted-foreground" />
                                             </div>

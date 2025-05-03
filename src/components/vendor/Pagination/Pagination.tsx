@@ -18,6 +18,8 @@ export default function PaginationComponent({ pagination, onPageChange }: Pagina
                         onClick={() => !pagination.isFirst && onPageChange(currentPage - 1)}
                         className={pagination.isFirst ? "pointer-events-none opacity-50" : "cursor-pointer"}
                         aria-disabled={pagination.isFirst}
+                        lang="vi"
+                        title="Trang trước"
                     />
                 </PaginationItem>
 
@@ -106,6 +108,8 @@ export default function PaginationComponent({ pagination, onPageChange }: Pagina
                         onClick={() => !pagination.isLast && onPageChange(currentPage + 1)}
                         className={pagination.isLast ? "pointer-events-none opacity-50" : "cursor-pointer"}
                         aria-disabled={pagination.isLast}
+                        lang="vi"
+                        title="Trang tiếp theo"
                     />
                 </PaginationItem>
             </PaginationContent>

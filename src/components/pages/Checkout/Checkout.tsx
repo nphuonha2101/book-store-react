@@ -58,7 +58,7 @@ export const Checkout: React.FC = () => {
         if (user?.id) {
             dispatch(fetchCartItems());
         } else {
-            navigate("/login", { state: { from: "/checkout" } });
+            navigate("/login?continue=/checkout");
             toast.error("Vui lòng đăng nhập để tiếp tục thanh toán");
         }
     }, [dispatch, user?.id, navigate]);
@@ -99,6 +99,10 @@ export const Checkout: React.FC = () => {
     };
 
     const handleContinue = () => {
+        if (step === 1 && !addressInfo && addresses.length > 0) {
+            toast.error("Vui lòng chọn địa chỉ giao hàng trước khi tiếp tục");
+            return;
+        }
         setStep((prevStep) => prevStep + 1);
     };
 
@@ -132,15 +136,20 @@ export const Checkout: React.FC = () => {
             };
 
             const response = await callAjaxPlaceOrder(orderRequest);
-            if (!response.ok) {
-                throw new Error("Đặt hàng không thành công");
+            const data = await response.json();
+            if (data.statusCode === 200) {
+                const orderId = data.data?.id;
+
+                // Clear giỏ hàng sau khi đặt hàng thành công
+                dispatch(clearAllCartItems());
+                toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua sắm.");
+                // Chuyển hướng đến trang thành công
+                navigate("/order-success/" + orderId, { state: { orderId } });
+            } else {
+                throw new Error(data.message || "Đặt hàng không thành công");
             }
 
-            // Clear giỏ hàng sau khi đặt hàng thành công
-            dispatch(clearAllCartItems());
 
-            toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua sắm.");
-            navigate("/order-success");
         } catch (error) {
             console.error("Lỗi khi đặt hàng:", error);
             toast.error("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại sau.");
