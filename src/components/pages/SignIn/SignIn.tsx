@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card";
@@ -22,6 +22,10 @@ export const SignIn = () => {
     const from = searchParams.get("from");
     const token = searchParams.get("token");
     const continuteTo = searchParams.get("continue");
+
+    useEffect(() => {
+        document.title = "Đăng nhập";
+    }, []);
 
     // Handle OAuth2 redirect
     const handleOAuth2Redirect = async () => {

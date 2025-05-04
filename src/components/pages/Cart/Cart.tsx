@@ -43,6 +43,10 @@ export const Cart: React.FC = () => {
         }
     }, [dispatch, user?.id]);
 
+    useEffect(() => {
+        document.title = "Giỏ hàng của bạn";
+    }, []);
+
     // Xử lý xóa sản phẩm khỏi giỏ hàng
     const handleRemoveFromCart = (cartItemId: number) => {
         if (!user?.id) {

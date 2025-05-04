@@ -2,10 +2,15 @@ import { CheckCircle2 } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Card, CardContent } from "../../ui/card";
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 export const OrderSuccess = () => {
     const navigate = useNavigate();
     const { orderId } = useParams<{ orderId: string }>();
+
+    useEffect(() => {
+        document.title = "Đặt hàng thành công";
+    }, []);
 
     return (
         <div className="flex items-center justify-center px-4" >

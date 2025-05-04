@@ -1,8 +1,8 @@
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
-import { ShoppingCart, Heart, Truck, RotateCcw, Shield, Info } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { ShoppingCart, Heart, Truck, Shield, Info, Package } from "lucide-react";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store.ts";
@@ -34,6 +34,15 @@ export const BookDetail: React.FC = () => {
         bookSuggestionRequestBody,
         { autoFetch: !!book }
     );
+
+    // Đặt tiêu đề trang
+    useEffect(() => {
+        if (book?.title) {
+            document.title = `Chi tiết sách: ${book.title}`;
+        } else {
+            document.title = "Chi tiết sách";
+        }
+    }, [book]);
 
     const [quantity, setQuantity] = useState<number>(1);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -153,17 +162,6 @@ export const BookDetail: React.FC = () => {
 
     return (
         <div className="container mx-auto px-4 py-4 sm:py-8">
-            <div className="text-sm text-gray-500 mb-4 sm:mb-6 overflow-x-auto whitespace-nowrap">
-                <Link to="/" className="hover:text-primary">
-                    Trang chủ
-                </Link>
-                <a href="/books" className="hover:text-primary">
-                    {" "}
-                    Sách
-                </a>
-                <span className="text-gray-700"> {book.title}</span>
-            </div>
-
             {/* Book Detail Section */}
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -306,19 +304,27 @@ export const BookDetail: React.FC = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                                 <div className="flex items-center gap-2 text-gray-600">
                                     <Truck className="h-4 w-4 text-primary" />
-                                    <span className="text-xs sm:text-sm">Giao hàng nhanh 1-3 ngày</span>
+                                    <span className="text-xs sm:text-sm">
+                                        Giao hàng nhanh 1-3 ngày
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600">
-                                    <RotateCcw className="h-4 w-4 text-primary" />
-                                    <span className="text-xs sm:text-sm">Đổi trả trong 7 ngày</span>
+                                    <Package className="h-4 w-4 text-primary" />
+                                    <span className="text-xs sm:text-sm">
+                                        Miễn phí giao hàng cho đơn hàng từ 300.000đ
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600">
                                     <Shield className="h-4 w-4 text-primary" />
-                                    <span className="text-xs sm:text-sm">Bảo hành chính hãng</span>
+                                    <span className="text-xs sm:text-sm">
+                                        Đảm bảo chất lượng sản phẩm
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600">
                                     <Info className="h-4 w-4 text-primary" />
-                                    <span className="text-xs sm:text-sm">Hỗ trợ 24/7</span>
+                                    <span className="text-xs sm:text-sm">
+                                        Hỗ trợ 24/7
+                                    </span>
                                 </div>
                             </div>
                         </div>

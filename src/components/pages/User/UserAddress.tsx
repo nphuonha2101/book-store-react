@@ -79,6 +79,10 @@ export const UserAddress = () => {
     const [editingAddress, setEditingAddress] = useState<Address | null>(null);
     const [userId, setUserId] = useState<number | null>(null);
 
+    useEffect(() => {
+        document.title = "Quản lý địa chỉ";
+    }, []);
+
     const {
         control,
         handleSubmit,
@@ -484,11 +488,10 @@ export const UserAddress = () => {
                                 {addresses.map((address) => (
                                     <div
                                         key={address.id}
-                                        className={`p-4 border rounded-lg flex justify-between items-center ${
-                                            address.isDefault
-                                                ? "border-green-500 bg-green-50 shadow-md"
-                                                : "border-gray-300"
-                                        }`}
+                                        className={`p-4 border rounded-lg flex justify-between items-center ${address.isDefault
+                                            ? "border-green-500 bg-green-50 shadow-md"
+                                            : "border-gray-300"
+                                            }`}
                                     >
                                         <div>
                                             <p className="font-medium">{address.fullName}</p>

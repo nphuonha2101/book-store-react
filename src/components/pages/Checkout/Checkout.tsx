@@ -53,6 +53,10 @@ export const Checkout: React.FC = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
     const [selectedAddressId, setSelectedAddressId] = useState<string | undefined>(undefined);
 
+    useEffect(() => {
+        document.title = "Thanh toán";
+    }, []);
+
     // Lấy danh sách sản phẩm trong giỏ hàng khi component được mount
     useEffect(() => {
         if (user?.id) {

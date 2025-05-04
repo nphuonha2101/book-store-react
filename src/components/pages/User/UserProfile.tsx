@@ -80,6 +80,10 @@ export const UserProfile = () => {
     });
 
     useEffect(() => {
+        document.title = "Thông tin cá nhân";
+    }, []);
+
+    useEffect(() => {
         if (userData) {
             // Set form fields with user data
             setValue('name', userData.name || '');

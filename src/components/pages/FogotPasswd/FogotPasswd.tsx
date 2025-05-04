@@ -2,13 +2,14 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../../ui/card.tsx";
-import {Input} from "../../ui/input.tsx";
-import {API_ENDPOINTS} from "../../../constants/apiInfo.ts";
-import {Label} from "../../ui/label.tsx";
-import {Button} from "../../ui/button.tsx";
-import {Loader2} from "lucide-react";
-import {Link} from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../ui/card.tsx";
+import { Input } from "../../ui/input.tsx";
+import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
+import { Label } from "../../ui/label.tsx";
+import { Button } from "../../ui/button.tsx";
+import { Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { use, useEffect } from "react";
 
 
 const ForgotPasswordSchema = z.object({
@@ -31,6 +32,10 @@ export const ForgotPassword = () => {
             email: "",
         },
     });
+
+    useEffect(() => {
+        document.title = "Quên mật khẩu"
+    }, []);
 
     const onSubmit = async (data: ForgotPasswordInputs) => {
         try {

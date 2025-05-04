@@ -4,15 +4,19 @@ import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import AuthUtil from "../../../utils/authUtil.ts";
-import {AppDispatch, RootState} from "../../../redux/store.ts";
-import {fetchWishlistItems, removeFromWishlist} from "../../../redux/slice/wishlistSlice.ts";
-import {BookCard} from "../../vendor/Card/BookCard.tsx";
+import { AppDispatch, RootState } from "../../../redux/store.ts";
+import { fetchWishlistItems, removeFromWishlist } from "../../../redux/slice/wishlistSlice.ts";
+import { BookCard } from "../../vendor/Card/BookCard.tsx";
 import Logger from "../../../utils/logger.ts";
 
 const Wishlist: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const user = useMemo(() => AuthUtil.getUser(), []);
     const { items: wishlistItems, status, error } = useSelector((state: RootState) => state.wishList);
+
+    useEffect(() => {
+        document.title = "Danh sách yêu thích";
+    }, []);
 
     useEffect(() => {
         const userId = user?.id;

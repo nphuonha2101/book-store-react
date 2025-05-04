@@ -6,6 +6,11 @@ import { RibbonsContainer } from "../../vendor/Ribbon/RibbonsContainer.tsx";
 import { Ribbon } from "../../../types/ApiResponse/Ribbon/ribbon.ts";
 export const Home: React.FC = () => {
     const { data: ribbons, loading } = useFetch<Ribbon[]>(API_ENDPOINTS.RIBBON.ALL.URL);
+
+    React.useEffect(() => {
+        document.title = "Trang chủ";
+    }, []);
+
     return (
         <div className="w-full">
             <div className="w-full flex items-center justify-center">
