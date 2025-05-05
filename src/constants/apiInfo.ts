@@ -152,7 +152,10 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders/history`,
         },
         CANCLE_ORDER: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders/cancle`,
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders/cancel`,
+        },
+        GET_BY_ID: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders`,
         }
 
     },
