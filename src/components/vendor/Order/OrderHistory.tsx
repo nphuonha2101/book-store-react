@@ -14,7 +14,8 @@ import { Separator } from "../../ui/separator";
 import { Alert, AlertDescription } from "../../ui/alert";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../../ui/dialog";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
-import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs"; // Giả sử bạn có component Tabs từ UI library
+import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
+import {Textarea} from "../../ui/textarea.tsx"; // Giả sử bạn có component Tabs từ UI library
 
 const OrderHistory: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -33,6 +34,10 @@ const OrderHistory: React.FC = () => {
         "Đặt nhầm sản phẩm",
         "Khác",
     ];
+
+    useEffect(() => {
+        document.title = "Lịch sử đơn hàng";
+    }, [])
 
     // Danh sách các tab trạng thái đơn hàng
     const orderStatuses = [
@@ -280,22 +285,23 @@ const OrderHistory: React.FC = () => {
                                     <span className="text-primary">{formatPrice(order.totalAmount)}</span>
                                 </div>
                             </CardContent>
-                            <CardContent className="pt-0 flex gap-3">
-                                {(order.status === "PENDING" || order.status === "PROCESSING") && (
-                                    <Button
-                                        variant="destructive"
-                                        size="sm"
-                                        onClick={() => handleCancelOrder(order.id)}
-                                        className="w-full bg-black hover:bg-black"
-                                    >
-                                        <Trash2 className="mr-2 h-4 w-4" /> Hủy đơn hàng
-                                    </Button>
-                                )}
+                            <CardContent className="pt-0 flex flex-wrap gap-3">
                                 <Button variant="outline" asChild className="w-full">
                                     <Link to={`/orders/${order.id}`}>
                                         Xem chi tiết <ChevronRight className="ml-2 h-4 w-4" />
                                     </Link>
                                 </Button>
+
+                                {(order.status === "PENDING" || order.status === "PROCESSING") && (
+                                    <Button
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() => handleCancelOrder(order.id)}
+                                        className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold"
+                                    >
+                                        <Trash2 className="mr-2 h-4 w-4" /> Hủy đơn hàng
+                                    </Button>
+                                )}
                             </CardContent>
                         </Card>
                     ))}
@@ -318,7 +324,7 @@ const OrderHistory: React.FC = () => {
                             ))}
                         </RadioGroup>
                         {cancellationReason === "Khác" && (
-                            <textarea
+                            <Textarea
                                 className="w-full p-1"
                                 placeholder="Nhập lý do cụ thể..."
                                 value={customReason}

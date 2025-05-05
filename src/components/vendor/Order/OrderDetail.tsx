@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {useParams, Link} from "react-router-dom";
 import {
     ArrowLeft, ShoppingCart, Wallet, Truck, BadgePercent,
-    User, Home, Phone, Mail
+    User, Home, Phone, Mail, CreditCard
 } from "lucide-react";
 import {
     Card,
@@ -11,49 +11,23 @@ import {
     CardContent,
     CardDescription,
 } from "../../ui/card";
-import { Badge } from "../../ui/badge";
-import { Separator } from "../../ui/separator";
-import { Button } from "../../ui/button";
-import { formatPrice } from "../../../utils/formatUtils";
-import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
-
-interface OrderItem {
-    id: number;
-    quantity: number;
-    price: number;
-    book: {
-        title: string;
-        coverImage?: string;
-    };
-}
-
-interface Address {
-    fullName: string;
-    addInfo: string;
-    ward: string;
-    district: string;
-    province: string;
-    phoneNumber?: string;
-    email?: string;
-}
-
-interface Order {
-    id: number;
-    createdAt: string;
-    status: "PENDING" | "PROCESSING" | "SHIPPING" | "DELIVERED" | "CANCELLED";
-    paymentMethod: number;
-    address: Address;
-    orderItems: OrderItem[];
-    totalAmount: number;
-    shippingFee: number;
-    totalDiscount: number;
-}
+import {Badge} from "../../ui/badge";
+import {Separator} from "../../ui/separator";
+import {Button} from "../../ui/button";
+import {formatPrice} from "../../../utils/formatUtils";
+import {API_ENDPOINTS} from "../../../constants/apiInfo.ts";
+import {Order} from "../../../types/ApiResponse/Order/order.ts";
+import {PAYMENT_METHOD} from "../../../constants/paymentMethod.ts";
 
 const OrderDetail: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+    const {id} = useParams<{ id: string }>();
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        document.title = "Chi tiết đơn hàng";
+    }, []);
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -104,7 +78,7 @@ const OrderDetail: React.FC = () => {
             <div className="flex items-center mb-8">
                 <Button variant="ghost" asChild className="mr-4">
                     <Link to="/orders/history">
-                        <ArrowLeft className="h-5 w-5 mr-2" /> Quay lại
+                        <ArrowLeft className="h-5 w-5 mr-2"/> Quay lại
                     </Link>
                 </Button>
                 <h1 className="text-4xl font-bold">Chi tiết đơn hàng #{order.id}</h1>
@@ -134,24 +108,24 @@ const OrderDetail: React.FC = () => {
                         {/* Thông tin người nhận */}
                         <div>
                             <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
-                                <User className="w-5 h-5" /> Thông tin người nhận
+                                <User className="w-5 h-5"/> Thông tin người nhận
                             </h3>
                             <div className="text-base space-y-2 text-muted-foreground">
                                 <p className="flex items-center gap-2">
-                                    <User className="w-4 h-4 text-foreground" /> {order.address.fullName}
+                                    <User className="w-4 h-4 text-foreground"/> {order.address.fullName}
                                 </p>
                                 <p className="flex items-center gap-2">
-                                    <Home className="w-4 h-4 text-foreground" />
+                                    <Home className="w-4 h-4 text-foreground"/>
                                     {`${order.address.addInfo}, ${order.address.ward}, ${order.address.district}, ${order.address.province}`}
                                 </p>
-                                {order.address.phoneNumber && (
+                                {order.address.phone && (
                                     <p className="flex items-center gap-2">
-                                        <Phone className="w-4 h-4 text-foreground" /> {order.address.phoneNumber}
+                                        <Phone className="w-4 h-4 text-foreground"/> {order.address.phone}
                                     </p>
                                 )}
-                                {order.address.email && (
+                                {order.user.email && (
                                     <p className="flex items-center gap-2">
-                                        <Mail className="w-4 h-4 text-foreground" /> {order.address.email}
+                                        <Mail className="w-4 h-4 text-foreground"/> {order.user.email}
                                     </p>
                                 )}
                             </div>
@@ -159,11 +133,14 @@ const OrderDetail: React.FC = () => {
 
                         {/* Thông tin thanh toán */}
                         <div>
-                            <h3 className="text-xl font-semibold mb-3">💳 Thông tin thanh toán</h3>
+                            <h3 className="text-xl flex items-center gap-2 font-semibold mb-3">
+                                <CreditCard className="w-4 h-4 text-foreground"/>
+                                Thông tin thanh toán
+                            </h3>
                             <p className="text-base text-muted-foreground">
                                 Phương thức:{" "}
                                 <span className="font-medium text-foreground">
-                  {order.paymentMethod === 1 ? "Thanh toán khi nhận hàng" : "Chuyển khoản"}
+                                {PAYMENT_METHOD[order.paymentMethod].name}
                 </span>
                             </p>
                         </div>
@@ -172,7 +149,7 @@ const OrderDetail: React.FC = () => {
                     {/* Danh sách sản phẩm */}
                     <div>
                         <h3 className="text-xl font-semibold mb-3 flex items-center">
-                            <ShoppingCart className="mr-2 h-5 w-5" /> Sản phẩm ({order.orderItems.length})
+                            <ShoppingCart className="mr-2 h-5 w-5"/> Sản phẩm ({order.orderItems.length})
                         </h3>
                         <div className="space-y-4">
                             {order.orderItems.map((item) => (
@@ -198,29 +175,39 @@ const OrderDetail: React.FC = () => {
                         </div>
                     </div>
 
-                    <Separator />
+                    <Separator/>
 
                     {/* Phí + giảm giá + tổng */}
+
+
                     <div className="space-y-3">
-                        <div className="flex justify-between items-center font-bold text-lg text-blue-600">
-              <span className="flex items-center gap-2">
-                <Truck className="h-5 w-5" />
-                Phí vận chuyển
-              </span>
+                        <div className="flex justify-between items-center text-lg text-blue-600">
+                          <span className="flex items-center font-bold gap-2">
+                            <Truck className="h-5 w-5"/>
+                            Tạm tính:
+                          </span>
+                            <span>{formatPrice(order.totalAmount + order.totalDiscount - order.shippingFee)}</span>
+                        </div>
+
+                        <div className="flex justify-between items-center text-lg text-blue-600">
+                          <span className="flex items-center font-bold gap-2">
+                            <Truck className="h-5 w-5"/>
+                            Phí vận chuyển
+                          </span>
                             <span>{formatPrice(order.shippingFee)}</span>
                         </div>
 
-                        <div className="flex justify-between items-center font-bold text-lg text-red-500">
-              <span className="flex items-center gap-2">
-                <BadgePercent className="h-5 w-5" />
-                Giảm giá
-              </span>
+                        <div className="flex justify-between items-center text-lg text-red-500">
+                          <span className="flex items-center font-bold gap-2">
+                            <BadgePercent className="h-5 w-5"/>
+                            Giảm giá
+                          </span>
                             <span>-{formatPrice(order.totalDiscount)}</span>
                         </div>
 
                         <div className="flex justify-between items-center font-bold text-xl text-green-600 pt-2">
               <span className="flex items-center gap-2">
-                <Wallet className="h-5 w-5" />
+                <Wallet className="h-5 w-5"/>
                 Tổng thanh toán
               </span>
                             <span>{formatPrice(order.totalAmount)}</span>
