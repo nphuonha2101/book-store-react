@@ -66,7 +66,6 @@ export const BookDetail: React.FC = () => {
         };
 
         console.log("Adding to cart:", cartItem);
-        console.log("Adding to cart:", cartItem); // Log payload for debugging
         actionRef.current = "ADD_TO_CART";
         dispatch(addToCart(cartItem));
     };
@@ -86,8 +85,9 @@ export const BookDetail: React.FC = () => {
                 .then(() => {
                     toast.success(`${book?.title} đã được xóa khỏi danh sách yêu thích!`);
                 })
-                .catch((error) => {
-                    toast.error(`Lỗi khi xóa khỏi danh sách yêu thích: ${error}`);
+                .catch((err: unknown) => {
+                    const errorMessage = err instanceof Error ? err.message : 'Lỗi không xác định';
+                    toast.error(`Lỗi khi xóa khỏi danh sách yêu thích: ${errorMessage}`);
                 });
         } else {
             const wishlistItem = {
@@ -99,8 +99,9 @@ export const BookDetail: React.FC = () => {
                 .then(() => {
                     toast.success(`${book?.title} đã được thêm vào danh sách yêu thích!`);
                 })
-                .catch((error) => {
-                    toast.error(`Lỗi khi thêm vào danh sách yêu thích: ${error}`);
+                .catch((err: unknown) => {
+                    const errorMessage = err instanceof Error ? err.message : 'Lỗi không xác định';
+                    toast.error(`Lỗi khi thêm vào danh sách yêu thích: ${errorMessage}`);
                 });
         }
     };
@@ -194,7 +195,7 @@ export const BookDetail: React.FC = () => {
                                     <div
                                         key={index}
                                         className={`border-2 rounded-md overflow-hidden cursor-pointer ${selectedImage === image.url ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
-                                            }`}
+                                        }`}
                                         onClick={() => setSelectedImage(image.url || null)}
                                     >
                                         <img
