@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../../redux/store';
 import { fetchCartItems } from "../../../redux/slice/cartItemSlice.ts"; // Đảm bảo bạn đã định nghĩa store
 import { logout } from '../../../redux/slice/authSlice.ts';
+import { NotificationSheet } from '../../vendor/Notification/NotificationSheet.tsx';
 
 export default function EnhancedEcommerceNavbar() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -115,13 +116,7 @@ export default function EnhancedEcommerceNavbar() {
                                 <Heart className="h-5 w-5" />
                             </button>
 
-                            <button
-                                className="p-2 text-muted-foreground hover:text-primary rounded-full hover:bg-secondary transition-colors hidden md:block"
-                                aria-label="Notifications"
-                            >
-                                <Bell className="h-5 w-5" />
-                            </button>
-
+                            {AuthUtil.isLogged() && (<NotificationSheet />)}
                             {/* Dropdown user */}
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="text-muted-foreground hover:text-primary">

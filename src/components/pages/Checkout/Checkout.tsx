@@ -53,12 +53,16 @@ export const Checkout: React.FC = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
     const [selectedAddressId, setSelectedAddressId] = useState<string | undefined>(undefined);
 
+    useEffect(() => {
+        document.title = "Thanh toán";
+    }, []);
+
     // Lấy danh sách sản phẩm trong giỏ hàng khi component được mount
     useEffect(() => {
         if (user?.id) {
             dispatch(fetchCartItems());
         } else {
-            navigate("/login", { state: { from: "/checkout" } });
+            navigate("/login?continue=/checkout");
             toast.error("Vui lòng đăng nhập để tiếp tục thanh toán");
         }
     }, [dispatch, user?.id, navigate]);
@@ -72,14 +76,31 @@ export const Checkout: React.FC = () => {
                         method: "GET"
                     });
                     const data = await response.json();
-                    setAddresses(data.data || []);
+                    const addressList: Address[] = data.data || [];
+                    setAddresses(addressList);
+
+                    // Tự động chọn địa chỉ mặc định hoặc địa chỉ đầu tiên
+                    if (addressList.length > 0) {
+                        // Tìm địa chỉ mặc định
+                        const defaultAddress = addressList.find(addr => addr.isDefault);
+
+                        if (defaultAddress) {
+                            // Nếu có địa chỉ mặc định, chọn nó
+                            setAddressInfo(defaultAddress);
+                            setSelectedAddressId(String(defaultAddress.id));
+                        } else {
+                            // Nếu không có địa chỉ mặc định, chọn địa chỉ đầu tiên
+                            setAddressInfo(addressList[0]);
+                            setSelectedAddressId(String(addressList[0].id));
+                        }
+                    }
                 } catch (error) {
                     console.error("Lỗi khi lấy danh sách địa chỉ:", error);
                 }
             };
             fetchAddresses();
         }
-    }, []);
+    }, [user?.id]); // Thêm user?.id vào dependency để React không cảnh báo
 
 
     // Tính tổng thanh toán = subtotal - discount + shippingFee
@@ -99,6 +120,10 @@ export const Checkout: React.FC = () => {
     };
 
     const handleContinue = () => {
+        if (step === 1 && !addressInfo && addresses.length > 0) {
+            toast.error("Vui lòng chọn địa chỉ giao hàng trước khi tiếp tục");
+            return;
+        }
         setStep((prevStep) => prevStep + 1);
     };
 
@@ -132,15 +157,20 @@ export const Checkout: React.FC = () => {
             };
 
             const response = await callAjaxPlaceOrder(orderRequest);
-            if (!response.ok) {
-                throw new Error("Đặt hàng không thành công");
+            const data = await response.json();
+            if (data.statusCode === 200) {
+                const orderId = data.data?.id;
+
+                // Clear giỏ hàng sau khi đặt hàng thành công
+                dispatch(clearAllCartItems());
+                toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua sắm.");
+                // Chuyển hướng đến trang thành công
+                navigate("/order-success/" + orderId, { state: { orderId } });
+            } else {
+                throw new Error(data.message || "Đặt hàng không thành công");
             }
 
-            // Clear giỏ hàng sau khi đặt hàng thành công
-            dispatch(clearAllCartItems());
 
-            toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua sắm.");
-            navigate("/order-success");
         } catch (error) {
             console.error("Lỗi khi đặt hàng:", error);
             toast.error("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại sau.");

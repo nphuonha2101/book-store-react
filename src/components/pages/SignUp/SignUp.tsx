@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../ui/form";
+import { useEffect } from "react";
 
 // Định nghĩa schema validation với Zod
 const signUpSchema = z.object({
@@ -29,6 +30,7 @@ const signUpSchema = z.object({
     path: ["confirmPassword"],
 });
 
+
 // Định nghĩa kiểu dữ liệu từ schema
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
@@ -46,6 +48,10 @@ export const SignUp = () => {
             confirmPassword: "",
         },
     });
+
+    useEffect(() => {
+        document.title = "Đăng ký tài khoản";
+    }, []);
 
     const handleSubmit = async (values: SignUpFormValues) => {
         try {

@@ -4,8 +4,10 @@ import cartReducer from "./slice/cartItemSlice";
 import wishListReducer from "./slice/wishlistSlice";
 import addressReducer from "./slice/addressSlice";
 import voucherReducer from "./slice/voucherSlice";
+import notificationReducer from "./slice/notificationSlice";
 import reviewReducer from "./slice/ReviewSlice.ts";
 import orderReducer from "./slice/orderSlice";
+
 
 const combinedReducer = combineReducers({
     auth: authReducer,
@@ -13,6 +15,7 @@ const combinedReducer = combineReducers({
     wishList: wishListReducer,
     voucher: voucherReducer,
     address: addressReducer,
+    notification: notificationReducer,
     review: reviewReducer,
     order: orderReducer,
 });

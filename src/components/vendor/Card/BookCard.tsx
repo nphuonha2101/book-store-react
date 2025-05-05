@@ -1,4 +1,4 @@
-import { ShoppingCart, Eye, CreditCard } from "lucide-react";
+import { ShoppingCart, Eye } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Book } from "../../../types/ApiResponse/Book/book";
 import { useDispatch } from "react-redux";
@@ -71,14 +71,6 @@ export const BookCard = ({ book, onClick }: { book: Book, onClick?: () => void }
                     >
                         <ShoppingCart className="h-4 w-4" />
                         Thêm vào giỏ hàng
-                    </Button>
-
-                    <Button
-                        size="sm"
-                        className="w-full bg-black hover:bg-gray-800 text-white flex items-center justify-center gap-2"
-                    >
-                        <CreditCard className="h-4 w-4" />
-                        Mua ngay
                     </Button>
                 </div>
             </div>

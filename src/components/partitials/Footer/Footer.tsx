@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, CreditCard, Truck, Shield } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, Truck, Shield, Package, Info } from 'lucide-react';
 import { Logo } from '../../vendor/Logo/Logo';
 
 const Footer = () => {
@@ -66,21 +66,32 @@ const Footer = () => {
 
                 {/* Tính năng */}
                 <div className="mt-12 pt-8 border-t border-border">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                        <div className="flex flex-col items-center">
+                            <Package size={24} className="mb-2 text-primary" />
+                            <h4 className="font-semibold mb-1">Miễn phí vận chuyển</h4>
+                            <p className="text-sm text-muted-foreground">Cho đơn hàng trên 300.000đ</p>
+                        </div>
                         <div className="flex flex-col items-center">
                             <Truck size={24} className="mb-2 text-primary" />
-                            <h4 className="font-semibold mb-1">Miễn phí vận chuyển</h4>
-                            <p className="text-sm text-muted-foreground">Cho đơn hàng trên 50$</p>
+                            <h4 className="font-semibold mb-1">Giao hàng nhanh chóng</h4>
+                            <p className="text-sm text-muted-foreground">Trong vòng 3-5 ngày làm việc</p>
                         </div>
-                        <div className="flex flex-col items-center">
-                            <CreditCard size={24} className="mb-2 text-primary" />
-                            <h4 className="font-semibold mb-1">Thanh toán an toàn</h4>
-                            <p className="text-sm text-muted-foreground">Thanh toán an toàn 100%</p>
-                        </div>
+
                         <div className="flex flex-col items-center">
                             <Shield size={24} className="mb-2 text-primary" />
-                            <h4 className="font-semibold mb-1">Đảm bảo hoàn tiền</h4>
-                            <p className="text-sm text-muted-foreground">Trong vòng 30 ngày</p>
+                            <h4 className="font-semibold mb-1">Đảm bảo chất lượng sản phẩm</h4>
+                            <p className="text-sm text-muted-foreground">
+                                Sách mới 100% và chính hãng
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col items-center">
+                            <Info size={24} className="mb-2 text-primary" />
+                            <h4 className="font-semibold mb-1">Chăm sóc 27/7</h4>
+                            <p className="text-sm text-muted-foreground">
+                                Hỗ trợ khách hàng 24/7 qua điện thoại và email
+                            </p>
                         </div>
                     </div>
                 </div>

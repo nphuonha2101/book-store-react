@@ -51,7 +51,7 @@ export default function SearchResults() {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [minPrice, setMinPrice] = useState<string>('');
     const [maxPrice, setMaxPrice] = useState<string>('');
-    const [pageSize, setPageSize] = useState<string>('10');
+    const [pageSize, setPageSize] = useState<string>('12');
 
     // Initialize form values from URL params on component mount
     useEffect(() => {
@@ -111,6 +111,11 @@ export default function SearchResults() {
 
         setSearchParams(newParams);
     };
+
+    // Đặt tên trang
+    useEffect(() => {
+        document.title = `Kết quả tìm kiếm: ${searchTerm}`;
+    }, [searchTerm]);
 
     // Handle form reset
     const handleReset = () => {
@@ -247,12 +252,12 @@ export default function SearchResults() {
                             }}
                         >
                             <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="10 kết quả mỗi trang" />
+                                <SelectValue placeholder="12 kết quả mỗi trang" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="10">10 kết quả mỗi trang</SelectItem>
-                                <SelectItem value="20">20 kết quả mỗi trang</SelectItem>
-                                <SelectItem value="50">50 kết quả mỗi trang</SelectItem>
+                                <SelectItem value="12">12 kết quả mỗi trang</SelectItem>
+                                <SelectItem value="24">24 kết quả mỗi trang</SelectItem>
+                                <SelectItem value="60">60 kết quả mỗi trang</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

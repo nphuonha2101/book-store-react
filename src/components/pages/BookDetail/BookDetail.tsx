@@ -1,8 +1,8 @@
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
-import { ShoppingCart, Heart, Truck, RotateCcw, Shield, Info } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { ShoppingCart, Heart, Truck, Shield, Info, Package } from "lucide-react";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store.ts";
@@ -34,6 +34,15 @@ export const BookDetail: React.FC = () => {
         bookSuggestionRequestBody,
         { autoFetch: !!book }
     );
+
+    // Đặt tiêu đề trang
+    useEffect(() => {
+        if (book?.title) {
+            document.title = `Chi tiết sách: ${book.title}`;
+        } else {
+            document.title = "Chi tiết sách";
+        }
+    }, [book]);
 
     const [quantity, setQuantity] = useState<number>(1);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -154,17 +163,6 @@ export const BookDetail: React.FC = () => {
 
     return (
         <div className="container mx-auto px-4 py-4 sm:py-8">
-            <div className="text-sm text-gray-500 mb-4 sm:mb-6 overflow-x-auto whitespace-nowrap">
-                <Link to="/" className="hover:text-primary">
-                    Trang chủ
-                </Link>
-                <a href="/books" className="hover:text-primary">
-                    {" "}
-                    Sách
-                </a>
-                <span className="text-gray-700"> {book.title}</span>
-            </div>
-
             {/* Book Detail Section */}
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -180,9 +178,8 @@ export const BookDetail: React.FC = () => {
                         {book.images && book.images.length > 0 && (
                             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                                 <div
-                                    className={`border-2 rounded-md overflow-hidden cursor-pointer ${
-                                        !selectedImage ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
-                                    }`}
+                                    className={`border-2 rounded-md overflow-hidden cursor-pointer ${!selectedImage ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
+                                        }`}
                                     onClick={() => setSelectedImage(null)}
                                 >
                                     <img
@@ -227,7 +224,11 @@ export const BookDetail: React.FC = () => {
                             </div>
                             <span className="text-gray-500 text-xs sm:text-sm">(12 đánh giá)</span>
                             <span className="text-gray-400 hidden sm:inline">|</span>
-                            <span className="text-green-600 text-xs sm:text-sm">Còn hàng</span>
+                            {book.available ? (
+                                <span className="text-green-600 text-xs sm:text-sm">Còn hàng</span>
+                            ) : (
+                                <span className="text-red-600 text-xs sm:text-sm">Hết hàng</span>
+                            )}
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mb-4 sm:mb-6">
                             <div>
@@ -245,8 +246,8 @@ export const BookDetail: React.FC = () => {
                                 <p className="text-gray-600 text-sm mb-1">
                                     Năm XB:{" "}
                                     <span className="text-gray-800">
-                    {book?.publishedAt ? formatDate(book.publishedAt) : "Chưa cập nhật"}
-                  </span>
+                                        {book?.publishedAt ? formatDate(book.publishedAt) : "Chưa cập nhật"}
+                                    </span>
                                 </p>
                             </div>
                         </div>
@@ -284,17 +285,14 @@ export const BookDetail: React.FC = () => {
                                         <span className="hidden sm:inline">Thêm vào giỏ hàng</span>
                                         <span className="sm:hidden">Thêm giỏ</span>
                                     </button>
-                                    <button className="flex-1 bg-black text-white px-3 py-2 sm:px-4 sm:py-3 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors duration-300 flex items-center justify-center">
-                                        Mua ngay
-                                    </button>
+
                                     <button
                                         onClick={handleToggleWishlist}
                                         disabled={wishlistStatus === "loading"}
-                                        className={`p-2 sm:p-3 border rounded-md flex items-center justify-center ${
-                                            isInWishlist
-                                                ? "bg-red-500 text-white hover:bg-red-600"
-                                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                                        } transition-colors duration-300`}
+                                        className={`p-2 sm:p-3 border rounded-md flex items-center justify-center ${isInWishlist
+                                            ? "bg-red-500 text-white hover:bg-red-600"
+                                            : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                                            } transition-colors duration-300`}
                                     >
                                         <Heart
                                             className={`h-4 w-4 sm:h-5 sm:w-5 ${isInWishlist ? "fill-current" : ""}`}
@@ -307,19 +305,27 @@ export const BookDetail: React.FC = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                                 <div className="flex items-center gap-2 text-gray-600">
                                     <Truck className="h-4 w-4 text-primary" />
-                                    <span className="text-xs sm:text-sm">Giao hàng nhanh 1-3 ngày</span>
+                                    <span className="text-xs sm:text-sm">
+                                        Giao hàng nhanh 1-3 ngày
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600">
-                                    <RotateCcw className="h-4 w-4 text-primary" />
-                                    <span className="text-xs sm:text-sm">Đổi trả trong 7 ngày</span>
+                                    <Package className="h-4 w-4 text-primary" />
+                                    <span className="text-xs sm:text-sm">
+                                        Miễn phí giao hàng cho đơn hàng từ 300.000đ
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600">
                                     <Shield className="h-4 w-4 text-primary" />
-                                    <span className="text-xs sm:text-sm">Bảo hành chính hãng</span>
+                                    <span className="text-xs sm:text-sm">
+                                        Đảm bảo chất lượng sản phẩm
+                                    </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600">
                                     <Info className="h-4 w-4 text-primary" />
-                                    <span className="text-xs sm:text-sm">Hỗ trợ 24/7</span>
+                                    <span className="text-xs sm:text-sm">
+                                        Hỗ trợ 24/7
+                                    </span>
                                 </div>
                             </div>
                         </div>

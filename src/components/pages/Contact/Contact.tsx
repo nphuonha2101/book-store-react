@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card.tsx";
 import { Button } from "../../ui/button.tsx";
 import { Label } from "../../ui/label.tsx";
 import { Input } from "../../ui/input.tsx";
+import { Textarea } from "../../ui/textarea.tsx";
+import { useEffect } from "react";
 
 // Định nghĩa schema xác thực form liên hệ
 const ContactSchema = z.object({
@@ -30,6 +32,10 @@ export const ContactAbout = () => {
             message: "",
         },
     });
+
+    useEffect(() => {
+        document.title = "Về chúng tôi";
+    }, []);
 
     const onSubmit = async (data: ContactInputs) => {
         try {
@@ -69,7 +75,7 @@ export const ContactAbout = () => {
             <div className="text-center mb-12">
                 <h1 className="text-4xl font-bold tracking-tight mb-4">Về Chúng Tôi</h1>
                 <p className="text-xl text-gray-500 max-w-3xl mx-auto">
-                    Book Store - Nơi kết nối đam mê đọc sách và lan tỏa tri thức
+                    NPBookStore - Nơi kết nối đam mê đọc sách và lan tỏa tri thức
                 </p>
             </div>
 
@@ -77,7 +83,7 @@ export const ContactAbout = () => {
                 <div>
                     <h2 className="text-3xl font-bold mb-6">Câu Chuyện Của Chúng Tôi</h2>
                     <p className="text-gray-700 mb-4">
-                        Chào mừng bạn đến với <strong>Book Store</strong>! Chúng tôi là một cửa hàng sách trực tuyến,
+                        Chào mừng bạn đến với <strong>NPBookStore</strong>! Chúng tôi là một cửa hàng sách trực tuyến,
                         nơi bạn có thể tìm thấy hàng ngàn cuốn sách từ nhiều thể loại khác nhau.
                     </p>
                     <p className="text-gray-700 mb-4">
@@ -112,7 +118,7 @@ export const ContactAbout = () => {
                 </div>
                 <div className="flex items-center justify-center">
                     <div className="w-full h-80 md:h-96 rounded-lg flex items-center justify-center">
-                        <img src="https://vanhoadoisong.vn/wp-content/uploads/2022/09/100-hinh-nen-anh-quyen-sach-cho-powerpoint-may-tinh-dien-thoai-4.jpg" alt=""/>
+                        <img src="https://vanhoadoisong.vn/wp-content/uploads/2022/09/100-hinh-nen-anh-quyen-sach-cho-powerpoint-may-tinh-dien-thoai-4.jpg" alt="" />
                     </div>
                 </div>
             </div>
@@ -235,7 +241,7 @@ export const ContactAbout = () => {
                                         control={control}
                                         render={({ field }) => (
                                             <>
-                                                <textarea
+                                                <Textarea
                                                     {...field}
                                                     id="message"
                                                     placeholder="Nhập tin nhắn của bạn"

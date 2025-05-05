@@ -125,8 +125,14 @@ export const API_ENDPOINTS = {
             GET: {
                 URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/notifications`,
             },
+            UNREAD_COUNT: {
+                URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/notifications/unread/count`,
+            },
             READ: {
-                URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/notifications/read`,
+                URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/notifications/mark-as-read`,
+            },
+            READ_ALL: {
+                URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/notifications/mark-as-read-all`,
             },
         }
     },
@@ -157,7 +163,9 @@ export const API_ENDPOINTS = {
         GET_BY_ID: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders`,
         }
-
+    },
+    TRANSCRIBE: {
+        URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/vosk/transcribe`,
     },
     REVIEW: {
         GET_REVIEW: {
