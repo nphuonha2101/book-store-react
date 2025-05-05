@@ -16,6 +16,7 @@ import { Checkout } from '../components/pages/Checkout/Checkout.tsx';
 import Products from '../components/pages/Products/Products.tsx';
 import { ContactAbout } from "../components/pages/Contact/Contact.tsx";
 import { OrderSuccess } from '../components/pages/OrderStatus/OrderSuccess.tsx';
+import { OrderFailed } from '../components/pages/OrderStatus/OrderFailed.tsx';
 
 export const routes: RouteProps[] = [
     {
@@ -100,6 +101,12 @@ export const routes: RouteProps[] = [
     {
         path: '/order-success/:orderId',
         Component: OrderSuccess,
+        Layout: Master,
+        routeType: RouteType.PRIVATE
+    },
+    {
+        path: '/order-failed/:orderId',
+        Component: OrderFailed,
         Layout: Master,
         routeType: RouteType.PRIVATE
     }

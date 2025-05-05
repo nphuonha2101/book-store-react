@@ -159,18 +159,31 @@ export const Checkout: React.FC = () => {
             const response = await callAjaxPlaceOrder(orderRequest);
             const data = await response.json();
             if (data.statusCode === 200) {
-                const orderId = data.data?.id;
 
-                // Clear giỏ hàng sau khi đặt hàng thành công
-                dispatch(clearAllCartItems());
-                toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua sắm.");
-                // Chuyển hướng đến trang thành công
-                navigate("/order-success/" + orderId, { state: { orderId } });
+                // Nếu phương thức thanh toán là "Thanh toán khi nhận hàng" (0), chuyển hướng đến trang thành công
+                if (data.data?.paymentMethod === 0) {
+                    const orderId = data.data?.id;
+
+                    // Clear giỏ hàng sau khi đặt hàng thành công
+                    dispatch(clearAllCartItems());
+                    toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua sắm.");
+                    // Chuyển hướng đến trang thành công
+                    navigate("/order-success/" + orderId, { state: { orderId } });
+                }
+                // Nếu phương thức thanh toán là "Thanh toán trực tuyến" (1), chuyển hướng đến trang thanh toán của bên thứ ba
+                else {
+                    const paymentUrl = data.data?.paymentUrl;
+                    if (paymentUrl) {
+                        // Chuyển hướng đến trang thanh toán của bên thứ ba
+                        window.location.href = paymentUrl;
+                    } else {
+                        toast.error("Có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại.");
+                    }
+                }
+
             } else {
                 throw new Error(data.message || "Đặt hàng không thành công");
             }
-
-
         } catch (error) {
             console.error("Lỗi khi đặt hàng:", error);
             toast.error("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại sau.");
