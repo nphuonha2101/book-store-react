@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../../constants/apiInfo.ts";
-import { Review } from "../../types/Review/review.ts";
+import { Review } from "../../types/ApiResponse/Review/review.ts";
 
 interface ReviewState {
     items: Review[];

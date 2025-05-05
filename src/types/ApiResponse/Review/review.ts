@@ -1,4 +1,4 @@
-import {User} from "../ApiResponse/User/user.ts";
+import {User} from "../User/user.ts";
 
 export interface Review {
     id ?: number;

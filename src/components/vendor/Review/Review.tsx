@@ -16,7 +16,7 @@ import Logger from "../../../utils/logger.ts";
 import {Label} from "../../ui/label.tsx";
 import {Input} from "../../ui/input.tsx";
 import {Button} from "../../ui/button.tsx";
-import {Review} from "../../../types/Review/review.ts";
+import {Review} from "../../../types/ApiResponse/Review/review.ts";
 
 const ReviewComponent: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
