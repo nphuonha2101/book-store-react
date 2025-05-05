@@ -1,13 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../../constants/apiInfo.ts";
-
-interface Order {
-    id: number;
-    userId: number;
-    totalAmount: number;
-    status: string;
-    createdAt: string;
-}
+import { Order } from "../../types/ApiResponse/Order/order.ts";
+import {ORDER_STATUS} from "../../constants/orderStatus.ts";
 
 interface OrderState {
     items: Order[];
@@ -24,14 +18,14 @@ const initialState: OrderState = {
 // Lấy danh sách lịch sử đơn hàng
 export const fetchOrderHistory = createAsyncThunk(
     "order/fetchOrderHistory",
-    async (userId: number, { rejectWithValue }) => {
+    async (orderStatus: string | null, { rejectWithValue }) => {
         try {
             const response = await fetch(
-                `${API_ENDPOINTS.ORDER.GET_HISTORY.URL}?userId=${userId}`,
+                `${API_ENDPOINTS.ORDER.GET_HISTORY.URL}?status=${orderStatus ?? ORDER_STATUS.ALL}`,
                 {
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`,
                     },
                 }
             );
@@ -47,16 +41,14 @@ export const fetchOrderHistory = createAsyncThunk(
         }
     }
 );
-
-// Hủy đơn hàng
 export const cancelOrder = createAsyncThunk(
     "order/cancelOrder",
-    async ({ orderId, userId }: { orderId: number; userId: number }, { rejectWithValue }) => {
+    async ({ orderId, cancellationReason }: { orderId: number; cancellationReason: string }, { rejectWithValue }) => {
         try {
             const response = await fetch(
-                `${API_ENDPOINTS.ORDER.CANCLE_ORDER.URL}?orderId=${orderId}&userId=${userId}`,
+                `${API_ENDPOINTS.ORDER.CANCLE_ORDER.URL}?orderId=${orderId}&cancellationReason=${encodeURIComponent(cancellationReason)}`,
                 {
-                    method: "POST",
+                    method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
