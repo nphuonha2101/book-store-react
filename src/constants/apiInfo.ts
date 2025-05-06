@@ -172,10 +172,13 @@ export const API_ENDPOINTS = {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews`,
         },
         ADD_REVIEW: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/reviews`,
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews`,
         },
         METADATA_BY_BOOK: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/reviews/metadata`,
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/metadata`,
+        },
+        CAN_REVIEW: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/can-review`,
         },
 
     }
