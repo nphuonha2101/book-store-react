@@ -1,38 +1,42 @@
-import { Book } from "../../../types/ApiResponse/Book/book.ts";
+import {Book} from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
-import React, { useState, useEffect, useMemo, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { ShoppingCart, Heart, Truck, Shield, Info, Package } from "lucide-react";
-import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../redux/store.ts";
-import { addToCart } from "../../../redux/slice/cartItemSlice.ts";
-import { addToWishlist, removeFromWishlist, fetchWishlistItems } from "../../../redux/slice/wishlistSlice.ts";
+import React, {useState, useEffect, useMemo, useRef} from "react";
+import {useParams} from "react-router-dom";
+import {ShoppingCart, Heart, Truck, Shield, Info, Package} from "lucide-react";
+import {API_ENDPOINTS} from "../../../constants/apiInfo.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {AppDispatch, RootState} from "../../../redux/store.ts";
+import {addToCart} from "../../../redux/slice/cartItemSlice.ts";
+import {addToWishlist, removeFromWishlist, fetchWishlistItems} from "../../../redux/slice/wishlistSlice.ts";
 import AuthUtil from "../../../utils/authUtil.ts";
-import { CartItemProps } from "../../../types/Cart/cartItemProps.ts";
-import { BookCard } from "../../vendor/Card/BookCard.tsx";
-import { formatDate } from "../../../utils/formatUtils.ts";
+import {CartItemProps} from "../../../types/Cart/cartItemProps.ts";
+import {BookCard} from "../../vendor/Card/BookCard.tsx";
+import {formatDate} from "../../../utils/formatUtils.ts";
 import useFetchPost from "../../../hooks/useFetchPost.ts";
-import { toast } from "sonner";
+import {toast} from "sonner";
+import ProductReviewSection from "../../vendor/Review/ProductReviewSection.tsx";
+import { fetchReviewsMetadataByBookId} from "../../../redux/slice/reviewSlice.ts";
 
 export const BookDetail: React.FC = () => {
-    const { id } = useParams<{ id: string }>(); // Book ID from URL
+    const {id} = useParams<{ id: string }>(); // Book ID from URL
     const hasFetchedWishlist = useRef(false);
     const dispatch = useDispatch<AppDispatch>();
-    const { status: cartStatus, error: cartError } = useSelector((state: RootState) => state.cart);
+    const {status: cartStatus, error: cartError} = useSelector((state: RootState) => state.cart);
     const prevStatus = useRef(cartStatus);
     const actionRef = useRef<string | null>(null);
-    const { items: wishlistItems, status: wishlistStatus, error: wishlistError } = useSelector(
+    const {items: wishlistItems, status: wishlistStatus, error: wishlistError} = useSelector(
         (state: RootState) => state.wishList
     );
     const user = AuthUtil.getUser();
-    const { data: book } = useFetch<Book>(API_ENDPOINTS.BOOK.BOOK_DETAIL.URL_DETAIL + `/${id}`);
+    const {data: book} = useFetch<Book>(API_ENDPOINTS.BOOK.BOOK_DETAIL.URL_DETAIL + `/${id}`);
+    const { totalReviews, averageRating } = useSelector((state: RootState) => state.review);
+
 
     const bookSuggestionRequestBody = useMemo(() => [book?.title ? book.title : ""], [book]);
-    const { data: suggestedBooks } = useFetchPost<string[], Book[]>(
+    const {data: suggestedBooks} = useFetchPost<string[], Book[]>(
         API_ENDPOINTS.BOOK.SUGGESTIONS.URL,
         bookSuggestionRequestBody,
-        { autoFetch: !!book }
+        {autoFetch: !!book}
     );
 
     // Đặt tiêu đề trang
@@ -43,6 +47,15 @@ export const BookDetail: React.FC = () => {
             document.title = "Chi tiết sách";
         }
     }, [book]);
+
+
+    // Fetch review metadata 
+    useEffect(() => {
+        if (book?.id) {
+            dispatch(fetchReviewsMetadataByBookId(book.id));
+        }
+    }, [dispatch, book?.id]);
+
 
     const [quantity, setQuantity] = useState<number>(1);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -89,7 +102,7 @@ export const BookDetail: React.FC = () => {
         }
 
         if (isInWishlist) {
-            dispatch(removeFromWishlist({ userId: user.id, bookId: Number(id) }))
+            dispatch(removeFromWishlist({userId: user.id, bookId: Number(id)}))
                 .unwrap()
                 .then(() => {
                     toast.success(`${book?.title} đã được xóa khỏi danh sách yêu thích!`);
@@ -157,7 +170,7 @@ export const BookDetail: React.FC = () => {
     }
 
     const formatPrice = (price: number) => {
-        return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
+        return new Intl.NumberFormat("vi-VN", {style: "currency", currency: "VND"}).format(price);
     };
     const displayImage = selectedImage || book.coverImage;
 
@@ -179,7 +192,7 @@ export const BookDetail: React.FC = () => {
                             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
                                 <div
                                     className={`border-2 rounded-md overflow-hidden cursor-pointer ${!selectedImage ? "border-blue-500" : "border-gray-200 hover:border-gray-300"
-                                        }`}
+                                    }`}
                                     onClick={() => setSelectedImage(null)}
                                 >
                                     <img
@@ -215,14 +228,16 @@ export const BookDetail: React.FC = () => {
                                     <svg
                                         key={star}
                                         xmlns="http://www.w3.org/2000/svg"
-                                        className="h-4 w-4 sm:h-5 sm:w-5 fill-current"
+                                        className={`h-4 w-4 sm:h-5 sm:w-5 ${star <= (averageRating ?? 0) ? "text-yellow-400 fill-current" : "text-gray-300 fill-current"}`}
                                         viewBox="0 0 24 24"
                                     >
-                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                        <path
+                                            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                                     </svg>
                                 ))}
                             </div>
-                            <span className="text-gray-500 text-xs sm:text-sm">(12 đánh giá)</span>
+                            <span className="text-gray-700 text-sm font-medium ml-1">{averageRating.toFixed(1)}</span>
+                            <span className="text-gray-500 text-xs sm:text-sm">({totalReviews} đánh giá)</span>
                             <span className="text-gray-400 hidden sm:inline">|</span>
                             {book.available ? (
                                 <span className="text-green-600 text-xs sm:text-sm">Còn hàng</span>
@@ -261,7 +276,8 @@ export const BookDetail: React.FC = () => {
                             <label className="block text-gray-700 text-sm mb-2">Số lượng:</label>
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                                 <div className="flex border rounded w-full sm:w-auto">
-                                    <button onClick={decreaseQuantity} className="px-3 sm:px-4 py-2 bg-gray-100 border-r">
+                                    <button onClick={decreaseQuantity}
+                                            className="px-3 sm:px-4 py-2 bg-gray-100 border-r">
                                         -
                                     </button>
                                     <input
@@ -271,7 +287,8 @@ export const BookDetail: React.FC = () => {
                                         onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
                                         className="w-full sm:w-16 text-center py-2"
                                     />
-                                    <button onClick={increaseQuantity} className="px-3 sm:px-4 py-2 bg-gray-100 border-l">
+                                    <button onClick={increaseQuantity}
+                                            className="px-3 sm:px-4 py-2 bg-gray-100 border-l">
                                         +
                                     </button>
                                 </div>
@@ -281,7 +298,7 @@ export const BookDetail: React.FC = () => {
                                         disabled={cartStatus === "loading"}
                                         className="flex-1 bg-blue-500 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-md text-sm font-medium hover:bg-blue-600 transition-colors duration-300 flex items-center justify-center gap-1 sm:gap-2 disabled:bg-gray-400"
                                     >
-                                        <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
+                                        <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5"/>
                                         <span className="hidden sm:inline">Thêm vào giỏ hàng</span>
                                         <span className="sm:hidden">Thêm giỏ</span>
                                     </button>
@@ -292,7 +309,7 @@ export const BookDetail: React.FC = () => {
                                         className={`p-2 sm:p-3 border rounded-md flex items-center justify-center ${isInWishlist
                                             ? "bg-red-500 text-white hover:bg-red-600"
                                             : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                                            } transition-colors duration-300`}
+                                        } transition-colors duration-300`}
                                     >
                                         <Heart
                                             className={`h-4 w-4 sm:h-5 sm:w-5 ${isInWishlist ? "fill-current" : ""}`}
@@ -304,25 +321,25 @@ export const BookDetail: React.FC = () => {
                         <div className="border-t pt-4">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                                 <div className="flex items-center gap-2 text-gray-600">
-                                    <Truck className="h-4 w-4 text-primary" />
+                                    <Truck className="h-4 w-4 text-primary"/>
                                     <span className="text-xs sm:text-sm">
                                         Giao hàng nhanh 1-3 ngày
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600">
-                                    <Package className="h-4 w-4 text-primary" />
+                                    <Package className="h-4 w-4 text-primary"/>
                                     <span className="text-xs sm:text-sm">
                                         Miễn phí giao hàng cho đơn hàng từ 300.000đ
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600">
-                                    <Shield className="h-4 w-4 text-primary" />
+                                    <Shield className="h-4 w-4 text-primary"/>
                                     <span className="text-xs sm:text-sm">
                                         Đảm bảo chất lượng sản phẩm
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-2 text-gray-600">
-                                    <Info className="h-4 w-4 text-primary" />
+                                    <Info className="h-4 w-4 text-primary"/>
                                     <span className="text-xs sm:text-sm">
                                         Hỗ trợ 24/7
                                     </span>
@@ -338,20 +355,24 @@ export const BookDetail: React.FC = () => {
                 <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Mô tả sách</h2>
                 <div className="prose max-w-none text-sm sm:text-base">
                     {book.description ? (
-                        <div dangerouslySetInnerHTML={{ __html: book.description }} />
+                        <div dangerouslySetInnerHTML={{__html: book.description}}/>
                     ) : (
                         <p className="text-gray-500 italic">Chưa có mô tả cho sách này.</p>
                     )}
                 </div>
             </div>
 
+            {/* Product Review Section */}
+            <ProductReviewSection bookId={book.id}/>
+
             {/* Related Books */}
             <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
                 <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-3 sm:mb-4">Sách liên quan</h2>
                 {suggestedBooks && suggestedBooks.length > 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
+                    <div
+                        className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-6">
                         {suggestedBooks.map((item) => (
-                            <BookCard key={item.id} book={item} />
+                            <BookCard key={item.id} book={item}/>
                         ))}
                     </div>
                 ) : (

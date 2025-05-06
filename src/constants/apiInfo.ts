@@ -168,17 +168,14 @@ export const API_ENDPOINTS = {
         URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/vosk/transcribe`,
     },
     REVIEW: {
-        GET_REVIEW: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/all`,
+        GET_BOOK_REVIEWS: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews`,
         },
         ADD_REVIEW: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/add`,
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/reviews`,
         },
-        UPDATE_REVIEW: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/update`,
-        },
-        DELETE_REVIEW: {
-            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/delete`,
+        METADATA_BY_BOOK: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/reviews/metadata`,
         },
 
     }

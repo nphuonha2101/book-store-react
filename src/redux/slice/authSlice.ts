@@ -27,6 +27,7 @@ const authSlice = createSlice({
             localStorage.removeItem("user");
             localStorage.removeItem("token");
             localStorage.removeItem("fcmToken");
+            localStorage.removeItem("searchTermsHistory");
         },
         refreshUser: (state, action: PayloadAction<User>) => {
             state.user = action.payload;

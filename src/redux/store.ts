@@ -5,7 +5,7 @@ import wishListReducer from "./slice/wishlistSlice";
 import addressReducer from "./slice/addressSlice";
 import voucherReducer from "./slice/voucherSlice";
 import notificationReducer from "./slice/notificationSlice";
-import reviewReducer from "./slice/ReviewSlice.ts";
+import reviewReducer from "./slice/reviewSlice.ts";
 import orderReducer from "./slice/orderSlice";
 
 

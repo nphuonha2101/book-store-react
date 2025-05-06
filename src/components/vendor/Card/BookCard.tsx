@@ -79,22 +79,7 @@ export const BookCard = ({ book, onClick }: { book: Book, onClick?: () => void }
                 <h3 className="font-medium text-lg hover:text-blue-600 transition-colors mt-1 line-clamp-2">
                     <Link to={`/books/${book.id}`}>{book.title}</Link>
                 </h3>
-                <div className="flex items-center justify-between mt-2">
-                    <p className="font-bold text-lg text-black">{formatPrice(book.price ? book.price : 0)}</p>
-                    <div className="flex items-center text-yellow-400">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                            <svg
-                                key={star}
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4 fill-current"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                            </svg>
-                        ))}
-                    </div>
-                </div>
+                <p className="text-lg font-semibold text-red-400 mt-2">{formatPrice(book.price ?? 0)}</p>
             </div>
         </div>
     );

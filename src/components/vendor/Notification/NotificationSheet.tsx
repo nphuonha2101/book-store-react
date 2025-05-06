@@ -1,7 +1,7 @@
 import { Bell, Check, ChevronRight, PackageCheck, PackageX, ShoppingBag, Loader2 } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../../ui/sheet";
-import { daysUntilNow, diffTimeUtilNow } from "../../../utils/formatUtils";
+import { diffTimeUtilNow } from "../../../utils/formatUtils";
 import { Skeleton } from "../../ui/skeleton";
 import { Separator } from "../../ui/separator";
 import { Badge } from "../../ui/badge";
@@ -57,7 +57,7 @@ export const NotificationSheet = () => {
     };
 
     const handleMarkAllAsRead = () => {
-        if (user?.id) {
+        if (user?.id && unreadCount > 0) {
             dispatch(markAllNotificationsAsRead(user.id));
         }
     };
