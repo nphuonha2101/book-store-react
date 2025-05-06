@@ -113,7 +113,7 @@ export const routes: RouteProps[] = [
         routeType: RouteType.PRIVATE
     },
     {
-        path: '/orders/history',
+        path: '/orders',
         Component: OrderHistory,
         Layout: Master,
         routeType: RouteType.PRIVATE
