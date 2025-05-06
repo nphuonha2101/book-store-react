@@ -15,7 +15,7 @@ import { Alert, AlertDescription } from "../../ui/alert";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../../ui/dialog";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
-import {Textarea} from "../../ui/textarea.tsx"; // Giả sử bạn có component Tabs từ UI library
+import { Textarea } from "../../ui/textarea.tsx"; // Giả sử bạn có component Tabs từ UI library
 
 const OrderHistory: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -47,6 +47,7 @@ const OrderHistory: React.FC = () => {
         { value: "SHIPPING", label: "Đang giao" },
         { value: "DELIVERED", label: "Đã giao" },
         { value: "CANCELLED", label: "Đã hủy" },
+        { value: "FAILED", label: "Thất bại" },
     ];
 
     useEffect(() => {
@@ -97,6 +98,25 @@ const OrderHistory: React.FC = () => {
     const handleAddToCart = (bookId: number) => {
         toast.success(`Đã thêm sách ID ${bookId} vào giỏ hàng!`);
     };
+
+    const renderOrderBadge = (status: string) => {
+        switch (status) {
+            case "PENDING":
+                return <Badge variant="outline" className="bg-cyan-100 text-cyan-800 border-cyan-300">Chờ xử lý</Badge>;
+            case "PROCESSING":
+                return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">Đang xử lý</Badge>;
+            case "SHIPPING":
+                return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-300">Đang giao</Badge>;
+            case "DELIVERED":
+                return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">Đã giao</Badge>;
+            case "CANCELLED":
+                return <Badge variant="secondary">Đã hủy</Badge>;
+            case "FAILED":
+                return <Badge variant="destructive">Thất bại</Badge>;
+            default:
+                return null;
+        }
+    }
 
     if (!user?.id) {
         return (
@@ -166,13 +186,20 @@ const OrderHistory: React.FC = () => {
 
             {/* Tabs để chọn trạng thái đơn hàng */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-                <TabsList className="grid w-full grid-cols-2 md:grid-cols-6">
-                    {orderStatuses.map((tab) => (
-                        <TabsTrigger key={tab.value} value={tab.value}>
-                            {tab.label}
-                        </TabsTrigger>
-                    ))}
-                </TabsList>
+                <div className="relative">
+                    <TabsList className="w-full flex overflow-x-auto pb-1 hide-scrollbar">
+                        {orderStatuses.map((tab) => (
+                            <TabsTrigger
+                                key={tab.value}
+                                value={tab.value}
+                                className="flex-shrink-0 text-sm sm:text-base whitespace-nowrap px-3 sm:px-4"
+                            >
+                                {tab.label}
+                            </TabsTrigger>
+                        ))}
+                    </TabsList>
+                    <div className="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-background to-transparent pointer-events-none md:hidden" />
+                </div>
             </Tabs>
 
             {orders.length === 0 ? (
@@ -201,30 +228,7 @@ const OrderHistory: React.FC = () => {
                                             Ngày đặt: {new Date(order.createdAt).toLocaleDateString()}
                                         </CardDescription>
                                     </div>
-                                    <Badge
-                                        variant={
-                                            order.status === "PENDING" || order.status === "PROCESSING"
-                                                ? "destructive"
-                                                : order.status === "DELIVERED"
-                                                    ? "default"
-                                                    : order.status === "CANCELLED"
-                                                        ? "secondary"
-                                                        : "outline"
-                                        }
-                                        className={
-                                            order.status === "DELIVERED"
-                                                ? "bg-green-500 text-white"
-                                                : order.status === "SHIPPING"
-                                                    ? "bg-blue-500 text-white"
-                                                    : ""
-                                        }
-                                    >
-                                        {order.status === "PENDING" && "Chờ xử lý"}
-                                        {order.status === "PROCESSING" && "Đang xử lý"}
-                                        {order.status === "SHIPPING" && "Đang giao"}
-                                        {order.status === "DELIVERED" && "Đã giao"}
-                                        {order.status === "CANCELLED" && "Đã hủy"}
-                                    </Badge>
+                                    {renderOrderBadge(order.status)}
                                 </div>
                             </CardHeader>
                             <CardContent className="space-y-4">

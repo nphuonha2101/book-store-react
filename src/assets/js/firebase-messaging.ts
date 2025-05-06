@@ -1,6 +1,7 @@
-import { messaging, getToken } from "./firebase-config";
+import { messaging, getToken, deleteToken } from "./firebase-config";
 import { API_ENDPOINTS } from "../../constants/apiInfo";
 import AuthUtil from "../../utils/authUtil";
+import { getMessaging } from "firebase/messaging";
 
 export const requestPermissionAndGetToken = async (swRegistration: ServiceWorkerRegistration | null) => {
     try {
@@ -10,6 +11,8 @@ export const requestPermissionAndGetToken = async (swRegistration: ServiceWorker
                 vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
                 serviceWorkerRegistration: swRegistration,
             });
+
+            localStorage.setItem("fcmToken", token);
             console.log("FCM Token:", token);
 
             const userToken = AuthUtil.getToken();
@@ -31,8 +34,6 @@ export const requestPermissionAndGetToken = async (swRegistration: ServiceWorker
             } catch (serverErr) {
                 console.error("Failed to send token to server:", serverErr);
             }
-
-            localStorage.setItem("fcmToken", token);
             return token;
         } else {
             console.warn("Notification permission denied");
@@ -41,3 +42,25 @@ export const requestPermissionAndGetToken = async (swRegistration: ServiceWorker
         console.error("FCM Error:", err);
     }
 };
+
+export const deleteFCMToken = async () => {
+    const token = localStorage.getItem("fcmToken");
+    if (token) {
+        try {
+            await fetch(API_ENDPOINTS.AUTH.FCM_TOKEN.DELETE.URL, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${AuthUtil.getToken()}`,
+                },
+                body: JSON.stringify({ token: token }),
+            });
+
+            const messaging = getMessaging();
+            await deleteToken(messaging);
+            console.log("Token deleted from server successfully");
+        } catch (serverErr) {
+            console.error("Failed to delete token from server:", serverErr);
+        }
+    }
+}

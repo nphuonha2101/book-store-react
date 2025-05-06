@@ -3,13 +3,18 @@ import { Button } from "../../ui/button";
 import { Card, CardContent } from "../../ui/card";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store";
+import { clearAllCartItems } from "../../../redux/slice/cartItemSlice";
 
 export const OrderSuccess = () => {
     const navigate = useNavigate();
     const { orderId } = useParams<{ orderId: string }>();
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
         document.title = "Đặt hàng thành công";
+        dispatch(clearAllCartItems());
     }, []);
 
     return (
