@@ -1,5 +1,5 @@
 import { Separator } from "@radix-ui/react-dropdown-menu"
-import { Menu, X, User, Shield, BellRing, CreditCard, Settings, LogOut } from "lucide-react"
+import { Menu, X, User, Shield, BellRing, LogOut } from "lucide-react"
 import { Button } from "../../ui/button"
 import { NavLink } from "react-router-dom"
 import { useState } from "react"
@@ -28,9 +28,7 @@ export const LeftUserSideBar = () => {
     const navigationItems = [
         { to: "/profile", icon: <User size={16} className="mr-2" />, label: "Thông tin cá nhân" },
         { to: "/addresses", icon: <Shield size={16} className="mr-2" />, label: "Địa chỉ người dùng" },
-        { to: "/profile/notifications", icon: <BellRing size={16} className="mr-2" />, label: "Thông báo" },
-        { to: "/profile/payments", icon: <CreditCard size={16} className="mr-2" />, label: "Thanh toán" },
-        { to: "/profile/settings", icon: <Settings size={16} className="mr-2" />, label: "Cài đặt" }
+        { to: "/notifications", icon: <BellRing size={16} className="mr-2" />, label: "Thông báo" },
     ];
 
     const SidebarContent = () => (
@@ -109,6 +107,7 @@ export const LeftUserSideBar = () => {
             {/* Mobile Sidebar with Slide Animation */}
             <div
                 className={`
+                    h-fit
                     fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg 
                     transform transition-transform duration-300 ease-in-out 
                     m-4 rounded-md p-2 border-2 box-border
@@ -129,7 +128,7 @@ export const LeftUserSideBar = () => {
             )}
 
             {/* Desktop Sidebar - Hidden on smaller screens */}
-            <div className="hidden md:block rounded-md w-64 bg-white border border-gray-200 p-4">
+            <div className="hidden md:block rounded-md w-64 bg-white border border-gray-200 p-4 h-fit">
                 <SidebarContent />
             </div>
         </>

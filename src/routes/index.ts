@@ -19,6 +19,7 @@ import { OrderSuccess } from '../components/pages/OrderStatus/OrderSuccess.tsx';
 import { OrderFailed } from '../components/pages/OrderStatus/OrderFailed.tsx';
 import OrderHistory from '../components/vendor/Order/OrderHistory.tsx';
 import OrderDetail from '../components/vendor/Order/OrderDetail.tsx';
+import { UserNotification } from '../components/pages/User/UserNotification.tsx';
 
 export const routes: RouteProps[] = [
     {
@@ -121,6 +122,12 @@ export const routes: RouteProps[] = [
     {
         path: '/orders/:id',
         Component: OrderDetail,
+        Layout: Master,
+        routeType: RouteType.PRIVATE
+    },
+    {
+        path: '/notifications',
+        Component: UserNotification,
         Layout: Master,
         routeType: RouteType.PRIVATE
     }

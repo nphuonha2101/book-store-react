@@ -58,7 +58,7 @@ export const NotificationSheet = () => {
 
     const handleMarkAllAsRead = () => {
         if (user?.id && unreadCount > 0) {
-            dispatch(markAllNotificationsAsRead(user.id));
+            dispatch(markAllNotificationsAsRead());
         }
     };
 

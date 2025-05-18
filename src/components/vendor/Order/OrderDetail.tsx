@@ -96,7 +96,7 @@ const OrderDetail: React.FC = () => {
         <div className="container mx-auto px-6 py-10 text-base">
             <div className="flex items-center mb-8">
                 <Button variant="ghost" asChild className="mr-4">
-                    <Link to="/orders/history">
+                    <Link to="/orders">
                         <ArrowLeft className="h-5 w-5 mr-2" /> Quay lại
                     </Link>
                 </Button>

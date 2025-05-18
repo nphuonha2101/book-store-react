@@ -289,23 +289,25 @@ const OrderHistory: React.FC = () => {
                                     <span className="text-primary">{formatPrice(order.totalAmount)}</span>
                                 </div>
                             </CardContent>
-                            <CardContent className="pt-0 flex flex-wrap gap-3">
-                                <Button variant="outline" asChild className="w-full">
-                                    <Link to={`/orders/${order.id}`}>
-                                        Xem chi tiết <ChevronRight className="ml-2 h-4 w-4" />
-                                    </Link>
-                                </Button>
-
-                                {(order.status === "PENDING" || order.status === "PROCESSING") && (
-                                    <Button
-                                        variant="destructive"
-                                        size="sm"
-                                        onClick={() => handleCancelOrder(order.id)}
-                                        className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold"
-                                    >
-                                        <Trash2 className="mr-2 h-4 w-4" /> Hủy đơn hàng
+                            <CardContent>
+                                <div className="pt-0 flex gap-3 justify-end">
+                                    <Button variant="outline" asChild>
+                                        <Link to={`/orders/${order.id}`}>
+                                            Xem chi tiết <ChevronRight className="ml-2 h-4 w-4" />
+                                        </Link>
                                     </Button>
-                                )}
+
+                                    {(order.status === "PENDING" || order.status === "PROCESSING") && (
+                                        <Button
+                                            variant="destructive"
+                                            size="sm"
+                                            onClick={() => handleCancelOrder(order.id)}
+                                            className="bg-red-600 hover:bg-red-700 text-white font-semibold"
+                                        >
+                                            <Trash2 className="mr-2 h-4 w-4" /> Hủy đơn hàng
+                                        </Button>
+                                    )}
+                                </div>
                             </CardContent>
                         </Card>
                     ))}
