@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../redux/store.ts";
 import { clearAllCartItems, fetchCartItems } from "../../../redux/slice/cartItemSlice.ts";
-import { ShoppingBag, CreditCard, Truck, ChevronRight, ArrowLeft } from "lucide-react";
+import { ShoppingBag, CreditCard, Truck, ChevronRight, ArrowLeft, Undo2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { formatPrice } from "../../../utils/formatUtils.ts";
@@ -639,7 +639,10 @@ export const Checkout: React.FC = () => {
                         </CardContent>
                         <CardFooter>
                             <Button variant="outline" asChild className="w-full">
-                                <Link to="/carts">Quay lại giỏ hàng</Link>
+                                <Link to="/carts">
+                                    <Undo2 className="mr-1 h-4 w-4" />
+                                    Quay lại giỏ hàng
+                                </Link>
                             </Button>
                         </CardFooter>
                     </Card>

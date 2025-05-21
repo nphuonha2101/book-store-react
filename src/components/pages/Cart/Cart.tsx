@@ -8,7 +8,7 @@ import {
     updateShippingFee,
     updateItemsPrice,
 } from "../../../redux/slice/cartItemSlice.ts";
-import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
+import { Trash2, Minus, Plus, ShoppingBag, ShoppingCart, Undo2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { VoucherDialog } from "./VoucherDialog.tsx";
 import { toast } from "sonner";
@@ -364,11 +364,13 @@ export const Cart: React.FC = () => {
                         </div>
                         <div className="mt-8 space-y-4">
                             <Link to="/checkout">
-                                <button className="w-full bg-black text-white py-4 rounded-lg hover:bg-gray-800 transition-colors font-semibold text-lg">
+                                <button className="w-full bg-black text-white py-1 rounded-lg hover:bg-gray-800 transition-colors font-semibold text-lg">
+                                    <ShoppingCart className="h-5 w-5 text-white inline-block mr-2" />
                                     Đặt hàng
                                 </button>
                             </Link>
-                            <button className="mt-2 w-full bg-white text-gray-800 border border-gray-300 py-4 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg">
+                            <button className="mt-2 w-full bg-white text-gray-800 border border-gray-300 py-1 rounded-lg hover:bg-gray-50 transition-colors font-semibold text-lg">
+                                <Undo2 className="h-5 w-5 text-gray-800 inline-block mr-2" />
                                 Tiếp tục mua hàng
                             </button>
                         </div>

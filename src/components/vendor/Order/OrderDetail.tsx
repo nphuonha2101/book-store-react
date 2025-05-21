@@ -193,37 +193,49 @@ const OrderDetail: React.FC = () => {
                     {/* Phí + giảm giá + tổng */}
 
 
-                    <div className="space-y-3">
-                        <div className="flex justify-between items-center text-lg text-blue-600">
-                            <span className="flex items-center font-bold gap-2">
-                                <Truck className="h-5 w-5" />
-                                Tạm tính:
-                            </span>
-                            <span>{formatPrice(order.totalAmount + order.totalDiscount - order.shippingFee)}</span>
-                        </div>
-
-                        <div className="flex justify-between items-center text-lg text-blue-600">
-                            <span className="flex items-center font-bold gap-2">
-                                <Truck className="h-5 w-5" />
-                                Phí vận chuyển
-                            </span>
-                            <span>{formatPrice(order.shippingFee)}</span>
-                        </div>
-
-                        <div className="flex justify-between items-center text-lg text-red-500">
-                            <span className="flex items-center font-bold gap-2">
-                                <BadgePercent className="h-5 w-5" />
-                                Giảm giá
-                            </span>
-                            <span>-{formatPrice(order.totalDiscount)}</span>
-                        </div>
-
-                        <div className="flex justify-between items-center font-bold text-xl text-green-600 pt-2">
-                            <span className="flex items-center gap-2">
-                                <Wallet className="h-5 w-5" />
-                                Tổng thanh toán
-                            </span>
-                            <span>{formatPrice(order.totalAmount)}</span>
+                    <div className="space-y-5 mt-6">
+                        <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+                            <Wallet className="h-5 w-5 text-primary" />
+                            Tóm tắt đơn hàng
+                        </h3>
+                        <div className="rounded-xl p-6 space-y-4 border border-slate-200">
+                            <div className="flex justify-between items-center text-base">
+                                <span className="flex items-center gap-2 text-gray-700">
+                                    <ShoppingCart className="h-4 w-4 text-blue-500" />
+                                    Tạm tính
+                                </span>
+                                <span className="font-semibold text-gray-900">
+                                    {formatPrice(order.totalAmount + order.totalDiscount - order.shippingFee)}
+                                </span>
+                            </div>
+                            <div className="flex justify-between items-center text-base">
+                                <span className="flex items-center gap-2 text-gray-700">
+                                    <Truck className="h-4 w-4 text-orange-500" />
+                                    Phí vận chuyển
+                                </span>
+                                <span className="font-semibold text-gray-900">
+                                    {formatPrice(order.shippingFee)}
+                                </span>
+                            </div>
+                            <div className="flex justify-between items-center text-base">
+                                <span className="flex items-center gap-2 text-red-500">
+                                    <BadgePercent className="h-4 w-4" />
+                                    Giảm giá
+                                </span>
+                                <span className="font-semibold text-red-500">
+                                    -{formatPrice(order.totalDiscount ?? 0)}
+                                </span>
+                            </div>
+                            <Separator className="my-2" />
+                            <div className="flex justify-between items-center font-bold text-lg pt-1">
+                                <span className="flex items-center gap-2 text-green-700">
+                                    <Wallet className="h-5 w-5" />
+                                    Tổng thanh toán
+                                </span>
+                                <span className="text-green-700 text-xl">
+                                    {formatPrice(order.totalAmount)}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </CardContent>
