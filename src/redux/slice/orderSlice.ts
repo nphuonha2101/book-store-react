@@ -98,19 +98,14 @@ const orderSlice = createSlice({
             .addCase(fetchOrderHistory.fulfilled, (state, action) => {
                 state.status = "succeeded";
                 state.items = action.payload.content;
-
-                // Cập nhật pagination với tên khớp PaginationProps
                 state.pagination = {
                     currentPage: action.payload.currentPage,
                     totalPages: action.payload.totalPages,
                     totalElements: action.payload.totalElements,
                     isFirst: action.payload.isFirst,
                     isLast: action.payload.isLast,
-                    pageSize: action.payload.pageSize, // Sử dụng pageSize thay vì size
+                    pageSize: action.payload.pageSize,
                 };
-
-                // Debug log để xác nhận dữ liệu pagination
-                console.log("Updated pagination state:", state.pagination);
             })
             .addCase(fetchOrderHistory.rejected, (state, action) => {
                 state.status = "failed";

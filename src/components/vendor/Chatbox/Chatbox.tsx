@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { marked } from 'marked';
 import { CHAT_TYPE } from '../../../constants/chatType';
+import LogoSvg from '../../../assets/images/Logo.svg';
 
 // Define types for our messages
 interface Message {
@@ -256,12 +257,11 @@ export const Chatbox = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between p-3 border-b border-border bg-muted/50 rounded-t-lg">
                     <div className="flex items-center space-x-2">
-                        <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                            <Bot className="h-4 w-4 text-primary-foreground" />
+                        <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
+                            <img src={LogoSvg} alt="Logo" className="h-6 w-6" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-medium text-foreground">Assistant</h3>
-                            <p className="text-xs text-muted-foreground">Đang hoạt động</p>
+                            <h3 className="text-sm font-medium text-foreground">NPBookStore Assistant</h3>
                         </div>
                     </div>
                     <div className="flex items-center space-x-1">
@@ -299,7 +299,7 @@ export const Chatbox = () => {
                                                 ? ((user && user.avatar)
                                                     ? <img className='w-6 h-6 rounded-full' src={user.avatar} alt="User Avatar" />
                                                     : <User className="h-3 w-3" />)
-                                                : <Bot className="h-3 w-3" />}
+                                                : <img className='w-4 h-4 rounded-full' src={LogoSvg} alt="Bot Avatar" />}
                                         </div>
                                         <div>
                                             <div className={`px-3 py-2 rounded-lg text-sm ${message.sender === 'user'

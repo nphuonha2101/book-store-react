@@ -21,11 +21,9 @@ export default function EnhancedEcommerceNavbar() {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
-    // Lấy cartItems từ Redux store
     const cartItems = useSelector((state: RootState) => state.cart.items);
-    const cartCount = cartItems.length; // Tính cartCount từ cartItems
+    const cartCount = cartItems.length;
 
-    // Lấy thông tin user từ Redux store (nếu bạn lưu user trong Redux)
     const user = useSelector((state: RootState) => state.auth.user);
 
     useEffect(() => {
