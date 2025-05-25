@@ -183,5 +183,10 @@ export const API_ENDPOINTS = {
         CAN_REVIEW: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/reviews/can-review`,
         },
+    },
+    CHAT: {
+        SEND: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/chat/send`,
+        }
     }
 } as const;

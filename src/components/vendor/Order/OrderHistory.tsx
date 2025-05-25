@@ -15,18 +15,20 @@ import { Alert, AlertDescription } from "../../ui/alert";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../../ui/dialog";
 import { RadioGroup, RadioGroupItem } from "../../ui/radio-group";
 import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
-import { Textarea } from "../../ui/textarea.tsx"; // Giả sử bạn có component Tabs từ UI library
+import { Textarea } from "../../ui/textarea.tsx";
+import PaginationComponent from "../Pagination/Pagination";
 
 const OrderHistory: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const user = AuthUtil.getUser();
-    const { items: orders, status, error } = useSelector((state: RootState) => state.order);
+    const { items: orders, status, error, pagination } = useSelector((state: RootState) => state.order);
 
     const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
     const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
     const [cancellationReason, setCancellationReason] = useState<string>("");
     const [customReason, setCustomReason] = useState<string>("");
-    const [activeTab, setActiveTab] = useState<string>("ALL"); // Trạng thái tab hiện tại
+    const [activeTab, setActiveTab] = useState<string>("ALL");
+    const [currentPage, setCurrentPage] = useState(0); // Page index starts from 0 (Spring Boot pagination)
 
     const cancelReasons = [
         "Thay đổi ý định",
@@ -50,12 +52,29 @@ const OrderHistory: React.FC = () => {
         { value: "FAILED", label: "Thất bại" },
     ];
 
+    // 1. useEffect xử lý khi tab thay đổi
     useEffect(() => {
         if (AuthUtil.isLogged()) {
-            // Dispatch fetchOrderHistory với trạng thái của tab hiện tại
-            dispatch(fetchOrderHistory(activeTab === "ALL" ? null : activeTab));
+            // Reset về trang đầu tiên khi tab thay đổi 
+            setCurrentPage(0);
         }
-    }, [dispatch, activeTab]); // Chỉ dispatch lại khi activeTab thay đổi
+    }, [activeTab]); // Chỉ phụ thuộc vào activeTab
+
+    // 2. useEffect để fetch dữ liệu
+    useEffect(() => {
+        if (AuthUtil.isLogged()) {
+            dispatch(fetchOrderHistory({
+                status: activeTab === "ALL" ? null : activeTab,
+                page: currentPage
+            }));
+        }
+    }, [dispatch, activeTab, currentPage]);
+
+    const handlePageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+        // Scroll to top when page changes
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     const handleCancelOrder = (orderId: number) => {
         if (!user?.id) {
@@ -87,8 +106,11 @@ const OrderHistory: React.FC = () => {
                 setCancellationReason("");
                 setCustomReason("");
                 setSelectedOrderId(null);
-                // Refresh danh sách đơn hàng sau khi hủy
-                dispatch(fetchOrderHistory(activeTab === "ALL" ? null : activeTab));
+                // Refresh order list after cancellation
+                dispatch(fetchOrderHistory({
+                    status: activeTab === "ALL" ? null : activeTab,
+                    page: currentPage
+                }));
             })
             .catch((error) => {
                 toast.error(`Lỗi khi hủy: ${error}`);
@@ -217,101 +239,113 @@ const OrderHistory: React.FC = () => {
                     </CardContent>
                 </Card>
             ) : (
-                <div className="space-y-6">
-                    {orders.map((order) => (
-                        <Card key={order.id}>
-                            <CardHeader>
-                                <div className="flex justify-between items-center">
-                                    <div>
-                                        <CardTitle className="text-lg">Đơn hàng #{order.id}</CardTitle>
-                                        <CardDescription>
-                                            Ngày đặt: {new Date(order.createdAt).toLocaleDateString()}
-                                        </CardDescription>
-                                    </div>
-                                    {renderOrderBadge(order.status)}
-                                </div>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div>
-                                    <h3 className="text-lg font-semibold mb-3 flex items-center">
-                                        <ShoppingCart className="mr-2 h-5 w-5" /> Sản phẩm (
-                                        {order.orderItems?.length || 0})
-                                    </h3>
-                                    {order.orderItems?.length > 0 ? (
-                                        <div className="space-y-3">
-                                            {order.orderItems.map((orderItem) => (
-                                                <div
-                                                    key={orderItem.id}
-                                                    className="flex items-center gap-3 border-b pb-3"
-                                                >
-                                                    <div className="h-16 w-16 bg-accent rounded-md overflow-hidden">
-                                                        <img
-                                                            src={
-                                                                orderItem.book.coverImage ||
-                                                                "/placeholder-image.jpg"
-                                                            }
-                                                            alt={orderItem.book.title}
-                                                            className="h-full w-full object-cover"
-                                                        />
-                                                    </div>
-                                                    <div className="flex-grow">
-                                                        <h4 className="font-medium text-sm">
-                                                            {orderItem.book.title}
-                                                        </h4>
-                                                        <p className="text-sm text-muted-foreground">
-                                                            Số lượng: {orderItem.quantity || 1}
-                                                        </p>
-                                                    </div>
-                                                    <div className="flex items-center gap-2">
-                                                        <p className="font-semibold text-right">
-                                                            {formatPrice(orderItem.price)}
-                                                        </p>
-                                                        <Button
-                                                            variant="outline"
-                                                            size="sm"
-                                                            onClick={() => handleAddToCart(orderItem.book.id)}
-                                                        >
-                                                            <ShoppingCart className="h-4 w-4" />
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                            ))}
+                <>
+                    <div className="space-y-6">
+                        {orders.map((order) => (
+                            <Card key={order.id}>
+                                <CardHeader>
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <CardTitle className="text-lg">Đơn hàng #{order.id}</CardTitle>
+                                            <CardDescription>
+                                                Ngày đặt: {new Date(order.createdAt).toLocaleDateString()}
+                                            </CardDescription>
                                         </div>
-                                    ) : (
-                                        <p className="text-muted-foreground">
-                                            Không có sản phẩm nào trong đơn hàng.
-                                        </p>
-                                    )}
-                                </div>
-                                <Separator />
-                                <div className="flex justify-between font-bold text-lg">
-                                    <span>Tổng thanh toán</span>
-                                    <span className="text-primary">{formatPrice(order.totalAmount)}</span>
-                                </div>
-                            </CardContent>
-                            <CardContent>
-                                <div className="pt-0 flex gap-3 justify-end">
-                                    <Button variant="outline" asChild>
-                                        <Link to={`/orders/${order.id}`}>
-                                            Xem chi tiết <ChevronRight className="ml-2 h-4 w-4" />
-                                        </Link>
-                                    </Button>
-
-                                    {(order.status === "PENDING" || order.status === "PROCESSING") && (
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            onClick={() => handleCancelOrder(order.id)}
-                                            className="bg-red-600 hover:bg-red-700 text-white font-semibold"
-                                        >
-                                            <Trash2 className="mr-2 h-4 w-4" /> Hủy đơn hàng
+                                        {renderOrderBadge(order.status)}
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div>
+                                        <h3 className="text-lg font-semibold mb-3 flex items-center">
+                                            <ShoppingCart className="mr-2 h-5 w-5" /> Sản phẩm (
+                                            {order.orderItems?.length || 0})
+                                        </h3>
+                                        {order.orderItems?.length > 0 ? (
+                                            <div className="space-y-3">
+                                                {order.orderItems.map((orderItem) => (
+                                                    <div
+                                                        key={orderItem.id}
+                                                        className="flex items-center gap-3 border-b pb-3"
+                                                    >
+                                                        <div className="h-16 w-16 bg-accent rounded-md overflow-hidden">
+                                                            <img
+                                                                src={
+                                                                    orderItem.book.coverImage ||
+                                                                    "/placeholder-image.jpg"
+                                                                }
+                                                                alt={orderItem.book.title}
+                                                                className="h-full w-full object-cover"
+                                                            />
+                                                        </div>
+                                                        <div className="flex-grow">
+                                                            <h4 className="font-medium text-sm">
+                                                                {orderItem.book.title}
+                                                            </h4>
+                                                            <p className="text-sm text-muted-foreground">
+                                                                Số lượng: {orderItem.quantity || 1}
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <p className="font-semibold text-right">
+                                                                {formatPrice(orderItem.price)}
+                                                            </p>
+                                                            <Button
+                                                                variant="outline"
+                                                                size="sm"
+                                                                onClick={() => handleAddToCart(orderItem.book.id)}
+                                                            >
+                                                                <ShoppingCart className="h-4 w-4" />
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <p className="text-muted-foreground">
+                                                Không có sản phẩm nào trong đơn hàng.
+                                            </p>
+                                        )}
+                                    </div>
+                                    <Separator />
+                                    <div className="flex justify-between font-bold text-lg">
+                                        <span>Tổng thanh toán</span>
+                                        <span className="text-primary">{formatPrice(order.totalAmount)}</span>
+                                    </div>
+                                </CardContent>
+                                <CardContent>
+                                    <div className="pt-0 flex gap-3 justify-end">
+                                        <Button variant="outline" asChild>
+                                            <Link to={`/orders/${order.id}`}>
+                                                Xem chi tiết <ChevronRight className="ml-2 h-4 w-4" />
+                                            </Link>
                                         </Button>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
+
+                                        {(order.status === "PENDING" || order.status === "PROCESSING") && (
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={() => handleCancelOrder(order.id)}
+                                                className="bg-red-600 hover:bg-red-700 text-white font-semibold"
+                                            >
+                                                <Trash2 className="mr-2 h-4 w-4" /> Hủy đơn hàng
+                                            </Button>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+
+                    {/* Pagination */}
+                    {pagination && (
+                        <div className="mt-8">
+                            <PaginationComponent
+                                pagination={pagination}
+                                onPageChange={handlePageChange}
+                            />
+                        </div>
+                    )}
+                </>
             )}
 
             {/* Dialog chọn lý do hủy */}

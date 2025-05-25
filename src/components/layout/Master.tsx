@@ -1,6 +1,7 @@
 import { LayoutProps } from "../../types/Layout/layoutProps.ts";
 import Footer from "../partitials/Footer/Footer";
 import Navbar from "../partitials/Header/Navbar";
+import { Chatbox } from "../vendor/Chatbox/Chatbox.tsx";
 
 export const Master: React.FC<LayoutProps> = ({ children }) => {
     return (
@@ -8,6 +9,8 @@ export const Master: React.FC<LayoutProps> = ({ children }) => {
             <Navbar />
             <section className="w-full mt-5 mb-28 px-7 max-w-screen-xl mx-auto">
                 {children}
+
+                <Chatbox />
             </section>
             <Footer />
         </div>

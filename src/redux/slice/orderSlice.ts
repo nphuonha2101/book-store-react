@@ -1,27 +1,36 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_ENDPOINTS } from "../../constants/apiInfo.ts";
 import { Order } from "../../types/ApiResponse/Order/order.ts";
-import {ORDER_STATUS} from "../../constants/orderStatus.ts";
+import { ORDER_STATUS } from "../../constants/orderStatus.ts";
 
 interface OrderState {
     items: Order[];
     status: "idle" | "loading" | "succeeded" | "failed";
     error: string | null;
+    pagination: {
+        isFirst: boolean;
+        isLast: boolean;
+        totalPages: number;
+        pageSize: number;
+        currentPage: number;
+        totalElements: number;
+    } | null;
 }
 
 const initialState: OrderState = {
     items: [],
     status: "idle",
     error: null,
+    pagination: null,
 };
 
 // Lấy danh sách lịch sử đơn hàng
 export const fetchOrderHistory = createAsyncThunk(
     "order/fetchOrderHistory",
-    async (orderStatus: string | null, { rejectWithValue }) => {
+    async ({ status, page = 0, size = 10 }: { status: string | null, page?: number, size?: number }, { rejectWithValue }) => {
         try {
             const response = await fetch(
-                `${API_ENDPOINTS.ORDER.GET_HISTORY.URL}?status=${orderStatus ?? ORDER_STATUS.ALL}`,
+                `${API_ENDPOINTS.ORDER.GET_HISTORY.URL}?status=${status ?? ORDER_STATUS.ALL}&page=${page}&size=${size}`,
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -34,7 +43,17 @@ export const fetchOrderHistory = createAsyncThunk(
                 throw new Error(`API error: ${errorData || response.statusText}`);
             }
             const data = await response.json();
-            return Array.isArray(data.data) ? data.data : [];
+            console.log("API Response:", data); // Debug log
+
+            return {
+                content: Array.isArray(data.data) ? data.data : [],
+                currentPage: data.pagination?.currentPage ?? page,
+                totalPages: data.pagination?.totalPages ?? 1,
+                totalElements: data.pagination?.totalElements ?? 0,
+                isFirst: data.pagination?.isFirst ?? (page === 0),
+                isLast: data.pagination?.isLast ?? true,
+                pageSize: data.pagination?.pageSize ?? size, // Đảm bảo trả về pageSize thay vì size
+            };
         } catch (error) {
             console.error("fetchOrderHistory error:", error);
             return rejectWithValue((error as Error).message);
@@ -78,7 +97,20 @@ const orderSlice = createSlice({
             })
             .addCase(fetchOrderHistory.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                state.items = action.payload;
+                state.items = action.payload.content;
+
+                // Cập nhật pagination với tên khớp PaginationProps
+                state.pagination = {
+                    currentPage: action.payload.currentPage,
+                    totalPages: action.payload.totalPages,
+                    totalElements: action.payload.totalElements,
+                    isFirst: action.payload.isFirst,
+                    isLast: action.payload.isLast,
+                    pageSize: action.payload.pageSize, // Sử dụng pageSize thay vì size
+                };
+
+                // Debug log để xác nhận dữ liệu pagination
+                console.log("Updated pagination state:", state.pagination);
             })
             .addCase(fetchOrderHistory.rejected, (state, action) => {
                 state.status = "failed";

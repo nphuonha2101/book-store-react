@@ -7,7 +7,6 @@ export default function PaginationComponent({ pagination, onPageChange }: Pagina
     // Đảm bảo các giá trị phù hợp với API Spring
     const currentPage = pagination.currentPage; // index bắt đầu từ 0 trong Spring
     const totalPages = pagination.totalPages;
-    const displayCurrentPage = currentPage + 1; // Hiển thị cho người dùng từ 1
 
     return (
         <Pagination>
@@ -25,72 +24,69 @@ export default function PaginationComponent({ pagination, onPageChange }: Pagina
 
                 {/* Logic hiển thị các trang với dấu ellipsis */}
                 {(() => {
-                    const visiblePageCount = 5; // Số trang hiển thị tối đa (không tính nút prev/next)
+                    // Số nút trang hiển thị tối đa (không tính nút prev/next và ellipsis)
+                    const visiblePageCount = 3;
                     const pages = [];
 
-                    // Luôn hiển thị trang đầu
-                    if (displayCurrentPage > 2) {
-                        pages.push(
-                            <PaginationItem key={0}>
-                                <PaginationLink
-                                    onClick={() => onPageChange(0)}
-                                    isActive={currentPage === 0}
-                                >
-                                    1
-                                </PaginationLink>
-                            </PaginationItem>
-                        );
+                    // Trang 1 luôn được hiển thị
+                    pages.push(
+                        <PaginationItem key={0}>
+                            <PaginationLink
+                                onClick={() => onPageChange(0)}
+                                isActive={currentPage === 0}
+                            >
+                                1
+                            </PaginationLink>
+                        </PaginationItem>
+                    );
+
+                    // Xác định phạm vi trang hiển thị xung quanh trang hiện tại
+                    let startPage = Math.max(1, currentPage - Math.floor(visiblePageCount / 2));
+                    const endPage = Math.min(totalPages - 2, startPage + visiblePageCount - 1);
+
+                    // Điều chỉnh lại nếu không đủ trang ở một bên
+                    if (endPage - startPage + 1 < visiblePageCount) {
+                        startPage = Math.max(1, endPage - visiblePageCount + 1);
                     }
 
-                    // Hiển thị "..." nếu vị trí hiện tại cách xa trang đầu
-                    if (displayCurrentPage > 3) {
+                    // Hiển thị ellipsis đầu tiên nếu cần
+                    if (startPage > 1) {
                         pages.push(
-                            <PaginationItem key="ellipsis-1">
+                            <PaginationItem key="ellipsis-start">
                                 <PaginationEllipsis />
                             </PaginationItem>
                         );
                     }
 
-                    // Xác định trang bắt đầu và kết thúc để hiển thị
-                    // Lưu ý: startPage bắt đầu từ 1 cho hiển thị, nhưng khi gọi API sẽ trừ 1
-                    let startDisplayPage = Math.max(displayCurrentPage - Math.floor(visiblePageCount / 2), 1);
-                    const endDisplayPage = Math.min(startDisplayPage + visiblePageCount - 1, totalPages);
-
-                    // Điều chỉnh lại nếu không đủ trang để hiển thị
-                    if (endDisplayPage - startDisplayPage + 1 < visiblePageCount) {
-                        startDisplayPage = Math.max(endDisplayPage - visiblePageCount + 1, 1);
-                    }
-
-                    // Tạo các nút trang
-                    for (let i = startDisplayPage; i <= endDisplayPage; i++) {
-                        const pageIndex = i - 1; // Chuyển đổi thành index 0-based cho API
+                    // Hiển thị các trang giữa
+                    for (let i = startPage; i <= endPage; i++) {
                         pages.push(
                             <PaginationItem key={i}>
                                 <PaginationLink
-                                    onClick={() => onPageChange(pageIndex)}
-                                    isActive={currentPage === pageIndex}
+                                    onClick={() => onPageChange(i)}
+                                    isActive={currentPage === i}
                                 >
-                                    {i}
+                                    {i + 1}
                                 </PaginationLink>
                             </PaginationItem>
                         );
                     }
 
-                    // Hiển thị "..." nếu vị trí hiện tại cách xa trang cuối
-                    if (displayCurrentPage < totalPages - 1) {
+                    // Hiển thị ellipsis cuối nếu cần
+                    if (endPage < totalPages - 2) {
                         pages.push(
-                            <PaginationItem key="ellipsis-2">
+                            <PaginationItem key="ellipsis-end">
                                 <PaginationEllipsis />
                             </PaginationItem>
                         );
                     }
 
-                    // Luôn hiển thị trang cuối nếu không nằm trong dải trang hiển thị
-                    if (displayCurrentPage < totalPages && endDisplayPage !== totalPages) {
+                    // Trang cuối cùng luôn được hiển thị nếu có nhiều hơn 1 trang
+                    if (totalPages > 1) {
                         pages.push(
-                            <PaginationItem key={totalPages}>
+                            <PaginationItem key={totalPages - 1}>
                                 <PaginationLink
-                                    onClick={() => onPageChange(totalPages - 1)} // Index của trang cuối = totalPages - 1
+                                    onClick={() => onPageChange(totalPages - 1)}
                                     isActive={currentPage === totalPages - 1}
                                 >
                                     {totalPages}
