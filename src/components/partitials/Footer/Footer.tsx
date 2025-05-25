@@ -1,5 +1,6 @@
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, Truck, Shield, Package, Info } from 'lucide-react';
 import { Logo } from '../../vendor/Logo/Logo';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
@@ -24,11 +25,9 @@ const Footer = () => {
                     <div>
                         <h3 className="text-xl font-bold mb-4 text-primary">Liên kết nhanh</h3>
                         <ul className="space-y-2">
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Trang chủ</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Sách bán chạy</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Sách mới phát hành</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Khuyến mãi đặc biệt</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Thể loại sách</a></li>
+                            <li><Link to="/" className="text-muted-foreground hover:text-primary transition-colors">Trang chủ</Link></li>
+                            <li><Link to="/products" className="text-muted-foreground hover:text-primary transition-colors">Sản phẩm</Link></li>
+                            <li><Link to="/contact-us" className="text-muted-foreground hover:text-primary transition-colors">Liên hệ</Link></li>
                         </ul>
                     </div>
 
@@ -36,9 +35,8 @@ const Footer = () => {
                     <div>
                         <h3 className="text-xl font-bold mb-4 text-primary">Dịch vụ khách hàng</h3>
                         <ul className="space-y-2">
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Tài khoản của tôi</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Lịch sử đơn hàng</a></li>
-                            <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Theo dõi đơn hàng</a></li>
+                            <li><Link to="/profile" className="text-muted-foreground hover:text-primary transition-colors">Tài khoản của tôi</Link></li>
+                            <li><Link to="/orders" className="text-muted-foreground hover:text-primary transition-colors">Lịch sử đơn hàng</Link></li>
                             <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Trả hàng & Hoàn tiền</a></li>
                             <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Trung tâm hỗ trợ</a></li>
                         </ul>
@@ -50,15 +48,15 @@ const Footer = () => {
                         <ul className="space-y-2">
                             <li className="flex items-center gap-2">
                                 <Phone size={16} className="text-primary" />
-                                <span className="text-muted-foreground">(123) 456-7890</span>
+                                <span className="text-muted-foreground">(84) 123 456 789</span>
                             </li>
                             <li className="flex items-center gap-2">
                                 <Mail size={16} className="text-primary" />
-                                <span className="text-muted-foreground">hotro@nhachsach.com</span>
+                                <a href='mailto:filmbookingdn@gmail.com' className="text-muted-foreground">filmbookingdn@gmail.com</a>
                             </li>
                             <li className="flex items-start gap-2">
                                 <MapPin size={16} className="text-primary mt-1" />
-                                <span className="text-muted-foreground">123 Đường Đọc Sách, Thành phố Sách, BK 12345</span>
+                                <span className="text-muted-foreground">Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh</span>
                             </li>
                         </ul>
                     </div>
@@ -92,28 +90,6 @@ const Footer = () => {
                             <p className="text-sm text-muted-foreground">
                                 Hỗ trợ khách hàng 24/7 qua điện thoại và email
                             </p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Bản tin */}
-                <div className="mt-12 pt-8 border-t border-border">
-                    <div className="flex flex-col md:flex-row justify-between items-center">
-                        <div className="mb-4 md:mb-0">
-                            <h3 className="text-xl font-bold mb-2 text-primary">Đăng ký nhận bản tin của chúng tôi</h3>
-                            <p className="text-muted-foreground">Cập nhật thông tin về sách mới và ưu đãi độc quyền</p>
-                        </div>
-                        <div className="w-full md:w-2/5">
-                            <div className="flex">
-                                <input
-                                    type="email"
-                                    placeholder="Địa chỉ email của bạn"
-                                    className="bg-background border border-input text-foreground py-2 px-4 rounded-l-md w-full focus:outline-none focus:ring-2 focus:ring-ring focus:border-input"
-                                />
-                                <button className="bg-primary hover:bg-primary/90 text-primary-foreground py-2 px-4 rounded-r-md font-medium transition-colors">
-                                    Đăng ký
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -230,7 +230,7 @@ export const Chatbox = () => {
     // Chat toggle button
     if (!isOpen) {
         return (
-            <div className="fixed bottom-4 right-4 z-50">
+            <div className="fixed bottom-32 right-4 z-50">
                 <button
                     onClick={toggleChat}
                     className="relative h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all duration-200 flex items-center justify-center group"
@@ -250,7 +250,7 @@ export const Chatbox = () => {
     }
 
     return (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="fixed bottom-32 right-4 z-50">
             <div className={`bg-background border border-border rounded-lg shadow-lg transition-all duration-300 ${isMinimized ? 'w-96 h-14' : 'w-96 h-[500px]'
                 }`}>
 

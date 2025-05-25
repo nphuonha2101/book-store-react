@@ -87,7 +87,7 @@ export const ContactAbout = () => {
                         nơi bạn có thể tìm thấy hàng ngàn cuốn sách từ nhiều thể loại khác nhau.
                     </p>
                     <p className="text-gray-700 mb-4">
-                        Được thành lập vào năm 2023, chúng tôi tự hào là nơi kết nối những người yêu sách với những tác phẩm
+                        Được thành lập vào năm 2025, chúng tôi tự hào là nơi kết nối những người yêu sách với những tác phẩm
                         ý nghĩa. Đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn tìm kiếm cuốn sách phù hợp nhất.
                     </p>
                     <p className="text-gray-700 mb-4">
@@ -165,7 +165,7 @@ export const ContactAbout = () => {
                             <MapPin className="w-6 h-6 text-blue-600 mt-1" />
                             <div>
                                 <h3 className="font-medium">Địa Chỉ</h3>
-                                <p className="text-gray-600">123 Đường Sách, Quận 1, TP. Hồ Chí Minh, Việt Nam</p>
+                                <p className="text-gray-600">Phường Linh Trung, Thủ Đức, Thành phố Hồ Chí Minh</p>
                             </div>
                         </div>
                         <div className="flex items-start space-x-4">
@@ -179,7 +179,7 @@ export const ContactAbout = () => {
                             <Mail className="w-6 h-6 text-blue-600 mt-1" />
                             <div>
                                 <h3 className="font-medium">Email</h3>
-                                <p className="text-gray-600">support@bookstore.com</p>
+                                <a href="mailto:filmbookingdn@gmail.com" className="text-gray-600">filmbookingdn@gmail.com</a>
                             </div>
                         </div>
                     </div>
@@ -282,7 +282,7 @@ export const ContactAbout = () => {
 
             <div className="mt-16">
                 <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.5177881826164!2d106.69507237465576!3d10.771594089387621!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f3c586421ef%3A0xb606461945f53fa9!2zTmd1ecOqbiBI4buvdSwgUuG6oW5oIFRyb25nIFTDom4sIFF14bqtbiAxLCBUaMOgbmggcGjhu5EgSOG7kyBDaMOtIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1659158004075!5m2!1svi!2s"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31673.215583671776!2d106.76368926203946!3d10.862032464671106!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d88215693361%3A0x95009cc1803a7e51!2zTGluaCBUcnVuZywgVGjhu6cgxJDhu6ljIENpdHksIEhvIENoaSBNaW5oIENpdHksIFZpZXRuYW0!5e1!3m2!1sen!2s!4v1748174559537!5m2!1sen!2s"
                     width="100%"
                     height="400"
                     style={{ border: 0 }}

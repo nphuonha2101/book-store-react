@@ -33,22 +33,19 @@ export default function MobileMenu({ setIsMobileMenuOpen, handleLogout }: { setI
                     <Link to="/products" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
                         Sản phẩm
                     </Link>
-                    <Link to="/categories" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
-                        Danh mục
-                    </Link>
                     <Link to="/contact-us" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
                         Liên hệ
                     </Link>
                     <div className="border-t border-border mt-4 pt-4">
-                        <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
+                        <Link to="/profile" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
                             Tài khoản
-                        </a>
-                        <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
+                        </Link>
+                        <Link to="/wishlists" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
                             Yêu thích
-                        </a>
-                        <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
+                        </Link>
+                        <Link to="/notifications" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
                             Thông báo
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

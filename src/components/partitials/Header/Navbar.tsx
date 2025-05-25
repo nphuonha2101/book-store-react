@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Search, ShoppingCart, Menu, User, Heart, Bell } from 'lucide-react';
+import { Search, ShoppingCart, Menu, User, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SearchBar from './SearchBar';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
@@ -80,13 +80,7 @@ export default function EnhancedEcommerceNavbar() {
                                     }`}>
                                     Sản phẩm
                                 </NavLink>
-                                <NavLink to="/categories" className={({ isActive }) =>
-                                    `font-medium text-sm hover:text-primary transition-colors ${isActive
-                                        ? 'text-primary'
-                                        : 'text-muted-foreground'
-                                    }`}>
-                                    Danh mục
-                                </NavLink>
+
                                 <NavLink to="/contact-us" className={({ isActive }) =>
                                     `font-medium text-sm hover:text-primary transition-colors ${isActive
                                         ? 'text-primary'
