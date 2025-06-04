@@ -5,7 +5,7 @@ export const PAYMENT_METHOD = [
         id: 0,
         name: 'Thanh toán khi nhận hàng',
         description: 'Thanh toán khi nhận hàng (COD) là hình thức thanh toán mà bạn sẽ thanh toán cho người giao hàng khi nhận hàng tại nhà.',
-        icon: Coins, // Hoặc Truck nếu anh thích
+        icon: Coins,
     },
     {
         id: 1,
