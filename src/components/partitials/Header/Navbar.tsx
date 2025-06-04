@@ -18,15 +18,14 @@ export default function EnhancedEcommerceNavbar() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
     const cartItems = useSelector((state: RootState) => state.cart.items);
     const cartCount = cartItems.length;
 
-    const user = useSelector((state: RootState) => state.auth.user);
-
-    useEffect(() => {
+    const user = useSelector((state: RootState) => state.auth.user); useEffect(() => {
         // Kiểm tra trạng thái đăng nhập
         setIsUserLoggedIn(AuthUtil.isLogged());
 
@@ -36,17 +35,30 @@ export default function EnhancedEcommerceNavbar() {
         }
     }, [dispatch, user]);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 30) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     const handleLogout = () => {
         dispatch(logout());
         setIsUserLoggedIn(false);
-        toast.success('Đăng xuất thành công');
-        navigate('/');
-    };
-
-    return (
-        <div className="relative">
+        toast.success('Đăng xuất thành công'); navigate('/');
+    }; return (
+        <div className="w-full">
             {/* Main Navbar */}
-            <nav className="bg-background sticky top-0 z-30 border-b border-border">
+            <nav className={`bg-background/85 backdrop-blur-sm fixed ${isScrolled ? 'max-w-[95%] mx-auto left-0 right-0 mt-2 rounded-lg shadow-md' : 'w-full'} top-0 z-40 border-b ${isScrolled ? 'border-transparent' : 'border-border/40'} transition-all duration-300`}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between h-16">
                         {/* Logo and Mobile Menu Button */}

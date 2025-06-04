@@ -247,15 +247,11 @@ export const Chatbox = () => {
                 </button>
             </div>
         );
-    }
-
-    return (
+    } return (
         <div className="fixed bottom-32 right-4 z-50">
-            <div className={`bg-background border border-border rounded-lg shadow-lg transition-all duration-300 ${isMinimized ? 'w-96 h-14' : 'w-96 h-[500px]'
-                }`}>
-
-                {/* Header */}
-                <div className="flex items-center justify-between p-3 border-b border-border bg-muted/50 rounded-t-lg">
+            <div className={`bg-background/85 backdrop-blur-sm border border-border/50 rounded-lg shadow-lg transition-all duration-300 ${isMinimized ? 'w-96 h-14' : 'w-96 h-[500px]'
+                }`}>                {/* Header */}
+                <div className="flex items-center justify-between p-3 border-b border-border/40 bg-muted/30 backdrop-blur-sm rounded-t-lg">
                     <div className="flex items-center space-x-2">
                         <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
                             <img src={LogoSvg} alt="Logo" className="h-6 w-6" />
@@ -281,9 +277,8 @@ export const Chatbox = () => {
                 </div>
 
                 {!isMinimized && (
-                    <>
-                        {/* Messages */}
-                        <div className="h-[320px] overflow-y-auto p-3 space-y-3">
+                    <>                        {/* Messages */}
+                        <div className="h-[320px] overflow-y-auto p-3 space-y-3 bg-background/40 backdrop-blur-xs">
                             {messages.map((message) => (
                                 <div
                                     key={message.id}
@@ -335,10 +330,8 @@ export const Chatbox = () => {
                             )}
 
                             <div ref={messagesEndRef} />
-                        </div>
-
-                        {/* Input với Chat Type Selection */}
-                        <div className="p-3 border-t border-border">
+                        </div>                        {/* Input với Chat Type Selection */}
+                        <div className="p-3 border-t border-border/40 bg-background/60 backdrop-blur-sm rounded-b-lg">
                             <div className="mb-2 flex items-center justify-between px-1">
                                 <div className="flex items-center gap-1">
                                     <button

@@ -16,7 +16,7 @@ export default function MobileMenu({ setIsMobileMenuOpen, handleLogout }: { setI
 
     return (
         <>
-            <div className="flex items-center justify-between h-16 px-6 border-b border-border">
+            <div className="z-50 flex items-center justify-between h-16 px-6 border-b border-border">
                 <Logo />
                 <button
                     onClick={() => setIsMobileMenuOpen(false)}
