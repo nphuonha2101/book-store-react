@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Minus, X, MessageCircle, ChevronDown, BookOpen, ShoppingBag, MessageSquare } from 'lucide-react';
+import { Send, Bot, User, X, BookOpen, ShoppingBag, MessageSquare } from 'lucide-react';
 import { API_ENDPOINTS } from '../../../constants/apiInfo';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
@@ -38,12 +38,13 @@ export const Chatbox = () => {
     );
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
-    const [isMinimized, setIsMinimized] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
     const [chatType, setChatType] = useState<string>(CHAT_TYPE.GENERAL);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const user = useSelector((state: RootState) => state.auth.user);
+    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+    const token = useSelector((state: RootState) => state.auth.token);
 
     // Use for fallback responses if API fails
     const botResponses: string[] = [
@@ -103,11 +104,15 @@ export const Chatbox = () => {
 
     const getBotResponseFromApi = async (userMessage: string): Promise<string> => {
         try {
+            const headers: Record<string, string> = {
+                'Content-Type': 'application/json'
+            }
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
             const response = await fetch(API_ENDPOINTS.CHAT.SEND.URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: headers,
                 body: JSON.stringify({
                     message: userMessage,
                     chatType: chatType
@@ -189,19 +194,6 @@ export const Chatbox = () => {
         });
     };
 
-    const toggleChat = () => {
-        if (!isOpen) {
-            setIsOpen(true);
-            setIsMinimized(false);
-        } else {
-            setIsOpen(false);
-        }
-    };
-
-    const toggleMinimize = () => {
-        setIsMinimized(!isMinimized);
-    };
-
     // Change chat type and reset messages
     const changeChatType = (type: string) => {
         if (type !== chatType) {
@@ -232,167 +224,163 @@ export const Chatbox = () => {
         return (
             <div className="fixed bottom-32 right-4 z-50">
                 <button
-                    onClick={toggleChat}
-                    className="relative h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all duration-200 flex items-center justify-center group"
+                    onClick={() => setIsOpen(true)}
+                    className="flex items-center justify-center h-12 w-12 bg-primary rounded-full shadow-lg hover:bg-primary/90 transition-colors duration-200"
+                    aria-label="Mở chat"
                 >
-                    <MessageCircle className="h-6 w-6" />
+                    <MessageSquare className="h-5 w-5 text-primary-foreground" />
                     {unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center font-medium">
-                            {unreadCount > 9 ? '9+' : unreadCount}
-                        </span>
+                        <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center font-medium">
+                            {unreadCount}
+                        </div>
                     )}
-                    <span className="absolute right-full mr-3 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        Mở chat
-                    </span>
                 </button>
             </div>
         );
-    } return (
+    }
+
+    return (
         <div className="fixed bottom-32 right-4 z-50">
-            <div className={`bg-background/85 backdrop-blur-sm border border-border/50 rounded-lg shadow-lg transition-all duration-300 ${isMinimized ? 'w-96 h-14' : 'w-96 h-[500px]'
-                }`}>                {/* Header */}
+            <div className="bg-background/85 backdrop-blur-sm border border-border/50 rounded-lg shadow-lg w-96 transition-opacity duration-200">
+                {/* Header */}
                 <div className="flex items-center justify-between p-3 border-b border-border/40 bg-muted/30 backdrop-blur-sm rounded-t-lg">
                     <div className="flex items-center space-x-2">
-                        <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
-                            <img src={LogoSvg} alt="Logo" className="h-6 w-6" />
+                        <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                            <img src={LogoSvg} alt="Logo" className="h-5 w-5" />
                         </div>
                         <div>
                             <h3 className="text-sm font-medium text-foreground">NPBookStore Assistant</h3>
+                            <p className="text-xs text-muted-foreground">Trả lời trong vài giây</p>
                         </div>
                     </div>
                     <div className="flex items-center space-x-1">
                         <button
-                            onClick={toggleMinimize}
-                            className="h-8 w-8 rounded-md hover:bg-muted transition-colors flex items-center justify-center"
-                        >
-                            {isMinimized ? <ChevronDown className="h-4 w-4" /> : <Minus className="h-4 w-4" />}
-                        </button>
-                        <button
                             onClick={() => setIsOpen(false)}
-                            className="h-8 w-8 rounded-md hover:bg-muted transition-colors flex items-center justify-center"
+                            className="h-7 w-7 rounded-md hover:bg-destructive/10 hover:text-destructive transition-colors flex items-center justify-center"
+                            aria-label="Đóng chat"
                         >
                             <X className="h-4 w-4" />
                         </button>
                     </div>
                 </div>
 
-                {!isMinimized && (
-                    <>                        {/* Messages */}
-                        <div className="h-[320px] overflow-y-auto p-3 space-y-3 bg-background/40 backdrop-blur-xs">
-                            {messages.map((message) => (
-                                <div
-                                    key={message.id}
-                                    className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                                >
-                                    <div className={`flex items-start space-x-2 max-w-[85%] ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
+                {/* Messages */}
+                <div className="h-[320px] overflow-y-auto p-3 space-y-3 bg-background/40 backdrop-blur-xs">
+                    {messages.map((message) => (
+                        <div
+                            key={message.id}
+                            className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                        >
+                            <div className={`flex items-start space-x-2 max-w-[85%] ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
+                                }`}>
+                                <div className={`h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0 ${message.sender === 'user'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-muted text-muted-foreground'
+                                    }`}>
+                                    {message.sender === 'user'
+                                        ? ((user && user.avatar)
+                                            ? <img className='w-6 h-6 rounded-full' src={user.avatar} alt="User Avatar" />
+                                            : <User className="h-3 w-3" />)
+                                        : <img className='w-4 h-4 rounded-full' src={LogoSvg} alt="Bot Avatar" />}
+                                </div>
+                                <div>
+                                    <div className={`px-3 py-2 rounded-lg text-sm ${message.sender === 'user'
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'bg-muted text-foreground'
+                                        }`} dangerouslySetInnerHTML={{ __html: message.text }}>
+                                    </div>
+                                    <p className={`text-xs text-muted-foreground mt-1 ${message.sender === 'user' ? 'text-right' : 'text-left'
                                         }`}>
-                                        <div className={`h-6 w-6 rounded-full flex items-center justify-center flex-shrink-0 ${message.sender === 'user'
-                                            ? 'bg-primary text-primary-foreground'
-                                            : 'bg-muted text-muted-foreground'
-                                            }`}>
-                                            {message.sender === 'user'
-                                                ? ((user && user.avatar)
-                                                    ? <img className='w-6 h-6 rounded-full' src={user.avatar} alt="User Avatar" />
-                                                    : <User className="h-3 w-3" />)
-                                                : <img className='w-4 h-4 rounded-full' src={LogoSvg} alt="Bot Avatar" />}
-                                        </div>
-                                        <div>
-                                            <div className={`px-3 py-2 rounded-lg text-sm ${message.sender === 'user'
-                                                ? 'bg-primary text-primary-foreground'
-                                                : 'bg-muted text-foreground'
-                                                }`} dangerouslySetInnerHTML={{ __html: message.text }}>
-                                            </div>
-                                            <p className={`text-xs text-muted-foreground mt-1 ${message.sender === 'user' ? 'text-right' : 'text-left'
-                                                }`}>
-                                                {formatTime(message.timestamp)}
-                                            </p>
-                                        </div>
-                                    </div>
+                                        {formatTime(message.timestamp)}
+                                    </p>
                                 </div>
-                            ))}
-
-                            {/* Typing Indicator */}
-                            {isTyping && (
-                                <div className="flex justify-start">
-                                    <div className="flex items-start space-x-2">
-                                        <div className="h-6 w-6 bg-muted text-muted-foreground rounded-full flex items-center justify-center">
-                                            <Bot className="h-3 w-3" />
-                                        </div>
-                                        <div className="bg-muted px-3 py-2 rounded-lg">
-                                            <div className="flex space-x-1">
-                                                <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce"></div>
-                                                <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.1s]"></div>
-                                                <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.2s]"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            <div ref={messagesEndRef} />
-                        </div>                        {/* Input với Chat Type Selection */}
-                        <div className="p-3 border-t border-border/40 bg-background/60 backdrop-blur-sm rounded-b-lg">
-                            <div className="mb-2 flex items-center justify-between px-1">
-                                <div className="flex items-center gap-1">
-                                    <button
-                                        onClick={() => changeChatType(CHAT_TYPE.GENERAL)}
-                                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${chatType === CHAT_TYPE.GENERAL
-                                            ? 'bg-primary/80 text-primary-foreground'
-                                            : 'bg-muted/50 hover:bg-muted/80 text-muted-foreground'
-                                            }`}
-                                    >
-                                        <MessageSquare className="h-3 w-3 mr-1" />
-                                        <span>Trò chuyện</span>
-                                    </button>
-                                    <button
-                                        onClick={() => changeChatType(CHAT_TYPE.BOOK_SEARCH)}
-                                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${chatType === CHAT_TYPE.BOOK_SEARCH
-                                            ? 'bg-primary/80 text-primary-foreground'
-                                            : 'bg-muted/50 hover:bg-muted/80 text-muted-foreground'
-                                            }`}
-                                    >
-                                        <BookOpen className="h-3 w-3 mr-1" />
-                                        <span>Sách</span>
-                                    </button>
-                                    <button
-                                        onClick={() => changeChatType(CHAT_TYPE.ORDER_LOOKUP)}
-                                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${chatType === CHAT_TYPE.ORDER_LOOKUP
-                                            ? 'bg-primary/80 text-primary-foreground'
-                                            : 'bg-muted/50 hover:bg-muted/80 text-muted-foreground'
-                                            }`}
-                                    >
-                                        <ShoppingBag className="h-3 w-3 mr-1" />
-                                        <span>Đơn hàng</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <input
-                                    type="text"
-                                    value={inputValue}
-                                    onChange={(e) => setInputValue(e.target.value)}
-                                    onKeyPress={handleKeyPress}
-                                    placeholder={
-                                        chatType === CHAT_TYPE.BOOK_SEARCH
-                                            ? "Nhập tên sách hoặc tác giả..."
-                                            : chatType === CHAT_TYPE.ORDER_LOOKUP
-                                                ? "Nhập mã đơn hàng..."
-                                                : "Nhập tin nhắn..."
-                                    }
-                                    className="flex-1 px-3 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent placeholder:text-muted-foreground"
-                                    maxLength={500}
-                                />
-                                <button
-                                    onClick={handleSendMessage}
-                                    disabled={!inputValue.trim() || isTyping}
-                                    className="h-9 w-9 bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground text-primary-foreground rounded-md flex items-center justify-center transition-colors duration-200"
-                                >
-                                    <Send className="h-4 w-4" />
-                                </button>
                             </div>
                         </div>
-                    </>
-                )}
+                    ))}
+
+                    {/* Typing Indicator */}
+                    {isTyping && (
+                        <div className="flex justify-start">
+                            <div className="flex items-start space-x-2">
+                                <div className="h-6 w-6 bg-muted text-muted-foreground rounded-full flex items-center justify-center">
+                                    <Bot className="h-3 w-3" />
+                                </div>
+                                <div className="bg-muted px-3 py-2 rounded-lg">
+                                    <div className="flex space-x-1">
+                                        <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce"></div>
+                                        <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.1s]"></div>
+                                        <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    <div ref={messagesEndRef} />
+                </div>
+                {/* Input với Chat Type Selection */}
+                <div className="p-3 border-t border-border/40 bg-background/60 backdrop-blur-sm rounded-b-lg">
+                    <div className="mb-2 flex items-center justify-between px-1">
+                        <div className="flex items-center gap-1">
+                            <button
+                                onClick={() => changeChatType(CHAT_TYPE.GENERAL)}
+                                className={`inline-flex items-center px-2 py-1 rounded-full text-xs transition-colors ${chatType === CHAT_TYPE.GENERAL
+                                    ? 'bg-primary/80 text-primary-foreground'
+                                    : 'bg-muted/50 hover:bg-muted/80 text-muted-foreground'
+                                    }`}
+                            >
+                                <MessageSquare className="h-3 w-3 mr-1" />
+                                <span>Trò chuyện</span>
+                            </button>
+                            <button
+                                onClick={() => changeChatType(CHAT_TYPE.BOOK_SEARCH)}
+                                className={`inline-flex items-center px-2 py-1 rounded-full text-xs transition-colors ${chatType === CHAT_TYPE.BOOK_SEARCH
+                                    ? 'bg-primary/80 text-primary-foreground'
+                                    : 'bg-muted/50 hover:bg-muted/80 text-muted-foreground'
+                                    }`}
+                            >
+                                <BookOpen className="h-3 w-3 mr-1" />
+                                <span>Sách</span>
+                            </button>
+                            {isAuthenticated && (
+                                <button
+                                    onClick={() => changeChatType(CHAT_TYPE.ORDER_LOOKUP)}
+                                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs transition-colors ${chatType === CHAT_TYPE.ORDER_LOOKUP
+                                        ? 'bg-primary/80 text-primary-foreground'
+                                        : 'bg-muted/50 hover:bg-muted/80 text-muted-foreground'
+                                        }`}
+                                >
+                                    <ShoppingBag className="h-3 w-3 mr-1" />
+                                    <span>Đơn hàng</span>
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <input
+                            type="text"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                            placeholder={
+                                chatType === CHAT_TYPE.BOOK_SEARCH
+                                    ? "Nhập tên sách hoặc tác giả..."
+                                    : chatType === CHAT_TYPE.ORDER_LOOKUP
+                                        ? "Nhập mã đơn hàng..."
+                                        : "Nhập tin nhắn..."
+                            }
+                            className="flex-1 px-3 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-1 focus:ring-ring focus:border-transparent placeholder:text-muted-foreground"
+                            maxLength={500}
+                        />
+                        <button
+                            onClick={handleSendMessage}
+                            disabled={!inputValue.trim() || isTyping}
+                            className="h-9 w-9 bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground text-primary-foreground rounded-md flex items-center justify-center transition-colors"
+                        >
+                            <Send className="h-4 w-4" />
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

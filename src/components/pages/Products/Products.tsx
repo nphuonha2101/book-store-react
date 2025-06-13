@@ -63,7 +63,7 @@ export default function Products() {
         setMinPrice(searchParams.get('minPrice') || '');
         setMaxPrice(searchParams.get('maxPrice') || '');
     }, [searchParams]);
-
+    
     const queryParams = useMemo(() => ({
         params: {
             authorName: author,
