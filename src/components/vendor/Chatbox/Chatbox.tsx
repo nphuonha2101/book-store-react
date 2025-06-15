@@ -10,7 +10,7 @@ import LogoSvg from '../../../assets/images/Logo.svg';
 // Define types for our messages
 interface Message {
     id: number;
-    text: string;
+    text: string|Promise<string>;
     sender: 'user' | 'bot';
     timestamp: Date;
 }

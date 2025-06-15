@@ -9,7 +9,7 @@ import { Label } from "../../ui/label.tsx";
 import { Button } from "../../ui/button.tsx";
 import { Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 
 
 const ForgotPasswordSchema = z.object({

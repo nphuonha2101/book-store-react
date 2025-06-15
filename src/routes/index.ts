@@ -7,7 +7,7 @@ import SearchResults from '../components/pages/Search/SearchResults.tsx';
 import { BookDetail } from "../components/pages/BookDetail/BookDetail.tsx";
 import { SignUp } from "../components/pages/SignUp/SignUp.tsx";
 import { UserProfile } from '../components/pages/User/UserProfile.tsx';
-import { RouteType } from "../constants/routeTypes.ts";
+import { RouteType } from "../constants/RouteTypes";
 import { Cart } from "../components/pages/Cart/Cart.tsx";
 import Wishlist from "../components/pages/WishList/WishList.tsx";
 import { UserAddress } from "../components/pages/User/UserAddress.tsx";

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { ApiResponse } from "../types/ApiResponse/apiResponse";
+import { ApiResponse } from "../types/ApiResponse/apiResponse.ts";
 
 interface FetchOptions extends RequestInit {
     skip?: boolean; // Bỏ qua fetch nếu cần
