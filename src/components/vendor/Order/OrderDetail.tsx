@@ -67,7 +67,7 @@ const OrderDetail: React.FC = () => {
             <div className="text-center py-20">
                 <p className="text-red-500 text-lg">{error}</p>
                 <Button asChild className="mt-4">
-                    <Link to="/orders/history">Quay lại lịch sử đơn hàng</Link>
+                    <Link to="/orders">Quay lại lịch sử đơn hàng</Link>
                 </Button>
             </div>
         );
