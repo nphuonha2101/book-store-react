@@ -17,7 +17,18 @@ import { useEffect } from "react";
 const signUpSchema = z.object({
     email: z.string()
         .min(1, { message: "Email không được để trống" })
-        .email({ message: "Email không hợp lệ" }),
+        .email({ message: "Email không hợp lệ" })
+        .refine(async (email) => {
+            const response = await fetch(`${API_ENDPOINTS.AUTH.EMAIL_EXISTS.URL}?email=${email}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+            console.log(data);
+            return data.data === false;
+        }, { message: "Email đã tồn tại" }),
     name: z.string()
         .min(1, { message: "Tên không được để trống" })
         .max(50, { message: "Tên không được quá 50 ký tự" }),

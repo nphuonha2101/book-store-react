@@ -93,6 +93,9 @@ export const API_ENDPOINTS = {
         }
     },
     AUTH: {
+        EMAIL_EXISTS: {
+            URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/exist-email`,
+        },
         SIGN_IN: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/login`,
         },
