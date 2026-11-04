@@ -28,6 +28,14 @@ npm run dev
 Open <http://localhost:3000>. The API is expected at <http://localhost:8080>
 unless `NEXT_PUBLIC_API_BASE_URL` points elsewhere.
 
+The backend seeds a demo catalogue on an empty database (`APP_SEED_ENABLED=true`):
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Customer with cart/wishlist/reviews | `demo@npbookstore.local` | `Demo@123456` |
+| Customer | `reviewer@npbookstore.local` | `Review@123456` |
+| Admin (backend dashboard) | `admin@npbookstore.local` | `Admin@123456` |
+
 ### Scripts
 
 ```bash
