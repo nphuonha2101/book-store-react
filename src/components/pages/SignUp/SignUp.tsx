@@ -1,6 +1,9 @@
+"use client";
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card";
 import { toast } from "sonner";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useNavigate } from "@/lib/use-navigate";
 import usePost from "../../../hooks/usePost.ts";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { Logo } from "../../vendor/Logo/Logo.tsx";
@@ -216,7 +219,7 @@ export const SignUp = () => {
                 <CardFooter className="flex flex-col space-y-1 mt-2">
                     <div className="text-center text-sm">
                         Bạn đã có tài khoản {" "}
-                        <Link to="/signin" className="text-red-500 hover:underline">
+                        <Link href="/signin" className="text-red-500 hover:underline">
                             Đăng nhập ở đây
                         </Link>
                     </div>

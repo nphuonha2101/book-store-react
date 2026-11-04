@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "@/lib/use-navigate";
+import { useParams } from "next/navigation";
 import { Card, CardContent } from "../../ui/card";
 import { XCircle } from "lucide-react";
 import { Button } from "../../ui/button";
@@ -8,7 +11,7 @@ import AuthUtil from "../../../utils/authUtil";
 
 export const OrderFailed = () => {
     const navigate = useNavigate();
-    const { orderId } = useParams<{ orderId: string }>();
+    const { orderId } = useParams() as {  orderId: string  };
 
     useEffect(() => {
         document.title = "Đặt hàng thất bại";

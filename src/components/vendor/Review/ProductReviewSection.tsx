@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { StarIcon } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';

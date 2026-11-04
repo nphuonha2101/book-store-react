@@ -1,58 +1,56 @@
 import { toast } from "sonner";
 import { User } from "../types/ApiResponse/User/user";
-import { API_ENDPOINTS } from "../constants/apiInfo.ts";
-import Logger from "./logger.ts";
+import { API_ENDPOINTS } from "../constants/apiInfo";
+import Logger from "./logger";
+
+const isBrowser = () => typeof window !== "undefined";
 
 export default class AuthUtil {
     /**
-     * Check if user is logged in
-     * @returns true if user is logged in, false otherwise
+     * Check if user is logged in. Safe to call during SSR.
      */
     static isLogged() {
-        return !!localStorage.getItem("token");
+        if (!isBrowser()) return false;
+        return !!window.localStorage.getItem("token");
     }
 
     /**
-     * Login user by saving user info and token to local storage
-     * @param user user object
-     * @param token  JWT token
+     * Persist user info and JWT after a successful login.
      */
     static login(user: object, token: string) {
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token);
+        if (!isBrowser()) return;
+        window.localStorage.setItem("user", JSON.stringify(user));
+        window.localStorage.setItem("token", token);
     }
 
     /**
-     * Logout user by removing user info and token from local storage
+     * Remove persisted credentials.
      */
     static logout() {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
+        if (!isBrowser()) return;
+        window.localStorage.removeItem("user");
+        window.localStorage.removeItem("token");
+        window.localStorage.removeItem("fcmToken");
+        window.localStorage.removeItem("searchTermsHistory");
     }
 
-    /**
-     *  Get user info from local storage
-     * @returns User info from local storage if user is logged in, null otherwise
-     */
-    static getUser() {
-        return JSON.parse(localStorage.getItem("user")!) as User;
+    static getUser(): User | null {
+        if (!isBrowser()) return null;
+        try {
+            const raw = window.localStorage.getItem("user");
+            return raw ? (JSON.parse(raw) as User) : null;
+        } catch {
+            return null;
+        }
     }
 
-    /**
-     *  Get JWT token from local storage
-     * @returns JWT token from local storage
-     */
-    static getToken() {
-        if (!AuthUtil.isLogged()) {
-            return null;
-        }
-        // Check if token is expired
-        const token = localStorage.getItem("token");
-        if (!token) {
-            return null;
-        }
-        const isExpired = AuthUtil.checkTokenExpired(token);
-        if (isExpired) {
+    static getToken(): string | null {
+        if (!isBrowser() || !AuthUtil.isLogged()) return null;
+
+        const token = window.localStorage.getItem("token");
+        if (!token) return null;
+
+        if (AuthUtil.checkTokenExpired(token)) {
             AuthUtil.logout();
             toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
             return null;
@@ -61,60 +59,47 @@ export default class AuthUtil {
     }
 
     /**
-     * Fetch user info from server. If user is logged in, save user info and token to local storage
-     * @returns User info if user is logged in, null otherwise
+     * Fetch the authenticated profile and refresh the persisted copy.
      */
-    static async fetchUser() {
+    static async fetchUser(): Promise<User | null> {
         const userToken = AuthUtil.getToken();
+        if (!userToken) return null;
 
-        if (!userToken) {
-            return;
-        }
-
-        const userResponse = await fetch(API_ENDPOINTS.AUTH.ME.URL, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${userToken}`,
-            },
-        }).then((res) => res.json())
-            .catch((error) => {
-                Logger.error("Fetch user error:", error);
-                return null;
+        try {
+            const response = await fetch(API_ENDPOINTS.AUTH.ME.URL, {
+                method: "POST",
+                headers: { Authorization: `Bearer ${userToken}` },
             });
-        if (!userResponse.success) {
-            toast.error("Đã có lỗi xảy ra khi lấy thông tin người dùng");
-            return;
+            const userResponse = await response.json();
+            if (!userResponse.success) {
+                toast.error("Đã có lỗi xảy ra khi lấy thông tin người dùng");
+                return null;
+            }
+            AuthUtil.login(userResponse.data, userToken);
+            return userResponse.data as User;
+        } catch (error) {
+            Logger.error("Fetch user error:", error);
+            return null;
         }
-
-        AuthUtil.login(userResponse.data, userToken);
-        return userResponse.data as User;
     }
 
-    /**
-     * Refresh user info and token from local storage when user info is changed
-     */
     static async refreshUser() {
         const user = await AuthUtil.fetchUser();
-        if (user)
-            this.login(user, AuthUtil.getToken()!);
-        else
-            this.logout();
+        if (user) AuthUtil.login(user, AuthUtil.getToken()!);
+        else AuthUtil.logout();
     }
 
     static decodeToken(token: string) {
         try {
             const parts = token.split(".");
-            if (parts.length !== 3) {
-                console.error("Invalid JWT token format");
-                return null;
-            }
+            if (parts.length !== 3) return null;
 
-            const payload = parts[1];
-            // Sửa lỗi padding khi decode base64url
-            const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
-            const paddedBase64 = base64.padEnd(base64.length + (4 - (base64.length % 4)) % 4, '=');
+            const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+            const paddedBase64 = base64.padEnd(
+                base64.length + ((4 - (base64.length % 4)) % 4),
+                "="
+            );
             const decodedPayload = atob(paddedBase64);
-
             return JSON.parse(decodedPayload);
         } catch (error) {
             console.error("Failed to decode JWT token:", error);
@@ -125,18 +110,13 @@ export default class AuthUtil {
     static checkTokenExpired(token: string) {
         try {
             const decodedToken = AuthUtil.decodeToken(token);
-            if (!decodedToken || !decodedToken.exp) {
-                console.error("Invalid token or missing exp claim");
-                return true; // Coi như token hết hạn
-            }
+            if (!decodedToken || !decodedToken.exp) return true;
 
             const currentTime = Math.floor(Date.now() / 1000);
-            const bufferTime = 60; // Thời gian đệm 60 giây
-
-            return decodedToken.exp < (currentTime + bufferTime);
-        } catch (error) {
-            console.error("Error checking token expiration:", error);
-            return true; // Coi như token hết hạn nếu có lỗi
+            const bufferTime = 60;
+            return decodedToken.exp < currentTime + bufferTime;
+        } catch {
+            return true;
         }
     }
 }

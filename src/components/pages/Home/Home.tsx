@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { HeroSlider } from "../../vendor/Carousel/HeroSlider";
 import useFetch from "../../../hooks/useFetch.ts";

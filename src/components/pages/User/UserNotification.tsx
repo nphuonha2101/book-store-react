@@ -1,3 +1,5 @@
+"use client";
+
 import { Bell, Check, ChevronRight, Loader2, PackageCheck, PackageX, ShoppingBag } from "lucide-react";
 import { Button } from "../../ui/button";
 import { diffTimeUtilNow } from "../../../utils/formatUtils";
@@ -8,7 +10,7 @@ import { LeftUserSideBar } from "./LeftUserSideBar";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/lib/use-navigate";
 
 export const UserNotification = () => {
     const [page, setPage] = useState(0);

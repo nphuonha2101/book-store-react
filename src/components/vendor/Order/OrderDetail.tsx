@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import {
     ArrowLeft, ShoppingCart, Wallet, Truck, BadgePercent,
     User, Home, Phone, Mail, CreditCard
@@ -20,7 +23,7 @@ import { Order } from "../../../types/ApiResponse/Order/order.ts";
 import { PAYMENT_METHOD } from "../../../constants/paymentMethod.ts";
 
 const OrderDetail: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+    const { id } = useParams() as {  id: string  };
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -67,7 +70,7 @@ const OrderDetail: React.FC = () => {
             <div className="text-center py-20">
                 <p className="text-red-500 text-lg">{error}</p>
                 <Button asChild className="mt-4">
-                    <Link to="/orders">Quay lại lịch sử đơn hàng</Link>
+                    <Link href="/orders">Quay lại lịch sử đơn hàng</Link>
                 </Button>
             </div>
         );
@@ -96,7 +99,7 @@ const OrderDetail: React.FC = () => {
         <div className="container mx-auto px-6 py-10 text-base">
             <div className="flex items-center mb-8">
                 <Button variant="ghost" asChild className="mr-4">
-                    <Link to="/orders">
+                    <Link href="/orders">
                         <ArrowLeft className="h-5 w-5 mr-2" /> Quay lại
                     </Link>
                 </Button>

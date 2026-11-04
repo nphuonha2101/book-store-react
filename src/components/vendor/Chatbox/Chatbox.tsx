@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, X, BookOpen, ShoppingBag, MessageSquare } from 'lucide-react';
 import { API_ENDPOINTS } from '../../../constants/apiInfo';
@@ -5,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { marked } from 'marked';
 import { CHAT_TYPE } from '../../../constants/chatType';
-import LogoSvg from '../../../assets/images/Logo.svg';
 
 // Define types for our messages
 interface Message {
@@ -246,7 +247,7 @@ export const Chatbox = () => {
                 <div className="flex items-center justify-between p-3 border-b border-border/40 bg-muted/30 backdrop-blur-sm rounded-t-lg">
                     <div className="flex items-center space-x-2">
                         <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-                            <img src={LogoSvg} alt="Logo" className="h-5 w-5" />
+                            <img src="/Logo.svg" alt="Logo" className="h-5 w-5" />
                         </div>
                         <div>
                             <h3 className="text-sm font-medium text-foreground">NPBookStore Assistant</h3>
@@ -281,7 +282,7 @@ export const Chatbox = () => {
                                         ? ((user && user.avatar)
                                             ? <img className='w-6 h-6 rounded-full' src={user.avatar} alt="User Avatar" />
                                             : <User className="h-3 w-3" />)
-                                        : <img className='w-4 h-4 rounded-full' src={LogoSvg} alt="Bot Avatar" />}
+                                        : <img className='w-4 h-4 rounded-full' src="/Logo.svg" alt="Bot Avatar" />}
                                 </div>
                                 <div>
                                     <div className={`px-3 py-2 rounded-lg text-sm ${message.sender === 'user'

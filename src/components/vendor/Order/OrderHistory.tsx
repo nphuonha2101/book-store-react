@@ -1,7 +1,9 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Trash2, ShoppingCart, ChevronRight } from "lucide-react";
 import AuthUtil from "../../../utils/authUtil.ts";
 import { AppDispatch, RootState } from "../../../redux/store.ts";
@@ -152,7 +154,7 @@ const OrderHistory: React.FC = () => {
                     </CardHeader>
                     <CardContent className="flex justify-center">
                         <Button asChild size="lg">
-                            <Link to="/signin">Đăng nhập ngay</Link>
+                            <Link href="/signin">Đăng nhập ngay</Link>
                         </Button>
                     </CardContent>
                 </Card>
@@ -193,7 +195,7 @@ const OrderHistory: React.FC = () => {
                         </Alert>
                         <div className="flex justify-center mt-6">
                             <Button asChild>
-                                <Link to="/">Quay lại trang chủ</Link>
+                                <Link href="/">Quay lại trang chủ</Link>
                             </Button>
                         </div>
                     </CardContent>
@@ -234,7 +236,7 @@ const OrderHistory: React.FC = () => {
                     </CardHeader>
                     <CardContent className="flex justify-center">
                         <Button asChild size="lg">
-                            <Link to="/products">Mua sắm ngay</Link>
+                            <Link href="/products">Mua sắm ngay</Link>
                         </Button>
                     </CardContent>
                 </Card>
@@ -315,7 +317,7 @@ const OrderHistory: React.FC = () => {
                                 <CardContent>
                                     <div className="pt-0 flex gap-3 justify-end">
                                         <Button variant="outline" asChild>
-                                            <Link to={`/orders/${order.id}`}>
+                                            <Link href={`/orders/${order.id}`}>
                                                 Xem chi tiết <ChevronRight className="ml-2 h-4 w-4" />
                                             </Link>
                                         </Button>

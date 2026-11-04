@@ -1,7 +1,9 @@
+"use client";
+
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import useFetch from "../../../hooks/useFetch.ts";
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "next/navigation";
 import { ShoppingCart, Heart, Truck, Shield, Info, Package } from "lucide-react";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +20,7 @@ import ProductReviewSection from "../../vendor/Review/ProductReviewSection.tsx";
 import { fetchReviewsMetadataByBookId } from "../../../redux/slice/reviewSlice.ts";
 
 export const BookDetail: React.FC = () => {
-    const { id } = useParams<{ id: string }>(); // Book ID from URL
+    const { id } = useParams() as {  id: string  }; // Book ID from URL
     const hasFetchedWishlist = useRef(false);
     const dispatch = useDispatch<AppDispatch>();
     const { status: cartStatus, error: cartError } = useSelector((state: RootState) => state.cart);
@@ -201,7 +203,7 @@ export const BookDetail: React.FC = () => {
                                         className="w-full h-16 sm:h-20 md:h-24 object-cover"
                                     />
                                 </div>
-                                {book.images.slice(0, window.innerWidth < 640 ? 3 : 4).map((image, index) => (
+                                {book.images.slice(0, 4).map((image, index) => (
                                     <div
                                         key={index}
                                         className={`border-2 rounded-md overflow-hidden cursor-pointer ${selectedImage === image.url ? "border-blue-500" : "border-gray-200 hover:border-gray-300"

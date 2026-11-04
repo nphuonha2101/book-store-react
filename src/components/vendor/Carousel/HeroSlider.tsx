@@ -1,6 +1,6 @@
+"use client";
+
 import React from "react";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import useFetch from "../../../hooks/useFetch";
 import { SliderItem } from "../../../types/ApiResponse/Slider/sliderItem.ts";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
@@ -11,7 +11,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "../../ui/carousel"
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/lib/use-navigate";
 
 export const HeroSlider: React.FC = () => {
     const { data: sliders } = useFetch<SliderItem[]>(API_ENDPOINTS.SLIDER.GET_SLIDER.URL);

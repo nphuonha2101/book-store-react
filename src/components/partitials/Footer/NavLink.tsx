@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { NavLinkProps } from '../../../types/Footer/navLinkProps.ts';
 

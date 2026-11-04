@@ -5,9 +5,8 @@ import wishListReducer from "./slice/wishlistSlice";
 import addressReducer from "./slice/addressSlice";
 import voucherReducer from "./slice/voucherSlice";
 import notificationReducer from "./slice/notificationSlice";
-import reviewReducer from "./slice/reviewSlice.ts";
+import reviewReducer from "./slice/reviewSlice";
 import orderReducer from "./slice/orderSlice";
-
 
 const combinedReducer = combineReducers({
     auth: authReducer,
@@ -21,18 +20,28 @@ const combinedReducer = combineReducers({
 });
 
 const rootReducer = (state: ReturnType<typeof combinedReducer> | undefined, action: AnyAction) => {
-    // Reset các state khi logout
-    // Redux tự khởi tạo các initial state cho các slice nếu state là undefined
+    // Reset every slice to its initial state on logout.
     if (action.type === logout.type) {
         return combinedReducer(undefined, action);
     }
-    // Giữ nguyên state cũ nếu không có action logout
     return combinedReducer(state, action);
 };
 
-export const store = configureStore({
-    reducer: rootReducer,
-});
+/**
+ * Create a fresh store. A store must never be shared between server requests,
+ * so the app creates one per client tree in `Providers`.
+ */
+export const makeStore = () =>
+    configureStore({
+        reducer: rootReducer,
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware({
+                serializableCheck: {
+                    ignoredActionPaths: ["meta.arg", "payload.timestamp"],
+                },
+            }),
+    });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type AppStore = ReturnType<typeof makeStore>;
+export type RootState = ReturnType<AppStore["getState"]>;
+export type AppDispatch = AppStore["dispatch"];

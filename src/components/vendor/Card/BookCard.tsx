@@ -1,3 +1,5 @@
+"use client";
+
 import { ShoppingCart, Eye } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Book } from "../../../types/ApiResponse/Book/book";
@@ -7,7 +9,7 @@ import { addToCart } from "../../../redux/slice/cartItemSlice";
 import { CartItem } from "../../../types/ApiResponse/Cart/cart";
 import { toast } from "sonner";
 import AuthUtil from "../../../utils/authUtil.ts";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { formatPrice } from "../../../utils/formatUtils.ts";
 
 export const BookCard = ({ book, onClick }: { book: Book, onClick?: () => void }) => {
@@ -58,7 +60,7 @@ export const BookCard = ({ book, onClick }: { book: Book, onClick?: () => void }
                         className="w-full bg-white text-black hover:bg-gray-100 font-medium"
                         asChild
                     >
-                        <Link to={`/books/${book.id}`} className="flex items-center justify-center gap-2">
+                        <Link href={`/books/${book.id}`} className="flex items-center justify-center gap-2">
                             <Eye className="h-4 w-4" />
                             Xem chi tiết
                         </Link>
@@ -77,7 +79,7 @@ export const BookCard = ({ book, onClick }: { book: Book, onClick?: () => void }
             <div className="p-4">
                 <p className="text-sm text-gray-500 line-clamp-1">{book.authorName}</p>
                 <h3 className="font-medium text-lg hover:text-blue-600 transition-colors mt-1 line-clamp-2">
-                    <Link to={`/books/${book.id}`}>{book.title}</Link>
+                    <Link href={`/books/${book.id}`}>{book.title}</Link>
                 </h3>
                 <p className="text-lg font-semibold text-red-400 mt-2">{formatPrice(book.price ?? 0)}</p>
             </div>

@@ -1,7 +1,10 @@
+"use client";
+
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Card, CardContent } from "../../ui/card";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "@/lib/use-navigate";
+import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
@@ -9,7 +12,7 @@ import { clearAllCartItems } from "../../../redux/slice/cartItemSlice";
 
 export const OrderSuccess = () => {
     const navigate = useNavigate();
-    const { orderId } = useParams<{ orderId: string }>();
+    const { orderId } = useParams() as {  orderId: string  };
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
@@ -25,7 +28,7 @@ export const OrderSuccess = () => {
                     <h1 className="text-2xl font-semibold">Đặt hàng thành công!</h1>
                     <p className="text-muted-foreground">
                         Cảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi! Chúng tôi sẽ xử lý đơn hàng của bạn trong thời gian sớm nhất.
-                        <br /> Bạn có thể kiểm tra trạng thái đơn hàng của mình trong phần "Đơn hàng của tôi".
+                        <br /> Bạn có thể kiểm tra trạng thái đơn hàng của mình trong phần &quot;Đơn hàng của tôi&quot;.
                     </p>
 
                     <div className="space-y-2">

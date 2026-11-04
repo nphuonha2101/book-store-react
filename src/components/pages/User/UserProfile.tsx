@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useRef, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
@@ -77,6 +79,13 @@ export const UserProfile = () => {
     } = useForm<UserProfileFormInputs>({
         resolver: zodResolver(UserProfileSchema),
         mode: 'onBlur',
+        defaultValues: {
+            name: "",
+            phone: "",
+            password: "",
+            address: "",
+            avatar: undefined,
+        },
     });
 
     useEffect(() => {

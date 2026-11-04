@@ -1,9 +1,12 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../redux/store.ts";
 import { clearAllCartItems, fetchCartItems } from "../../../redux/slice/cartItemSlice.ts";
 import { ShoppingBag, CreditCard, Truck, ChevronRight, ArrowLeft, Undo2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useNavigate } from "@/lib/use-navigate";
 import { toast } from "sonner";
 import { formatPrice } from "../../../utils/formatUtils.ts";
 import { Button } from "../../ui/button";
@@ -62,7 +65,7 @@ export const Checkout: React.FC = () => {
         if (user?.id) {
             dispatch(fetchCartItems());
         } else {
-            navigate("/login?continue=/checkout");
+            navigate("/signin?continue=/checkout");
             toast.error("Vui lòng đăng nhập để tiếp tục thanh toán");
         }
     }, [dispatch, user?.id, navigate]);
@@ -243,7 +246,7 @@ export const Checkout: React.FC = () => {
                         </Alert>
                         <div className="flex justify-center mt-6">
                             <Button asChild>
-                                <Link to="/cart">Quay lại giỏ hàng</Link>
+                                <Link href="/carts">Quay lại giỏ hàng</Link>
                             </Button>
                         </div>
                     </CardContent>
@@ -267,7 +270,7 @@ export const Checkout: React.FC = () => {
                     </CardHeader>
                     <CardFooter className="flex justify-center">
                         <Button asChild size="lg">
-                            <Link to="/">Tiếp tục mua hàng</Link>
+                            <Link href="/">Tiếp tục mua hàng</Link>
                         </Button>
                     </CardFooter>
                 </Card>
@@ -432,7 +435,7 @@ export const Checkout: React.FC = () => {
                                                     <div className="p-4 border-t">
                                                         <div className="flex flex-col gap-3">
                                                             <Button variant="outline" asChild className="w-full">
-                                                                <Link to="/addresses/add">
+                                                                <Link href="/addresses">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
                                                                         <path d="M5 12h14"></path>
                                                                         <path d="M12 5v14"></path>
@@ -456,7 +459,7 @@ export const Checkout: React.FC = () => {
                                                 <AlertDescription>Không có địa chỉ nào được lưu trữ. Vui lòng thêm địa chỉ.</AlertDescription>
                                             </Alert>
                                             <Button variant="link" asChild className="mt-2">
-                                                <Link to="/addresses">Thêm địa chỉ</Link>
+                                                <Link href="/addresses">Thêm địa chỉ</Link>
                                             </Button>
                                         </>
                                     )}
@@ -639,7 +642,7 @@ export const Checkout: React.FC = () => {
                         </CardContent>
                         <CardFooter>
                             <Button variant="outline" asChild className="w-full">
-                                <Link to="/carts">
+                                <Link href="/carts">
                                     <Undo2 className="mr-1 h-4 w-4" />
                                     Quay lại giỏ hàng
                                 </Link>

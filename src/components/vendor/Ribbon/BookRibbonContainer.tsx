@@ -1,3 +1,5 @@
+"use client";
+
 import { Ribbon } from "../../../types/ApiResponse/Ribbon/ribbon.ts";
 import { BookCard } from "../Card/BookCard.tsx";
 import { ChevronRight, ChevronLeft } from "lucide-react";

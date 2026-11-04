@@ -1,18 +1,13 @@
+"use client";
+
 import { X } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Logo } from "../../vendor/Logo/Logo";
-import { User } from "../../../types/ApiResponse/User/user";
-import { useEffect, useState } from "react";
-import AuthUtil from "../../../utils/authUtil";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
 export default function MobileMenu({ setIsMobileMenuOpen, handleLogout }: { setIsMobileMenuOpen: (value: boolean) => void, handleLogout: () => void }) {
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-    const [user, setUser] = useState<User>();
-
-    useEffect(() => {
-        setIsUserLoggedIn(AuthUtil.isLogged());
-        setUser(AuthUtil.getUser());
-    }, []);
+    const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
 
     return (
         <>
@@ -27,30 +22,30 @@ export default function MobileMenu({ setIsMobileMenuOpen, handleLogout }: { setI
             </div>
             <div className="flex-1 overflow-y-auto py-4 px-6">
                 <div className="space-y-1">
-                    <Link to="/" className="block px-3 py-2 rounded-md text-base font-medium bg-secondary text-primary">
+                    <Link href="/" className="block px-3 py-2 rounded-md text-base font-medium bg-secondary text-primary">
                         Trang chủ
                     </Link>
-                    <Link to="/products" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
+                    <Link href="/products" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
                         Sản phẩm
                     </Link>
-                    <Link to="/contact-us" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
+                    <Link href="/contact-us" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
                         Liên hệ
                     </Link>
                     <div className="border-t border-border mt-4 pt-4">
-                        <Link to="/profile" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
+                        <Link href="/profile" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
                             Tài khoản
                         </Link>
-                        <Link to="/wishlists" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
+                        <Link href="/wishlists" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
                             Yêu thích
                         </Link>
-                        <Link to="/notifications" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
+                        <Link href="/notifications" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors">
                             Thông báo
                         </Link>
                     </div>
                 </div>
             </div>
             <div className="border-t border-border p-4">
-                {isUserLoggedIn ? (
+                {isAuthenticated ? (
                     <div className="space-y-3">
                         <div className="flex items-center gap-3 px-3 py-2">
                             {user?.avatar ? (
@@ -70,13 +65,13 @@ export default function MobileMenu({ setIsMobileMenuOpen, handleLogout }: { setI
                             </div>
                         </div>
                         <Link
-                            to="/profile"
+                            href="/profile"
                             className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors"
                         >
                             Quản lý tài khoản
                         </Link>
                         <Link
-                            to="/orders"
+                            href="/orders"
                             className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-secondary hover:text-primary transition-colors"
                         >
                             Đơn hàng của tôi
@@ -91,13 +86,13 @@ export default function MobileMenu({ setIsMobileMenuOpen, handleLogout }: { setI
                 ) : (
                     <div className="space-y-2">
                         <Link
-                            to="/signin"
+                            href="/signin"
                             className="block w-full text-center px-3 py-2 rounded-md text-base font-medium bg-primary text-white hover:bg-primary/90 transition-colors"
                         >
                             Đăng nhập
                         </Link>
                         <Link
-                            to="/signup"
+                            href="/signup"
                             className="block w-full text-center px-3 py-2 rounded-md text-base font-medium border border-primary text-primary hover:bg-primary/10 transition-colors"
                         >
                             Đăng ký

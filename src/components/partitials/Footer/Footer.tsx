@@ -1,6 +1,8 @@
+"use client";
+
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin, Truck, Shield, Package, Info } from 'lucide-react';
 import { Logo } from '../../vendor/Logo/Logo';
-import { Link } from 'react-router-dom';
+import Link from "next/link";
 
 const Footer = () => {
     return (
@@ -25,9 +27,9 @@ const Footer = () => {
                     <div>
                         <h3 className="text-xl font-bold mb-4 text-primary">Liên kết nhanh</h3>
                         <ul className="space-y-2">
-                            <li><Link to="/" className="text-muted-foreground hover:text-primary transition-colors">Trang chủ</Link></li>
-                            <li><Link to="/products" className="text-muted-foreground hover:text-primary transition-colors">Sản phẩm</Link></li>
-                            <li><Link to="/contact-us" className="text-muted-foreground hover:text-primary transition-colors">Liên hệ</Link></li>
+                            <li><Link href="/" className="text-muted-foreground hover:text-primary transition-colors">Trang chủ</Link></li>
+                            <li><Link href="/products" className="text-muted-foreground hover:text-primary transition-colors">Sản phẩm</Link></li>
+                            <li><Link href="/contact-us" className="text-muted-foreground hover:text-primary transition-colors">Liên hệ</Link></li>
                         </ul>
                     </div>
 
@@ -35,8 +37,8 @@ const Footer = () => {
                     <div>
                         <h3 className="text-xl font-bold mb-4 text-primary">Dịch vụ khách hàng</h3>
                         <ul className="space-y-2">
-                            <li><Link to="/profile" className="text-muted-foreground hover:text-primary transition-colors">Tài khoản của tôi</Link></li>
-                            <li><Link to="/orders" className="text-muted-foreground hover:text-primary transition-colors">Lịch sử đơn hàng</Link></li>
+                            <li><Link href="/profile" className="text-muted-foreground hover:text-primary transition-colors">Tài khoản của tôi</Link></li>
+                            <li><Link href="/orders" className="text-muted-foreground hover:text-primary transition-colors">Lịch sử đơn hàng</Link></li>
                             <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Trả hàng & Hoàn tiền</a></li>
                             <li><a href="#" className="text-muted-foreground hover:text-primary transition-colors">Trung tâm hỗ trợ</a></li>
                         </ul>

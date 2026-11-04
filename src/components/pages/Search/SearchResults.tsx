@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from "@/lib/use-search-params";
 import {
     Card,
     CardHeader,

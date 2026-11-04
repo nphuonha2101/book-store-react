@@ -1,3 +1,5 @@
+"use client";
+
 import { Bell, Check, ChevronRight, PackageCheck, PackageX, ShoppingBag, Loader2 } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../../ui/sheet";
@@ -8,7 +10,7 @@ import { Badge } from "../../ui/badge";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@/lib/use-navigate";
 import {
     fetchNotifications,
     fetchUnreadCount,

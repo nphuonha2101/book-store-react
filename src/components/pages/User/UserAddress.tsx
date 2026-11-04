@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import {
@@ -66,9 +68,7 @@ const AddressSchema = z.object({
 
     addInfo: z
         .string()
-        .max(200, { message: "Thông tin bổ sung không được vượt quá 200 ký tự" })
-        .optional()
-        .transform((val) => val || ""),
+        .max(200, { message: "Thông tin bổ sung không được vượt quá 200 ký tự" }),
 
     isDefault: z.boolean(),
 });

@@ -1,13 +1,14 @@
-import { Link } from "react-router-dom";
-import LogoSvg from '../../../assets/images/Logo.svg';
+"use client";
+
+import Link from "next/link";
 export const Logo = ({ className, width = '70px', height = 'auto' }: {
     className?: string;
     width?: string;
     height?: string;
 }) => {
     return (
-        <Link to="/" className={className}>
-            <img src={LogoSvg} alt="logo" style={{ width, height }} />
+        <Link href="/" className={className}>
+            <img src="/Logo.svg" alt="logo" style={{ width, height }} />
         </Link>
     );
 }

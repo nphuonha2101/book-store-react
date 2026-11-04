@@ -1,23 +1,26 @@
+"use client";
+
 import { useEffect, useState } from 'react';
 import { Search, ShoppingCart, Menu, User, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SearchBar from './SearchBar';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import Link from "next/link";
+import { NavLink } from "@/components/nav-link";
+import { useNavigate } from "@/lib/use-navigate";
 import MobileMenu from './MobileMenu';
 import { Logo } from '../../vendor/Logo/Logo';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../../ui/dropdown-menu';
 import { toast } from 'sonner';
-import AuthUtil from '../../../utils/authUtil';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../../redux/store';
-import { fetchCartItems } from "../../../redux/slice/cartItemSlice.ts"; // Đảm bảo bạn đã định nghĩa store
+import { fetchCartItems } from "../../../redux/slice/cartItemSlice.ts";
 import { logout } from '../../../redux/slice/authSlice.ts';
 import { NotificationSheet } from '../../vendor/Notification/NotificationSheet.tsx';
+import { deleteFCMToken } from '../../../assets/js/firebase-messaging.ts';
 
 export default function EnhancedEcommerceNavbar() {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -25,15 +28,22 @@ export default function EnhancedEcommerceNavbar() {
     const cartItems = useSelector((state: RootState) => state.cart.items);
     const cartCount = cartItems.length;
 
-    const user = useSelector((state: RootState) => state.auth.user); useEffect(() => {
-        // Kiểm tra trạng thái đăng nhập
-        setIsUserLoggedIn(AuthUtil.isLogged());
+    const { user, isAuthenticated, hydrated } = useSelector((state: RootState) => state.auth);
+    // Auth-dependent markup is only rendered after the component has mounted on
+    // the client. The first client render must match the server HTML exactly.
+    const [mounted, setMounted] = useState(false);
+    const signedIn = mounted && hydrated && isAuthenticated;
 
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
         // Nếu người dùng đã đăng nhập, lấy dữ liệu giỏ hàng
-        if (AuthUtil.isLogged() && user?.id) {
+        if (signedIn && user?.id) {
             dispatch(fetchCartItems());
         }
-    }, [dispatch, user]);
+    }, [dispatch, user?.id, signedIn]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -52,9 +62,10 @@ export default function EnhancedEcommerceNavbar() {
     }, []);
 
     const handleLogout = () => {
+        void deleteFCMToken();
         dispatch(logout());
-        setIsUserLoggedIn(false);
-        toast.success('Đăng xuất thành công'); navigate('/');
+        toast.success('Đăng xuất thành công');
+        navigate('/');
     }; return (
         <div className="w-full">
             {/* Main Navbar */}
@@ -78,14 +89,14 @@ export default function EnhancedEcommerceNavbar() {
                         {/* Desktop Menu */}
                         <div className="hidden md:flex md:items-center md:space-x-8">
                             <div className="flex space-x-8">
-                                <NavLink to="/" className={({ isActive }) =>
+                                <NavLink href="/" className={({ isActive }) =>
                                     `font-medium text-sm hover:text-primary transition-colors ${isActive
                                         ? 'text-primary'
                                         : 'text-muted-foreground'
                                     }`}>
                                     Trang chủ
                                 </NavLink>
-                                <NavLink to="/products" className={({ isActive }) =>
+                                <NavLink href="/products" className={({ isActive }) =>
                                     `font-medium text-sm hover:text-primary transition-colors ${isActive
                                         ? 'text-primary'
                                         : 'text-muted-foreground'
@@ -93,7 +104,7 @@ export default function EnhancedEcommerceNavbar() {
                                     Sản phẩm
                                 </NavLink>
 
-                                <NavLink to="/contact-us" className={({ isActive }) =>
+                                <NavLink href="/contact-us" className={({ isActive }) =>
                                     `font-medium text-sm hover:text-primary transition-colors ${isActive
                                         ? 'text-primary'
                                         : 'text-muted-foreground'
@@ -120,28 +131,28 @@ export default function EnhancedEcommerceNavbar() {
                                 <Heart className="h-5 w-5" />
                             </button>
 
-                            {AuthUtil.isLogged() && (<NotificationSheet />)}
+                            {signedIn && (<NotificationSheet />)}
                             {/* Dropdown user */}
                             <DropdownMenu>
                                 <DropdownMenuTrigger className="text-muted-foreground hover:text-primary">
                                     <User className="h-5 w-5" />
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
-                                    <DropdownMenuLabel>{AuthUtil.getUser() ? `Xin chào ${AuthUtil.getUser().name}` : "Xin chào bạn"}</DropdownMenuLabel>
+                                    <DropdownMenuLabel>{signedIn && user ? `Xin chào ${user.name}` : "Xin chào bạn"}</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
-                                    {!isUserLoggedIn ? (
+                                    {!signedIn ? (
                                         <>
                                             <DropdownMenuItem>
-                                                <Link to="/signin">Đăng nhập</Link>
+                                                <Link href="/signin">Đăng nhập</Link>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem>
-                                                <Link to="/signup">Đăng ký</Link>
+                                                <Link href="/signup">Đăng ký</Link>
                                             </DropdownMenuItem>
                                         </>
                                     ) : (
                                         <>
                                             <DropdownMenuItem>
-                                                <NavLink to="/profile" className={({ isActive }) =>
+                                                <NavLink href="/profile" className={({ isActive }) =>
                                                     `w-full block text-sm rounded-md p-1.5 ${isActive
                                                         ? 'font-bold text-primary'
                                                         : 'text-foreground hover:text-primary'
@@ -150,7 +161,7 @@ export default function EnhancedEcommerceNavbar() {
                                                 </NavLink>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem>
-                                                <NavLink to="/orders" className={({ isActive }) =>
+                                                <NavLink href="/orders" className={({ isActive }) =>
                                                     `w-full block text-sm rounded-md p-1.5 ${isActive
                                                         ? 'font-bold text-primary'
                                                         : 'text-foreground hover:text-primary'

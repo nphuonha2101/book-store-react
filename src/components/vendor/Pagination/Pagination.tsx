@@ -1,3 +1,5 @@
+"use client";
+
 import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext, PaginationLink, PaginationEllipsis } from "../../ui/pagination";
 import { PaginationProps } from "../../../types/Pagination/paginationProps";
 

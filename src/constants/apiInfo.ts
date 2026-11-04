@@ -1,8 +1,6 @@
 export const API_INFO = {
-    BASE_URL: import.meta.env.VITE_REACT_APP_API_BASE_URL,
-    API_VERSION: import.meta.env.VITE_REACT_APP_API_VERSION,
-    // API_KEY: process.env.REACT_APP_API_KEY,
-    // API_SECRET: process.env.REACT_APP_API_SECRET,
+    BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080",
+    API_VERSION: process.env.NEXT_PUBLIC_API_VERSION ?? "v1",
 } as const;
 
 export const API_ENDPOINTS = {
@@ -12,7 +10,6 @@ export const API_ENDPOINTS = {
         },
     },
     SEND_MAIL: {
-
         SEND: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/contacts`,
         },
@@ -21,7 +18,6 @@ export const API_ENDPOINTS = {
         GET_BOOKS: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/all`,
         },
-
         BOOK_DETAIL: {
             URL_DETAIL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books`,
         },
@@ -36,7 +32,7 @@ export const API_ENDPOINTS = {
         },
         GET_REVIEW: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/books/reviews`,
-        }
+        },
     },
     CATEGORY: {
         GET_CATEGORIES: {
@@ -56,7 +52,6 @@ export const API_ENDPOINTS = {
         REMOVE_FROM_WISHLIST: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/wishlists/delete`,
         },
-
     },
     CART: {
         GET_CART: {
@@ -77,7 +72,6 @@ export const API_ENDPOINTS = {
         CLEAR_CART: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/carts/clear`,
         },
-
     },
     VOUCHER: {
         GET_VOUCHERS: {
@@ -90,7 +84,7 @@ export const API_ENDPOINTS = {
     RIBBON: {
         ALL: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/ribbons/all`,
-        }
+        },
     },
     AUTH: {
         EMAIL_EXISTS: {
@@ -114,7 +108,7 @@ export const API_ENDPOINTS = {
         OAUTH2: {
             GOOGLE: {
                 URL: `${API_INFO.BASE_URL}/oauth2/authorization/google`,
-            }
+            },
         },
         FCM_TOKEN: {
             ADD: {
@@ -137,7 +131,7 @@ export const API_ENDPOINTS = {
             READ_ALL: {
                 URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/notifications/mark-as-read-all`,
             },
-        }
+        },
     },
     ADDRESS: {
         GET_ADDRESS: {
@@ -168,7 +162,7 @@ export const API_ENDPOINTS = {
         },
         MAKE_FAILED: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/auth/orders/make-failed`,
-        }
+        },
     },
     TRANSCRIBE: {
         URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/vosk/transcribe`,
@@ -190,6 +184,6 @@ export const API_ENDPOINTS = {
     CHAT: {
         SEND: {
             URL: `${API_INFO.BASE_URL}/api/${API_INFO.API_VERSION}/chat/send`,
-        }
-    }
+        },
+    },
 } as const;

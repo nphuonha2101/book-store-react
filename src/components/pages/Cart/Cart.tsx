@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../../../redux/store.ts";
@@ -9,7 +11,7 @@ import {
     updateItemsPrice,
 } from "../../../redux/slice/cartItemSlice.ts";
 import { Trash2, Minus, Plus, ShoppingBag, ShoppingCart, Undo2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { VoucherDialog } from "./VoucherDialog.tsx";
 import { toast } from "sonner";
 import { formatPrice } from "../../../utils/formatUtils.ts";
@@ -184,7 +186,7 @@ export const Cart: React.FC = () => {
                     <h2 className="text-2xl font-semibold text-gray-800 mb-4">Giỏ hàng của bạn đang trống</h2>
                     <p className="text-gray-600 mb-8 text-lg">Thêm mặt hàng vào giỏ hàng để tiếp tục mua sắm</p>
                     <Button className="w-full">
-                        <Link to="/">
+                        <Link href="/">
                             Tiếp tục mua hàng
                         </Link>
                     </Button>
@@ -363,7 +365,7 @@ export const Cart: React.FC = () => {
                             </div>
                         </div>
                         <div className="mt-8 space-y-4">
-                            <Link to="/checkout">
+                            <Link href="/checkout">
                                 <button className="w-full bg-black text-white py-1 rounded-lg hover:bg-gray-800 transition-colors font-semibold text-lg">
                                     <ShoppingCart className="h-5 w-5 text-white inline-block mr-2" />
                                     Đặt hàng

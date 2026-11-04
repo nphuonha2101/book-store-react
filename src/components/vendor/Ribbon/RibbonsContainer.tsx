@@ -1,3 +1,5 @@
+"use client";
+
 import { Ribbon } from "../../../types/ApiResponse/Ribbon/ribbon";
 import { BooksRibbonContainer } from "./BookRibbonContainer";
 

@@ -1,10 +1,13 @@
+"use client";
+
 import { ArrowLeft, Search, X, History } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState, useRef, useMemo } from "react";
 import { getArray, saveArray } from "../../../utils/localStorageUtils";
 import { Book } from "../../../types/ApiResponse/Book/book";
 import useFetch from "../../../hooks/useFetch";
 import { Button } from "../../ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useNavigate } from "@/lib/use-navigate";
 import { BookCard } from "../../vendor/Card/BookCard";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { Category } from "../../../types/ApiResponse/Category/category.ts";
@@ -160,7 +163,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
                                         {categories?.map((category, index) => (
                                             <Link
                                                 key={index}
-                                                to={`/products?categoryIds=${category.id}`}
+                                                href={`/products?categoryIds=${category.id}`}
                                                 className="bg-background/60 hover:bg-background/90 border border-border/40 rounded-lg p-3.5 cursor-pointer transition-all flex items-center justify-between group"
                                                 onClick={() => setIsSearchOpen(false)}
                                                 aria-label={`Xem danh mục ${category.name}`}
@@ -190,7 +193,7 @@ export default function SearchBar({ setIsSearchOpen }: { setIsSearchOpen: Dispat
                                                 <BookCard key={book.id} book={book} onClick={() => handleBookCardClick(book.id, book.title ? book.title : '')} />
                                             ))}
                                             <div className="col-span-full mt-4 flex justify-center">
-                                                <Link to={`/search?title=${searchTerm}`} onClick={() => setIsSearchOpen(false)}>
+                                                <Link href={`/search?title=${searchTerm}`} onClick={() => setIsSearchOpen(false)}>
                                                     <Button className="bg-primary/90 hover:bg-primary text-primary-foreground py-2.5 px-5 rounded-full font-medium transition-colors shadow-sm">
                                                         Xem tất cả kết quả
                                                     </Button>

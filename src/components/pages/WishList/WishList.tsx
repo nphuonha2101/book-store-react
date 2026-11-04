@@ -1,7 +1,9 @@
+"use client";
+
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import AuthUtil from "../../../utils/authUtil.ts";
 import { AppDispatch, RootState } from "../../../redux/store.ts";
@@ -47,7 +49,7 @@ const Wishlist: React.FC = () => {
             <div className="container mx-auto px-4 py-12 text-center">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">Vui lòng đăng nhập</h2>
                 <p className="text-gray-600">Bạn cần đăng nhập để xem danh sách yêu thích.</p>
-                <Link to="/signin" className="text-blue-500 hover:underline">
+                <Link href="/signin" className="text-blue-500 hover:underline">
                     Đăng nhập ngay
                 </Link>
             </div>
@@ -76,7 +78,7 @@ const Wishlist: React.FC = () => {
             <div className="container mx-auto px-4 py-12 text-center">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">Danh sách yêu thích trống</h2>
                 <p className="text-gray-600">Bạn chưa có sản phẩm nào trong danh sách yêu thích.</p>
-                <Link to="/products" className="text-blue-500 hover:underline">
+                <Link href="/products" className="text-blue-500 hover:underline">
                     Khám phá sản phẩm ngay
                 </Link>
             </div>

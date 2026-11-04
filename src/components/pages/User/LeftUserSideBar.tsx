@@ -1,7 +1,9 @@
+"use client";
+
 import { Separator } from "@radix-ui/react-dropdown-menu"
 import { Menu, X, User, Shield, BellRing, LogOut } from "lucide-react"
 import { Button } from "../../ui/button"
-import { NavLink } from "react-router-dom"
+import { NavLink } from "@/components/nav-link";
 import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../../../redux/store"

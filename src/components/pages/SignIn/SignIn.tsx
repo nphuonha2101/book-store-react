@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
@@ -8,7 +10,9 @@ import { Logo } from "../../vendor/Logo/Logo";
 import { toast } from "sonner";
 import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import Logger from "../../../utils/logger.ts";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import Link from "next/link";
+import { useNavigate } from "@/lib/use-navigate";
+import { useSearchParams } from "@/lib/use-search-params";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store.ts";
 import { login } from "../../../redux/slice/authSlice.ts";
@@ -57,16 +61,19 @@ export const SignIn = () => {
         }
     };
 
-    // Call the function immediately
-    handleOAuth2Redirect();
-
     const handleRedirectToBeforeLogin = () => {
         if (continuteTo) {
             navigate(continuteTo);
         } else {
             navigate("/");
         }
-    }
+    };
+
+    // Handle the OAuth2 callback exactly once, after hydration.
+    useEffect(() => {
+        void handleOAuth2Redirect();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
 
 
@@ -161,7 +168,7 @@ export const SignIn = () => {
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
                                 <Label htmlFor="password">Mật khẩu</Label>
-                                <Link to="/forgot-password" className="text-sm text-primary hover:underline">
+                                <Link href="/forgot-password" className="text-sm text-primary hover:underline">
                                     Quên mật khẩu?
                                 </Link>
                             </div>
@@ -212,7 +219,7 @@ export const SignIn = () => {
                 <CardFooter className="flex flex-col space-y-1 mt-2">
                     <div className="text-center text-sm">
                         Chưa phải là thành viên{" "}
-                        <Link to="/signup" className="text-red-500 hover:underline">
+                        <Link href="/signup" className="text-red-500 hover:underline">
                             Tạo tài khoản
                         </Link>
                     </div>

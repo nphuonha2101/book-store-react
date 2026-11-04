@@ -1,3 +1,5 @@
+"use client";
+
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,7 +10,7 @@ import { API_ENDPOINTS } from "../../../constants/apiInfo.ts";
 import { Label } from "../../ui/label.tsx";
 import { Button } from "../../ui/button.tsx";
 import { Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { useEffect } from "react";
 
 
@@ -127,7 +129,7 @@ export const ForgotPassword = () => {
                             )}
                         </Button>
                         <div className="text-center mt-2">
-                            <Link to="/signin" className="text-blue-500 hover:underline">
+                            <Link href="/signin" className="text-blue-500 hover:underline">
                                 Quay lại đăng nhập
                             </Link>
                         </div>

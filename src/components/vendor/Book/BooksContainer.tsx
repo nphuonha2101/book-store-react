@@ -1,3 +1,5 @@
+"use client";
+
 import { Book } from "../../../types/ApiResponse/Book/book.ts";
 import { BookCard } from "../Card/BookCard.tsx";
 
